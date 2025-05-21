@@ -158,4 +158,8 @@ Bu FastMCP sunucusu aşağıdaki temel araçları sunar:
 
 📜 **Lisans**
 
+<<<<<<< HEAD
 Bu proje MIT Lisansı altında lisanslanmıştır. 
+=======
+Bu proje MIT Lisansı altında lisanslanmıştır. Detaylar için `LICENSE` dosyasına bakınız.
+>>>>>>> d44b51efb64e0a178c22d308b9b06f6bdd2c7b69
