@@ -1,11 +1,6 @@
-Harika bir fikir! Projeniz için YÖKATLAS MCP sunucusu README'sine benzer, kapsamlı bir `README.md` dosyası oluşturalım. Bu dosya, projenizin ne yaptığını, nasıl kurulacağını ve kullanılacağını açıklayacaktır.
-
-Aşağıda, bu bilgilerle oluşturulmuş bir `README.md` taslağı bulunmaktadır. Boşlukları kendi proje detaylarınızla (özellikle GitHub repo URL'si gibi) doldurmanız gerekecektir.
-
-```markdown
 # Yargı MCP: Türk Hukuk Kaynakları için MCP Sunucusu
 
-Bu proje, çeşitli Türk hukuk kaynaklarına (Yargıtay, Danıştay, Emsal Kararlar, Uyuşmazlık Mahkemesi ve Anayasa Mahkemesi Norm Denetimi Kararları) erişimi kolaylaştıran bir [FastMCP](https://gofastmcp.com/) sunucusu oluşturur. Bu sayede, bu kaynaklardan veri arama ve belge getirme işlemleri, Model Context Protocol (MCP) destekleyen LLM (Büyük Dil Modeli) uygulamaları (örneğin Claude Desktop) ve diğer istemciler tarafından araç (tool) olarak kullanılabilir hale gelir.
+Bu proje, çeşitli Türk hukuk kaynaklarına (Yargıtay, Danıştay, Emsal Kararlar, Uyuşmazlık Mahkemesi ve Anayasa Mahkemesi - Norm Denetimi ile Bireysel Başvuru Kararları) erişimi kolaylaştıran bir [FastMCP](https://gofastmcp.com/) sunucusu oluşturur. Bu sayede, bu kaynaklardan veri arama ve belge getirme işlemleri, Model Context Protocol (MCP) destekleyen LLM (Büyük Dil Modeli) uygulamaları (örneğin Claude Desktop) ve diğer istemciler tarafından araç (tool) olarak kullanılabilir hale gelir.
 
 🎯 **Temel Özellikler**
 
@@ -15,7 +10,8 @@ Bu proje, çeşitli Türk hukuk kaynaklarına (Yargıtay, Danıştay, Emsal Kara
     * **Danıştay:** Anahtar kelime bazlı ve detaylı kriterlerle karar arama; karar metinlerini Markdown formatında getirme.
     * **Emsal (UYAP):** Detaylı kriterlerle emsal karar arama ve karar metinlerini Markdown formatında getirme.
     * **Uyuşmazlık Mahkemesi:** Form tabanlı kriterlerle karar arama ve karar metinlerini (URL ile erişilen) Markdown formatında getirme.
-    * **Anayasa Mahkemesi (Norm Denetimi):** Kapsamlı kriterlerle norm denetimi kararlarını arama; uzun karar metinlerini sayfalanmış Markdown formatında getirme.
+    * **Anayasa Mahkemesi (Norm Denetimi):** Kapsamlı kriterlerle norm denetimi kararlarını arama; uzun karar metinlerini (5.000 karakterlik) sayfalanmış Markdown formatında getirme.
+    * **Anayasa Mahkemesi (Bireysel Başvuru):** Kapsamlı kriterlerle bireysel başvuru "Karar Arama Raporu" oluşturma ve listedeki kararların metinlerini (5.000 karakterlik) sayfalanmış Markdown formatında getirme.
 * Karar metinlerinin daha kolay işlenebilmesi için Markdown formatına çevrilmesi.
 * Claude Desktop uygulaması ile `fastmcp install` komutu kullanılarak kolay entegrasyon.
 
@@ -30,7 +26,6 @@ Claude Desktop uygulamasına yükleme yapabilmek için öncelikle `uv` (önerili
 
 **1. `uv` Kurulumu (Önerilir)**
 
-`uv`, son derece hızlı bir Python paket kurucusu ve sanal ortam yöneticisidir.
 * **macOS ve Linux için:**
     ```bash
     curl -LsSf [https://astral.sh/uv/install.sh](https://astral.sh/uv/install.sh) | sh
@@ -43,7 +38,6 @@ Claude Desktop uygulamasına yükleme yapabilmek için öncelikle `uv` (önerili
 
 **2. `fastmcp` Komut Satırı Aracının (CLI) Kurulumu**
 
-`fastmcp` CLI, MCP sunucularını yönetmek ve özellikle `fastmcp install` komutu ile Claude Desktop'a kurmak için gereklidir.
 * **`uv` kullanarak (önerilir):**
     ```bash
     uv pip install fastmcp
@@ -56,9 +50,9 @@ Claude Desktop uygulamasına yükleme yapabilmek için öncelikle `uv` (önerili
 
 **3. Proje Dosyalarını Alın**
 
-Bu Yargı MCP sunucusunun kaynak kodlarını bilgisayarınıza indirin (Bu depoyu klonladığınızı varsayıyoruz. URL'yi kendi reponuzla değiştirin):
+Bu Yargı MCP sunucusunun kaynak kodlarını bilgisayarınıza indirin (URL'yi kendi reponuzla değiştirin):
 ```bash
-git clone [https://github.com/kullaniciadiniz/yargi-mcp.git](https://github.com/kullaniciadiniz/yargi-mcp.git)
+git clone [https://github.com/KULLANICIADINIZ/yargi-mcp.git](https://github.com/KULLANICIADINIZ/yargi-mcp.git)
 cd yargi-mcp
 ```
 Bu README.md dosyasının ve `mcp_server_main.py` script'inin bulunduğu dizine `cd` komutu ile geçmiş olacaksınız.
@@ -66,17 +60,9 @@ Bu README.md dosyasının ve `mcp_server_main.py` script'inin bulunduğu dizine 
 **4. Sunucuya Özel Bağımlılıkların Bilinmesi**
 
 Bu sunucunun (`mcp_server_main.py`) çalışması için aşağıdaki Python kütüphanelerine ihtiyacı vardır. Bu kütüphaneler `fastmcp install` sırasında `--with` parametreleriyle belirtilecektir:
-* `httpx` (Asenkron HTTP istekleri için)
-* `beautifulsoup4` (HTML parse etmek için)
-* `markitdown` (HTML'i Markdown'a çevirmek için)
-* `pydantic` (Veri modelleri ve validasyon için, genellikle FastMCP bağımlılığıdır)
-* `aiohttp` (Uyuşmazlık Mahkemesi client'ı için)
-* `fastmcp` (sunucunun kendisi için de gereklidir)
 
-(Eğer sunucuyu bağımsız olarak geliştirmek veya test etmek isterseniz, projenizin kök dizininde bir sanal ortam oluşturup – örn: `uv venv` & `source .venv/bin/activate` – bu bağımlılıkları `requirements.txt` dosyasından `uv pip install -r requirements.txt` komutuyla kurabilirsiniz.)
-
-Aşağıda `requirements.txt` içeriği bulunmaktadır:
 ```text
+# requirements.txt
 fastmcp
 httpx
 beautifulsoup4
@@ -84,6 +70,7 @@ markitdown
 pydantic
 aiohttp
 ```
+(Eğer sunucuyu bağımsız olarak geliştirmek veya test etmek isterseniz, projenizin kök dizininde bir sanal ortam oluşturup – örn: `uv venv` & `source .venv/bin/activate` – bu bağımlılıkları `uv pip install -r requirements.txt` komutuyla kurabilirsiniz.)
 
 🚀 **Claude Desktop Entegrasyonu (`fastmcp install` ile - Önerilen)**
 
@@ -94,7 +81,7 @@ Yukarıdaki kurulum adımlarını tamamladıktan sonra, bu sunucuyu Claude Deskt
 
     ```bash
     fastmcp install mcp_server_main.py \
-        --name "Yargı API Servisleri" \
+        --name "Yargı MCP" \
         --with httpx \
         --with beautifulsoup4 \
         --with markitdown \
@@ -102,27 +89,25 @@ Yukarıdaki kurulum adımlarını tamamladıktan sonra, bu sunucuyu Claude Deskt
         --with aiohttp
     ```
 
-    * `--name "Yargı API Servisleri"`: Araç Claude Desktop'ta bu isimle görünecektir.
+    * `--name "Yargı MCP"`: Araç Claude Desktop'ta bu isimle görünecektir.
     * `--with ...`: Sunucunun çalışması için gereken Python bağımlılıklarını belirtir.
 
-    Bu komut, `uv` kullanarak sunucunuz için izole bir Python ortamı oluşturacak, belirtilen bağımlılıkları kuracak ve aracı Claude Desktop uygulamasına kaydedecektir. Kurulum tamamlandıktan sonra "Yargı API Servisleri" Claude Desktop uygulamanızda kullanılabilir olacaktır.
+    Bu komut, `uv` kullanarak sunucunuz için izole bir Python ortamı oluşturacak, belirtilen bağımlılıkları kuracak ve aracı Claude Desktop uygulamasına kaydedecektir.
 
 ⚙️ **Claude Desktop Manuel Kurulumu (Yapılandırma Dosyası ile - Alternatif)**
-
-`fastmcp install` komutunu kullanmak yerine, sunucunuzu Claude Desktop uygulamasına manuel olarak da ekleyebilirsiniz.
 
 1.  **Claude Desktop Ayarları**'nı açın.
 2.  **Developer** sekmesine gidin ve **Edit Config** düğmesine tıklayın.
 3.  Açılan `claude_desktop_config.json` dosyasını bir metin düzenleyici ile açın.
-4.  `mcpServers` nesnesine aşağıdaki JSON bloğunu ekleyin (var olan diğer sunucu tanımlarınızla virgülle ayırarak):
+4.  `mcpServers` nesnesine aşağıdaki JSON bloğunu ekleyin:
 
     ```json
     {
       "mcpServers": {
         // ... (varsa diğer sunucu tanımlamalarınız) ...
 
-        "Yargı API Servisleri (Manuel)": {
-          "command": "uv", // veya python eğer uv PATH'de değilse ve bağımlılıklar ana python'da ise
+        "Yargı MCP": {
+          "command": "uv",
           "args": [
             "run",
             "--with", "httpx",
@@ -130,42 +115,47 @@ Yukarıdaki kurulum adımlarını tamamladıktan sonra, bu sunucuyu Claude Deskt
             "--with", "markitdown",
             "--with", "pydantic",
             "--with", "aiohttp",
-            "--with", "fastmcp", // fastmcp'nin kendisi de çalıştırılacak ortamda olmalı
+            "--with", "fastmcp",
             "fastmcp", "run", 
-            "/tam/proje/yolunuz/yargi-mcp/mcp_server_main.py" // BU YOLU KENDİ SİSTEMİNİZE GÖRE GÜNCELLEYİN
+            "/TAM/PROJE/YOLUNUZ/yargi-mcp/mcp_server_main.py" 
           ]
         }
       }
     }
     ```
-    * **Önemli:** `/tam/proje/yolunuz/yargi-mcp/mcp_server_main.py` kısmını, `mcp_server_main.py` dosyasının sisteminizdeki **tam ve doğru yolu** ile değiştirmeyi unutmayın.
+    * **Önemli:** `/TAM/PROJE/YOLUNUZ/yargi-mcp/mcp_server_main.py` kısmını, `mcp_server_main.py` dosyasının sisteminizdeki **tam ve doğru yolu** ile değiştirmeyi unutmayın.
 5.  Claude Desktop'ı yeniden başlatın.
 
 🛠️ **Kullanılabilir Araçlar (MCP Tools)**
 
-Bu FastMCP sunucusu aşağıdaki temel araçları sunar (parametre detayları için ilgili Pydantic modellerine bakınız):
+Bu FastMCP sunucusu aşağıdaki temel araçları sunar:
 
 * **Yargıtay Araçları:**
-    * `search_yargitay_detailed(search_query: YargitayDetailedSearchRequest)`: Yargıtay kararlarını detaylı kriterlerle arar.
-    * `get_yargitay_document_markdown(document_id: str)`: Belirli bir Yargıtay kararının metnini Markdown formatında getirir.
+    * `search_yargitay_detailed(search_query: YargitayDetailedSearchRequest) -> CompactYargitaySearchResult`: Yargıtay kararlarını detaylı kriterlerle arar.
+    * `get_yargitay_document_markdown(document_id: str) -> YargitayDocumentMarkdown`: Belirli bir Yargıtay kararının metnini Markdown formatında getirir.
 
 * **Danıştay Araçları:**
-    * `search_danistay_by_keyword(search_query: DanistayKeywordSearchRequest)`: Danıştay kararlarını anahtar kelimelerle arar.
-    * `search_danistay_detailed(search_query: DanistayDetailedSearchRequest)`: Danıştay kararlarını detaylı kriterlerle arar.
-    * `get_danistay_document_markdown(document_id: str)`: Belirli bir Danıştay kararının metnini Markdown formatında getirir.
+    * `search_danistay_by_keyword(search_query: DanistayKeywordSearchRequest) -> CompactDanistaySearchResult`: Danıştay kararlarını anahtar kelimelerle arar.
+    * `search_danistay_detailed(search_query: DanistayDetailedSearchRequest) -> CompactDanistaySearchResult`: Danıştay kararlarını detaylı kriterlerle arar.
+    * `get_danistay_document_markdown(document_id: str) -> DanistayDocumentMarkdown`: Belirli bir Danıştay kararının metnini Markdown formatında getirir.
 
 * **Emsal Karar Araçları:**
-    * `search_emsal_detailed_decisions(search_query: EmsalSearchRequest)`: Emsal (UYAP) kararlarını detaylı kriterlerle arar.
-    * `get_emsal_document_markdown(document_id: str)`: Belirli bir Emsal kararının metnini Markdown formatında getirir.
+    * `search_emsal_detailed_decisions(search_query: EmsalSearchRequest) -> CompactEmsalSearchResult`: Emsal (UYAP) kararlarını detaylı kriterlerle arar.
+    * `get_emsal_document_markdown(document_id: str) -> EmsalDocumentMarkdown`: Belirli bir Emsal kararının metnini Markdown formatında getirir.
 
 * **Uyuşmazlık Mahkemesi Araçları:**
-    * `search_uyusmazlik_decisions(search_params: UyusmazlikSearchRequest)`: Uyuşmazlık Mahkemesi kararlarını çeşitli form kriterleriyle arar.
-    * `get_uyusmazlik_document_markdown_from_url(document_url: HttpUrl)`: Bir Uyuşmazlık kararını tam URL'sinden alıp Markdown formatında getirir.
+    * `search_uyusmazlik_decisions(search_params: UyusmazlikSearchRequest) -> UyusmazlikSearchResponse`: Uyuşmazlık Mahkemesi kararlarını çeşitli form kriterleriyle arar.
+    * `get_uyusmazlik_document_markdown_from_url(document_url: HttpUrl) -> UyusmazlikDocumentMarkdown`: Bir Uyuşmazlık kararını tam URL'sinden alıp Markdown formatında getirir.
 
 * **Anayasa Mahkemesi (Norm Denetimi) Araçları:**
-    * `search_anayasa_norm_denetimi_decisions(search_query: AnayasaNormDenetimiSearchRequest)`: AYM Norm Denetimi kararlarını kapsamlı kriterlerle arar.
-    * `get_anayasa_norm_denetimi_document_markdown(document_url: str, page_number: Optional[int] = 1)`: Belirli bir AYM Norm Denetimi kararını URL'sinden alır ve 5.000 karakterlik sayfalanmış Markdown içeriğini getirir.
+    * `search_anayasa_norm_denetimi_decisions(search_query: AnayasaNormDenetimiSearchRequest) -> AnayasaSearchResult`: AYM Norm Denetimi kararlarını kapsamlı kriterlerle arar.
+    * `get_anayasa_norm_denetimi_document_markdown(document_url: str, page_number: Optional[int] = 1) -> AnayasaDocumentMarkdown`: Belirli bir AYM Norm Denetimi kararını URL'sinden alır ve 5.000 karakterlik sayfalanmış Markdown içeriğini getirir.
+
+* **Anayasa Mahkemesi (Bireysel Başvuru) Araçları:**
+    * `search_anayasa_bireysel_basvuru_report(search_query: AnayasaBireyselReportSearchRequest) -> AnayasaBireyselReportSearchResult`: AYM Bireysel Başvuru "Karar Arama Raporu" oluşturur.
+    * `get_anayasa_bireysel_basvuru_document_markdown(document_url_path: str, page_number: Optional[int] = 1) -> AnayasaBireyselBasvuruDocumentMarkdown`: Belirli bir AYM Bireysel Başvuru kararını URL path'inden alır ve 5.000 karakterlik sayfalanmış Markdown içeriğini getirir.
+
 
 📜 **Lisans**
 
-Bu proje MIT Lisansı altında lisanslanmıştır. Detaylar için `LICENSE` dosyasına bakınız.
+Bu proje MIT Lisansı altında lisanslanmıştır. 
