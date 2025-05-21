@@ -1,8 +1,3 @@
-Harika bir fikir! Projeniz için YÖKATLAS MCP sunucusu README'sine benzer, kapsamlı bir `README.md` dosyası oluşturalım. Bu dosya, projenizin ne yaptığını, nasıl kurulacağını ve kullanılacağını açıklayacaktır.
-
-Aşağıda, bu bilgilerle oluşturulmuş bir `README.md` taslağı bulunmaktadır. Boşlukları kendi proje detaylarınızla (özellikle GitHub repo URL'si gibi) doldurmanız gerekecektir.
-
-```markdown
 # Yargı MCP: Türk Hukuk Kaynakları için MCP Sunucusu
 
 Bu proje, çeşitli Türk hukuk kaynaklarına (Yargıtay, Danıştay, Emsal Kararlar, Uyuşmazlık Mahkemesi ve Anayasa Mahkemesi Norm Denetimi Kararları) erişimi kolaylaştıran bir [FastMCP](https://gofastmcp.com/) sunucusu oluşturur. Bu sayede, bu kaynaklardan veri arama ve belge getirme işlemleri, Model Context Protocol (MCP) destekleyen LLM (Büyük Dil Modeli) uygulamaları (örneğin Claude Desktop) ve diğer istemciler tarafından araç (tool) olarak kullanılabilir hale gelir.
