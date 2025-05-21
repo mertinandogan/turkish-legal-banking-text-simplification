@@ -1,0 +1,6 @@
+fastmcp
+httpx
+beautifulsoup4
+markitdown
+pydantic
+aiohttp 
