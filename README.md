@@ -54,9 +54,9 @@ Claude Desktop uygulamasına yükleme yapabilmek için öncelikle `uv` (önerili
 
 **3. Proje Dosyalarını Alın**
 
-Bu Yargı MCP sunucusunun kaynak kodlarını bilgisayarınıza indirin (URL'yi kendi reponuzla değiştirin):
+Bu Yargı MCP sunucusunun kaynak kodlarını bilgisayarınıza indirin:
 ```bash
-git clone [https://github.com/KULLANICIADINIZ/yargi-mcp.git](https://github.com/KULLANICIADINIZ/yargi-mcp.git)
+git clone [https://github.com/saidsurucu/yargi-mcp.git](https://github.com/saidsurucu/yargi-mcp.git)
 cd yargi-mcp
 ```
 Bu README.md dosyasının ve `mcp_server_main.py` script'inin bulunduğu dizine `cd` komutu ile geçmiş olacaksınız.
