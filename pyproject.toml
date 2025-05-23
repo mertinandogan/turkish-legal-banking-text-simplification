@@ -12,3 +12,5 @@ dependencies = [
     "pydantic>=2.11.4",
     "aiohttp>=3.11.18",
 ]
+[tool.setuptools.packages.find]
+include = ["*_mcp_module"]
