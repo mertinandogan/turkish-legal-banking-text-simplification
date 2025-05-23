@@ -46,7 +46,7 @@ Bu bölüm, teknik bilgisi daha az olan kullanıcıların **Yargı MCP** araçla
 
 Proje dosyalarını bilgisayarınıza aldıktan sonra, işletim sisteminize uygun kurulum script'ini çalıştırabilirsiniz.
 
-### (Windows) Kullanıcıları İçin (`install.bat`)
+### Windows Kullanıcıları İçin (`install.bat`)
 
 1.  Proje dosyalarını çıkarttığınız klasörün içine gidin (örneğin, `C:\Users\KULLANICIADINIZ\Documents\yargi-mcp` klasörü).
 2.  `install.bat` adlı dosyayı bulun.
