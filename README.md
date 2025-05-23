@@ -19,10 +19,88 @@ Bu proje, çeşitli Türk hukuk kaynaklarına (Yargıtay, Danıştay, Emsal Kara
 * Karar metinlerinin daha kolay işlenebilmesi için Markdown formatına çevrilmesi.
 * Claude Desktop uygulaması ile `fastmcp install` komutu kullanılarak kolay entegrasyon.
 
+---
 📋 **Ön Gereksinimler**
 
-* **Python Sürümü:** Python 3.10 veya daha yeni bir sürümünün sisteminizde kurulu olması gerekmektedir. Python'ı [python.org](https://www.python.org/) adresinden indirebilirsiniz.
-* **Paket Yöneticisi:** `pip` (Python ile birlikte gelir) veya tercihen `uv` ([Astral](https://astral.sh/uv) tarafından geliştirilen hızlı Python paket yöneticisi).
+Bu Yargı MCP aracını Claude Desktop ile kullanabilmek için öncelikle aşağıdaki yazılımların sisteminizde kurulu olması gerekmektedir:
+
+1.  **Claude Desktop:** Henüz kurmadıysanız, [Claude Desktop web sitesinden](https://claude.ai/desktop) işletim sisteminize uygun sürümü indirip kurun.
+2.  **Python Sürümü:** Python 3.10 veya daha yeni bir sürüm.
+    * **Windows Kullanıcıları:** Eğer Python kurulu değilse, [python.org/downloads/windows/](https://www.python.org/downloads/windows/) adresinden en son kararlı sürümü indirip kurabilirsiniz. Kurulum sırasında "**Add Python to PATH**" (Python'ı PATH'e ekle) seçeneğini işaretlemeyi unutmayın.
+    * **macOS Kullanıcıları:** macOS genellikle Python ile birlikte gelir. Terminal'de `python3 --version` yazarak kontrol edebilirsiniz. Eğer kurulu değilse veya eski bir sürümse, [python.org](https://www.python.org/downloads/macos/) adresinden veya [Homebrew](https://brew.sh/) (`brew install python`) ile kurabilirsiniz.
+    * **Linux Kullanıcıları:** Çoğu Linux dağıtımı Python ile gelir. Terminal'de `python3 --version` yazarak kontrol edebilirsiniz. Gerekirse dağıtımınızın paket yöneticisi ile kurabilirsiniz (örn: `sudo apt update && sudo apt install python3 python3-pip python3-venv`).
+3.  **Paket Yöneticisi:** `pip` (Python ile birlikte gelir) veya tercihen `uv` ([Astral](https://astral.sh/uv) tarafından geliştirilen hızlı Python paket yöneticisi). Kurulum script'lerimiz `uv`'yi sizin için kurmayı deneyecektir.
+
+---
+🚀 **Kolay Kurulum Adımları (Claude Desktop için)**
+
+Bu bölüm, teknik bilgisi daha az olan kullanıcıların **Yargı MCP** araçlarını Claude Desktop uygulamalarına hızlı ve kolay bir şekilde entegre etmeleri için hazırlanmıştır.
+
+**Öncelikle Yapılması Gerekenler:**
+
+1.  **Proje Dosyalarını İndirin:**
+    * Bu GitHub deposunun ana sayfasına gidin.
+    * Yeşil renkli "**<> Code**" düğmesine tıklayın.
+    * Açılan menüden "**Download ZIP**" seçeneğini seçin.
+    * İndirdiğiniz ZIP dosyasını bilgisayarınızda kolayca erişebileceğiniz bir klasöre çıkartın (örneğin, `Belgelerim` veya `Masaüstü` altında `yargi-mcp` adında bir klasör oluşturabilirsiniz).
+
+Proje dosyalarını bilgisayarınıza aldıktan sonra, işletim sisteminize uygun kurulum script'ini çalıştırabilirsiniz.
+
+### (Windows) Kullanıcıları İçin (`install.bat`)
+
+1.  Proje dosyalarını çıkarttığınız klasörün içine gidin (örneğin, `C:\Users\KULLANICIADINIZ\Documents\yargi-mcp` klasörü).
+2.  `install.bat` adlı dosyayı bulun.
+3.  Bu dosyaya **çift tıklayarak** çalıştırın.
+4.  Kurulum sırasında bir komut istemi penceresi açılacak ve bazı mesajlar göreceksiniz. Script, gerekli araçları (`uv`, `fastmcp` CLI) sisteminize kurmayı deneyecek ve ardından "**Yargı MCP**" aracını Claude Desktop'a entegre edecektir.
+    * *Not: Bu işlem sırasında script sizden yönetici onayı isteyebilir veya internet bağlantısı gerektirebilir. `uv` kurulumu için PowerShell script çalıştırma politikalarınızda geçici bir değişiklik yapılması gerekebilir; script bunu sizin için halletmeye çalışacaktır.*
+5.  Kurulum tamamlandığında, komut istemi penceresinde bir başarı mesajı göreceksiniz. Pencere, "Devam etmek için bir tuşa basın..." mesajıyla açık kalacaktır. Herhangi bir tuşa basarak pencereyi kapatabilirsiniz.
+6.  **Önemli:** Kurulumun etkili olması için Claude Desktop uygulamasını tamamen kapatıp yeniden başlatmanız gerekebilir.
+
+### macOS ve Linux Kullanıcıları İçin (`install.sh`)
+
+1.  Proje dosyalarını çıkarttığınız klasörün içine gidin (örneğin, `/Users/KULLANICIADINIZ/Documents/yargi-mcp` klasörü).
+2.  **Terminal** uygulamasını açın:
+    * **macOS'te:**
+        1.  **Finder**'ı açın.
+        2.  Proje dosyalarını çıkarttığınız klasöre (`yargi-mcp` gibi) gidin.
+        3.  Finder penceresinin en altındaki yol çubuğunda (Path Bar), klasör adının üzerine **Control tuşuna basılı tutarak tıklayın** (veya sağ tıklayın).
+        4.  Açılan menüden "**Terminal'de Aç**" seçeneğini seçin. (Eğer bu seçenek yoksa, Finder'da `Görünüm > Yol Çubuğunu Göster` seçeneğinin aktif olduğundan emin olun. Alternatif olarak, `Uygulamalar > İzlenceler > Terminal` yolunu izleyip `cd` komutuyla klasörünüze gidin.)
+    * **Linux'ta:** Genellikle dosya yöneticisinde klasöre sağ tıklayıp "Burada Terminal Aç" seçeneğini kullanabilir veya Ctrl+Alt+T kısayoluyla terminal açıp `cd` komutuyla klasörünüze gidebilirsiniz.
+3.  Terminalde, doğru klasörde olduğunuzdan emin olduktan sonra, script'e çalıştırma izni verin (bu işlemi sadece bir kez yapmanız yeterlidir):
+    ```bash
+    chmod +x install.sh
+    ```
+4.  Script'i çalıştırın:
+    ```bash
+    ./install.sh
+    ```
+5.  Kurulum sırasında terminalde bazı mesajlar göreceksiniz. Script, gerekli araçları (`uv`, `fastmcp` CLI) sisteminize kurmayı deneyecek ve ardından "**Yargı MCP**" aracını Claude Desktop'a entegre edecektir.
+    * *Not: Bu işlem sırasında script sizden şifrenizi (`sudo` yetkileri için, özellikle `uv` kurulumunda) isteyebilir veya internet bağlantısı gerektirebilir.*
+6.  Kurulum tamamlandığında, terminalde bir başarı mesajı göreceksiniz.
+7.  **Önemli:** Kurulumun etkili olması için Claude Desktop uygulamasını tamamen kapatıp yeniden başlatmanız gerekebilir. Ayrıca, eğer `uv` veya `fastmcp` PATH'e yeni eklendiyse, terminalinizi de yeniden başlatmanız veya shell profilinizi (`~/.bashrc`, `~/.zshrc`, `~/.profile` vb.) `source ~/.zshrc` (veya kullandığınız shell'e uygun komutla) yeniden yüklemeniz gerekebilir. Script bu konuda sizi uyaracaktır.
+
+### Python Script ile Kurulum (`install.py`) (Platform Bağımsız Alternatif)
+
+Eğer yukarıdaki işletim sistemine özel script'lerde sorun yaşarsanız veya Python tabanlı bir kurulumu tercih ediyorsanız, `install.py` script'ini kullanabilirsiniz. Bu yöntem, sisteminizde Python'un (sürüm 3.8+ önerilir) ve `pip` paket yöneticisinin kurulu ve çalışır durumda olmasını gerektirir.
+
+1.  Proje dosyalarını çıkarttığınız klasörün içine Terminal veya Komut İstemi ile gidin.
+2.  Aşağıdaki komutu çalıştırın (sisteminizdeki Python 3 komutuna göre `python` veya `python3` kullanın):
+    ```bash
+    python3 install.py 
+    ```
+    veya
+    ```bash
+    python install.py
+    ```
+3.  Script, size gerekli adımlarda rehberlik edecek ve kurulumu tamamlamaya çalışacaktır. Kurulum sırasında ek bağımlılıkların indirilmesi gerekebilir.
+
+---
+
+**Kurulum Sonrası**
+
+Kurulum başarıyla tamamlandıktan sonra, Claude Desktop uygulamasını (gerekirse yeniden başlatarak) açın. Araçlar menüsünde (genellikle ekranın sağ alt köşesindeki çekiç 🛠️ simgesi altında) "**Yargı MCP**" adlı yeni aracı görmelisiniz.
+
+Herhangi bir sorunla karşılaşırsanız, lütfen [GitHub Issues](https://github.com/KULLANICIADINIZ/yargi-mcp/issues) bölümünden bize bildirin (Kendi GitHub reponuzun Issues linkini buraya ekleyin).
 
 ⚙️ **Kurulum Adımları (Claude Desktop Entegrasyonu Odaklı)**
 
