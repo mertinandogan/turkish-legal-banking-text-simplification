@@ -13,6 +13,7 @@ echo Devam etmek istiyor musunuz? (E/H):
 set /p "continue_script="
 if /i not "%continue_script%"=="E" (
     echo Kurulum iptal edildi.
+    pause
     goto :eof
 )
 echo.
@@ -28,34 +29,49 @@ uv --version >nul 2>&1
 if %errorlevel% equ 0 (
     echo   uv zaten kurulu. Versiyon:
     uv --version
+    set "UV_EXECUTABLE=uv"
 ) else (
-    echo   uv kurulu degil. Kurulum denenecek...
+    echo   uv kurulu degil veya PATH'de degil. Kurulum denenecek...
     echo   PowerShell ile uv indirme ve kurma script'i calistirilacak.
-    echo   Bu islem icin internet baglantisi gereklidir.
     powershell -ExecutionPolicy Bypass -NoProfile -Command "irm https://astral.sh/uv/install.ps1 | iex"
-    if %errorlevel% neq 0 (
+    if !errorlevel! neq 0 (
         echo   HATA: uv PowerShell ile kurulamadi. Alternatif olarak pip/pip3 ile deneniyor...
         pip install uv
-        if %errorlevel% neq 0 (
+        if !errorlevel! neq 0 (
             echo     UYARI: 'pip install uv' basarisiz oldu. 'pip3 install uv' deneniyor...
             pip3 install uv
-            if %errorlevel% neq 0 (
+            if !errorlevel! neq 0 (
                  echo       HATA: uv 'pip3 install uv' ile de kurulamadi. Lutfen https://astral.sh/uv adresinden manuel kurulum yapin.
                  goto :error_exit
             )
         )
     )
-    echo   uv basariyla kuruldu (veya kuruluma calisildi). PATH'in guncellenmesi icin terminali yeniden baslatmaniz gerekebilir.
-    echo   uv versiyonu kontrol ediliyor:
-    set "UV_PATH_CARGO=%USERPROFILE%\.cargo\bin\uv.exe"
-    set "UV_PATH_LOCALAPP=%LOCALAPPDATA%\uv\uv.exe"
+    echo   uv kurulum denemesi tamamlandi.
+    set "UV_EXECUTABLE="
+    if exist "%USERPROFILE%\.cargo\bin\uv.exe" (
+        set "UV_EXECUTABLE=%USERPROFILE%\.cargo\bin\uv.exe"
+        echo   uv "%USERPROFILE%\.cargo\bin\" adresinde bulundu.
+    ) else if exist "%LOCALAPPDATA%\uv\uv.exe" (
+        set "UV_EXECUTABLE=%LOCALAPPDATA%\uv\uv.exe"
+        echo   uv "%LOCALAPPDATA%\uv\" adresinde bulundu.
+    )
     
-    if exist "%UV_PATH_CARGO%" (
-        "%UV_PATH_CARGO%" --version
-    ) else if exist "%UV_PATH_LOCALAPP%" (
-        "%UV_PATH_LOCALAPP%" --version
+    if defined UV_EXECUTABLE (
+        "%UV_EXECUTABLE%" --version
+        if !errorlevel! neq 0 (
+            echo HATA: uv kuruldu ancak calistirilamiyor. PATH sorunu olabilir. Terminali yeniden baslatin.
+            set "UV_EXECUTABLE=uv" 
+        )
     ) else (
-        uv --version || (echo HATA: uv kuruldu ancak PATH'de bulunamadi. Lutfen terminali yeniden baslatin veya PATH'i manuel guncelleyin. && goto :error_exit)
+        uv --version >nul 2>&1
+        if !errorlevel! equ 0 (
+            echo   uv PATH'de bulundu.
+            set "UV_EXECUTABLE=uv"
+        ) else (
+            echo HATA: uv kuruldu ancak PATH'de bulunamadi veya calistirilamadi.
+            echo Lutfen terminali yeniden baslatin veya PATH'i manuel guncelleyin ve uv'nin calistigini dogrulayin.
+            goto :error_exit
+        )
     )
 )
 echo.
@@ -64,33 +80,39 @@ REM --- Adim 2: fastmcp CLI Kurulumu ---
 echo [ADIM 2/3] fastmcp CLI kontrol ediliyor ve gerekiyorsa kuruluyor...
 fastmcp --version >nul 2>&1
 if %errorlevel% equ 0 (
-    echo   fastmcp CLI zaten kurulu. Versiyon:
+    echo   fastmcp CLI zaten kurulu.
     fastmcp --version
+    set "FASTMCP_EXECUTABLE=fastmcp"
 ) else (
-    echo   fastmcp CLI kurulu degil. Kurulum denenecek (uv kullanarak)...
-    if exist "%UV_PATH_CARGO%" (
-        "%UV_PATH_CARGO%" pip install fastmcp
-    ) else if exist "%UV_PATH_LOCALAPP%" (
-        "%UV_PATH_LOCALAPP%" pip install fastmcp
+    echo   fastmcp CLI kurulu degil veya PATH'de degil. Kurulum denenecek...
+    if defined UV_EXECUTABLE (
+        echo   uv kullanarak fastmcp kuruluyor: "%UV_EXECUTABLE%" pip install fastmcp
+        "%UV_EXECUTABLE%" pip install fastmcp
     ) else (
-        uv pip install fastmcp
-    )
-
-    if %errorlevel% neq 0 (
-        echo     UYARI: fastmcp CLI 'uv pip install fastmcp' ile kurulamadi. Alternatif olarak pip/pip3 ile deneniyor...
+        echo   UYARI: uv bulunamadigi icin fastmcp CLI, pip/pip3 ile denenecek.
         pip install fastmcp
-        if %errorlevel% neq 0 (
-            echo       UYARI: fastmcp CLI 'pip install fastmcp' ile de kurulamadi. 'pip3 install fastmcp' deneniyor...
+        if !errorlevel! neq 0 (
+            echo     UYARI: 'pip install fastmcp' basarisiz oldu. 'pip3 install fastmcp' deneniyor...
             pip3 install fastmcp
-            if %errorlevel% neq 0 (
-                 echo         HATA: fastmcp CLI 'pip3 install fastmcp' ile de kurulamadi. Lutfen manuel kurulum yapin.
-                 goto :error_exit
-            )
         )
     )
-    echo   fastmcp CLI basariyla kuruldu (veya kuruluma calisildi).
-    echo   fastmcp versiyonu kontrol ediliyor:
-    fastmcp --version || (echo HATA: fastmcp kuruldu ancak PATH'de bulunamadi. Lutfen terminali yeniden baslatin veya PATH'i manuel guncelleyin. && goto :error_exit)
+
+    fastmcp --version >nul 2>&1
+    if !errorlevel! equ 0 (
+        echo   fastmcp CLI basariyla kuruldu/bulundu.
+        fastmcp --version
+        set "FASTMCP_EXECUTABLE=fastmcp"
+    ) else (
+        if exist ".\.venv\Scripts\fastmcp.exe" (
+            echo   fastmcp .\.venv\Scripts\ adresinde bulundu.
+            set "FASTMCP_EXECUTABLE=.\.venv\Scripts\fastmcp.exe"
+            "%FASTMCP_EXECUTABLE%" --version
+        ) else (
+            echo HATA: fastmcp CLI kurulamadi veya PATH'de bulunamadi.
+            echo Lutfen terminali yeniden baslatin veya PATH'i manuel guncelleyin.
+            goto :error_exit
+        )
+    )
 )
 echo.
 
@@ -103,15 +125,14 @@ if not exist "%MCP_SERVER_SCRIPT_NAME%" (
 )
 
 echo   Kullanilacak komut:
-echo   fastmcp install %MCP_SERVER_SCRIPT_NAME% --name %CLAUDE_TOOL_NAME% %DEPENDENCIES_FOR_FASTMCP_INSTALL%
+echo   %FASTMCP_EXECUTABLE% install %MCP_SERVER_SCRIPT_NAME% --name %CLAUDE_TOOL_NAME% %DEPENDENCIES_FOR_FASTMCP_INSTALL%
 echo.
 
-REM fastmcp CLI'nin PATH'de oldugunu varsayiyoruz (bir önceki adimda kontrol edildi)
-fastmcp install %MCP_SERVER_SCRIPT_NAME% --name %CLAUDE_TOOL_NAME% %DEPENDENCIES_FOR_FASTMCP_INSTALL%
+"%FASTMCP_EXECUTABLE%" install "%MCP_SERVER_SCRIPT_NAME%" --name %CLAUDE_TOOL_NAME% %DEPENDENCIES_FOR_FASTMCP_INSTALL%
 
-if %errorlevel% neq 0 (
+if !errorlevel! neq 0 (
     echo   HATA: Sunucu Claude Desktop'a 'fastmcp install' komutu ile kurulamadi.
-    echo   Lutfen fastmcp CLI'nin duzgun kuruldugundan ve PATH'de oldugundan emin olun.
+    echo   Lutfen '%FASTMCP_EXECUTABLE%' komutunun duzgun calistigindan emin olun.
     echo   Ayrica, Claude Desktop uygulamasinin calisir durumda oldugunu kontrol edin.
     goto :error_exit
 )
@@ -125,6 +146,7 @@ echo - Degisikliklerin etkili olmasi icin Claude Desktop'i yeniden baslatmaniz g
 echo - Eger 'uv' veya 'fastmcp' PATH'e yeni eklendiyse, bu script'i calistirdiginiz terminali de
 echo   yeniden baslatmaniz gerekebilir.
 echo.
+pause
 goto :eof
 
 :error_exit
