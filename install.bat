@@ -6,8 +6,9 @@ echo ===================================================================
 echo Yargi MCP Sunucusu - Kolay Kurulum Script'i (Windows BAT)
 echo ===================================================================
 echo Bu script, Yargi MCP sunucusunun Claude Desktop'a entegrasyonu
-echo icin gerekli olan uv ve fastmcp araclarini kuracak ve ardindan
-echo sunucuyu dogru bagimliliklarla Claude Desktop'a kuracaktir.
+echo icin gerekli olan uv (fastmcp install komutu icin onerilir) 
+echo ve fastmcp araclarini kuracak ve ardindan sunucuyu 
+echo dogru bagimliliklarla Claude Desktop'a kuracaktir.
 echo.
 echo Devam etmek istiyor musunuz? (E/H):
 set /p "continue_script="
@@ -23,7 +24,7 @@ set MCP_SERVER_SCRIPT_NAME=mcp_server_main.py
 set CLAUDE_TOOL_NAME="Yargı MCP"
 set DEPENDENCIES_FOR_FASTMCP_INSTALL=--with httpx --with beautifulsoup4 --with markitdown --with pydantic --with aiohttp
 
-REM --- Adim 1: uv Kurulumu ---
+REM --- Adim 1: uv Kurulumu 
 echo [ADIM 1/3] uv kontrol ediliyor ve gerekiyorsa kuruluyor...
 uv --version >nul 2>&1
 if %errorlevel% equ 0 (
@@ -59,7 +60,7 @@ if %errorlevel% equ 0 (
     if defined UV_EXECUTABLE (
         "%UV_EXECUTABLE%" --version
         if !errorlevel! neq 0 (
-            echo HATA: uv kuruldu ancak calistirilamiyor. PATH sorunu olabilir. Terminali yeniden baslatin.
+            echo UYARI: uv kuruldu ancak calistirilamiyor. PATH sorunu olabilir. Terminali yeniden baslatin.
             set "UV_EXECUTABLE=uv" 
         )
     ) else (
@@ -76,24 +77,22 @@ if %errorlevel% equ 0 (
 )
 echo.
 
-REM --- Adim 2: fastmcp CLI Kurulumu ---
-echo [ADIM 2/3] fastmcp CLI kontrol ediliyor ve gerekiyorsa kuruluyor...
+REM --- Adim 2: fastmcp CLI Kurulumu 
+echo [ADIM 2/3] fastmcp CLI kontrol ediliyor ve gerekiyorsa kuruluyor (pip/pip3 kullanarak)...
 fastmcp --version >nul 2>&1
 if %errorlevel% equ 0 (
     echo   fastmcp CLI zaten kurulu.
     fastmcp --version
     set "FASTMCP_EXECUTABLE=fastmcp"
 ) else (
-    echo   fastmcp CLI kurulu degil veya PATH'de degil. Kurulum denenecek...
-    if defined UV_EXECUTABLE (
-        echo   uv kullanarak fastmcp kuruluyor: "%UV_EXECUTABLE%" pip install fastmcp
-        "%UV_EXECUTABLE%" pip install fastmcp
-    ) else (
-        echo   UYARI: uv bulunamadigi icin fastmcp CLI, pip/pip3 ile denenecek.
-        pip install fastmcp
+    echo   fastmcp CLI kurulu degil veya PATH'de degil. Kurulum denenecek (pip/pip3 ile)...
+    pip install fastmcp
+    if !errorlevel! neq 0 (
+        echo     UYARI: 'pip install fastmcp' basarisiz oldu. 'pip3 install fastmcp' deneniyor...
+        pip3 install fastmcp
         if !errorlevel! neq 0 (
-            echo     UYARI: 'pip install fastmcp' basarisiz oldu. 'pip3 install fastmcp' deneniyor...
-            pip3 install fastmcp
+            echo       HATA: fastmcp CLI 'pip3 install fastmcp' ile de kurulamadi. Lutfen manuel kurulum yapin.
+            goto :error_exit
         )
     )
 
@@ -103,15 +102,9 @@ if %errorlevel% equ 0 (
         fastmcp --version
         set "FASTMCP_EXECUTABLE=fastmcp"
     ) else (
-        if exist ".\.venv\Scripts\fastmcp.exe" (
-            echo   fastmcp .\.venv\Scripts\ adresinde bulundu.
-            set "FASTMCP_EXECUTABLE=.\.venv\Scripts\fastmcp.exe"
-            "%FASTMCP_EXECUTABLE%" --version
-        ) else (
-            echo HATA: fastmcp CLI kurulamadi veya PATH'de bulunamadi.
-            echo Lutfen terminali yeniden baslatin veya PATH'i manuel guncelleyin.
-            goto :error_exit
-        )
+        echo HATA: fastmcp CLI kurulamadi veya PATH'de bulunamadi.
+        echo Lutfen terminali yeniden baslatin veya PATH'i manuel guncelleyin.
+        goto :error_exit
     )
 )
 echo.
