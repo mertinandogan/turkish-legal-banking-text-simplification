@@ -1,6 +1,10 @@
 # Yargı MCP: Türk Hukuk Kaynakları için MCP Sunucusu
 
+[![Star History Chart](https://api.star-history.com/svg?repos=saidsurucu/yargi-mcp&type=Date)](https://www.star-history.com/#saidsurucu/yargi-mcp&Date)
+
 Bu proje, çeşitli Türk hukuk kaynaklarına (Yargıtay, Danıştay, Emsal Kararlar, Uyuşmazlık Mahkemesi ve Anayasa Mahkemesi - Norm Denetimi ile Bireysel Başvuru Kararları) erişimi kolaylaştıran bir [FastMCP](https://gofastmcp.com/) sunucusu oluşturur. Bu sayede, bu kaynaklardan veri arama ve belge getirme işlemleri, Model Context Protocol (MCP) destekleyen LLM (Büyük Dil Modeli) uygulamaları (örneğin Claude Desktop) ve diğer istemciler tarafından araç (tool) olarak kullanılabilir hale gelir.
+
+![örnek](./ornek.png)
 
 🎯 **Temel Özellikler**
 
@@ -50,9 +54,9 @@ Claude Desktop uygulamasına yükleme yapabilmek için öncelikle `uv` (önerili
 
 **3. Proje Dosyalarını Alın**
 
-Bu Yargı MCP sunucusunun kaynak kodlarını bilgisayarınıza indirin (URL'yi kendi reponuzla değiştirin):
+Bu Yargı MCP sunucusunun kaynak kodlarını bilgisayarınıza indirin:
 ```bash
-git clone [https://github.com/KULLANICIADINIZ/yargi-mcp.git](https://github.com/KULLANICIADINIZ/yargi-mcp.git)
+git clone https://github.com/saidsurucu/yargi-mcp.git
 cd yargi-mcp
 ```
 Bu README.md dosyasının ve `mcp_server_main.py` script'inin bulunduğu dizine `cd` komutu ile geçmiş olacaksınız.
