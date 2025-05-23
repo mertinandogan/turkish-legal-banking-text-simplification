@@ -16,4 +16,4 @@ dependencies = [
 include = ["*_mcp_module"]
 
 [project.scripts]
-yargi-mcp = "mcp_server_main:main"
+yargi-mcp = "yargi_mcp:__main__.main"
