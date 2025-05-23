@@ -14,3 +14,6 @@ dependencies = [
 ]
 [tool.setuptools.packages.find]
 include = ["*_mcp_module"]
+
+[project.scripts]
+yargi-mcp = "mcp_server_main:main"
