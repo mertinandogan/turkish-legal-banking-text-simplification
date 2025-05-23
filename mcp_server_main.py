@@ -323,9 +323,9 @@ def perform_cleanup():
 
 atexit.register(perform_cleanup)
 
-# --- Main Entry Point ---
-if __name__ == "__main__":
-    logger.info(f"Starting {app.name} server (main execution block)...")
+def main():
+    """Main entry point for the MCP server."""
+    logger.info(f"Starting {app.name} server via main() function...")
     logger.info(f"Logs will be written to: {LOG_FILE_PATH}")
     try:
         app.run(transport="sse", host="127.0.0.1", port=8000)
@@ -335,3 +335,7 @@ if __name__ == "__main__":
         logger.exception("Server failed to start or crashed.")
     finally:
         logger.info(f"{app.name} server has shut down.")
+
+# --- Main Entry Point ---
+if __name__ == "__main__":
+    main()  
