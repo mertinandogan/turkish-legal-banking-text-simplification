@@ -328,7 +328,7 @@ if __name__ == "__main__":
     logger.info(f"Starting {app.name} server (main execution block)...")
     logger.info(f"Logs will be written to: {LOG_FILE_PATH}")
     try:
-        app.run(transport="stdio")
+        app.run(transport="sse", host="127.0.0.1", port=8000)
     except KeyboardInterrupt:
         logger.info("Server shut down by user (KeyboardInterrupt).")
     except Exception as e:
