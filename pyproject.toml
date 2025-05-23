@@ -12,8 +12,12 @@ dependencies = [
     "pydantic>=2.11.4",
     "aiohttp>=3.11.18",
 ]
-[tool.setuptools.packages.find]
-include = ["*_mcp_module"]
 
 [project.scripts]
-yargi-mcp = "yargi_mcp:__main__.main"
+yargi-mcp = "mcp_server_main:main"
+
+[tool.setuptools]
+py-modules = ["mcp_server_main"]
+
+[tool.setuptools.packages.find]
+include = ["*_mcp_module"]
