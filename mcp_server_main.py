@@ -328,7 +328,7 @@ if __name__ == "__main__":
     logger.info(f"Starting {app.name} server (main execution block)...")
     logger.info(f"Logs will be written to: {LOG_FILE_PATH}")
     try:
-        asyncio.run(app.run_sse_async(host="127.0.0.1", port=8890, log_level="debug"))
+        app.run(transport="stdio")
     except KeyboardInterrupt:
         logger.info("Server shut down by user (KeyboardInterrupt).")
     except Exception as e:
