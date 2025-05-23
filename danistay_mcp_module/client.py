@@ -35,8 +35,6 @@ class DanistayApiClient:
             headers={
                 "Content-Type": "application/json; charset=UTF-8", # Arama endpoint'leri için
                 "Accept": "application/json, text/plain, */*",    # Arama endpoint'leri için
-                # /getDokuman HTML döndürdüğü için Accept header'ı GET isteğinde farklı olabilir
-                # ama httpx genellikle bunu yönetir. Gerekirse özel header eklenebilir.
                 "X-Requested-With": "XMLHttpRequest",
             },
             timeout=request_timeout,
@@ -44,7 +42,7 @@ class DanistayApiClient:
         )
 
     def _prepare_keywords_for_api(self, keywords: List[str]) -> List[str]:
-        return [f'"{k.strip("\"")}"' for k in keywords if k and k.strip()]
+        return ['"' + k.strip('"') + '"' for k in keywords if k and k.strip()]
 
     async def search_keyword_decisions(
         self,
