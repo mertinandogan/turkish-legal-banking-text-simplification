@@ -5,13 +5,13 @@ import sys
 import os
 import shutil
 import platform
-from urllib.parse import urlencode, urljoin, quote 
 
 # --- Yapılandırma ---
 MCP_SERVER_SCRIPT_NAME = "mcp_server_main.py"
-CLAUDE_TOOL_NAME = "Yargı MCP" 
+CLAUDE_TOOL_NAME = "Yargı MCP"
+# playwright bağımlılıklara eklendi
 DEPENDENCIES_FOR_FASTMCP = [
-    "httpx", "beautifulsoup4", "markitdown", "pydantic", "aiohttp"
+    "httpx", "beautifulsoup4", "markitdown", "pydantic", "aiohttp", "playwright"
 ]
 
 # --- Yardımcı Fonksiyonlar ---
@@ -32,8 +32,6 @@ def command_exists(command_parts):
         if found_path:
             return found_path
         if platform.system() == "Windows" and not command_to_check.endswith(".exe"):
-            # .exe olmadan da PATH'de bulunabilir (örn: pyenv shims)
-            # ama yine de .exe ile de kontrol edelim
             path_with_exe = shutil.which(command_to_check + ".exe")
             if path_with_exe:
                 return path_with_exe
@@ -51,12 +49,11 @@ def run_command(command_parts, capture_output_flag=False, check_return_code=True
         "shell": shell,
         "cwd": cwd,
         "encoding": 'utf-8',
-        "errors": 'replace' # Handles potential decoding errors in output
+        "errors": 'replace' 
     }
 
     if capture_output_flag:
         kwargs["capture_output"] = True
-    # Else, stdout/stderr go to console by default (unless shell redirects them)
 
     try:
         process = subprocess.run(command_parts, **kwargs)
@@ -65,7 +62,7 @@ def run_command(command_parts, capture_output_flag=False, check_return_code=True
             if log_output_on_success and process.returncode == 0:
                 if process.stdout: print_info(f"Stdout:\n{process.stdout.strip()}")
                 if process.stderr: print_warning(f"Stderr:\n{process.stderr.strip()}")
-            elif process.returncode != 0: # Always log output on error if captured
+            elif process.returncode != 0: 
                 if process.stdout: print_error(f"Hata Stdout:\n{process.stdout.strip()}")
                 if process.stderr: print_error(f"Hata Stderr:\n{process.stderr.strip()}")
 
@@ -74,9 +71,8 @@ def run_command(command_parts, capture_output_flag=False, check_return_code=True
             
         return process
     except subprocess.CalledProcessError as e:
-        # run_command already printed details if capture_output_flag was true
-        if not capture_output_flag: # If output went to console, just print a simpler error
-             print_error(f"Komut hatası (return code {e.returncode}): {cmd_str_for_log}")
+        if not capture_output_flag: 
+            print_error(f"Komut hatası (return code {e.returncode}): {cmd_str_for_log}")
         raise 
     except FileNotFoundError:
         print_error(f"Komut bulunamadı: {command_parts[0] if isinstance(command_parts, list) else command_parts.split()[0]}")
@@ -86,48 +82,43 @@ def run_command(command_parts, capture_output_flag=False, check_return_code=True
         raise
 
 def get_python_executable():
-    """Kullanılabilir Python 3 çalıştırılabilir dosyasını bulur."""
-    print_info("Python 3 yorumlayıcısı aranıyor...")
-    # Önce mevcut çalışan Python'u dene
+    """Kullanılabilir Python 3 (tercihen 3.11) çalıştırılabilir dosyasını bulur."""
+    print_info("Python 3.11 (veya uyumlu Python 3) yorumlayıcısı aranıyor...")
+    
+    # Önce python3.11, sonra python3, sonra python dene
+    preferred_cmds = ["python3.11", "python3", "python"]
+    
+    # Mevcut çalışan Python'u da listeye ekle (eğer farklıysa)
     current_python = sys.executable
-    if current_python:
-        try:
-            print_info(f"Mevcut Python deneniyor: {current_python}")
-            result = run_command([current_python, "-c", "import sys; assert sys.version_info.major == 3, 'Not Python 3'"], capture_output_flag=True, log_output_on_success=False)
-            if result.returncode == 0:
-                print_info(f"Kullanılacak Python: {current_python}")
-                return current_python
-        except Exception as e:
-            print_warning(f"Mevcut Python ({current_python}) kontrol edilirken sorun: {e}")
+    if current_python and os.path.basename(current_python).lower() not in [cmd.lower() for cmd in preferred_cmds]:
+        preferred_cmds.insert(0, current_python) # Başa ekle
 
-    # PATH'deki python3 ve python komutlarını dene
-    for cmd_name in ["python3", "python"]:
+    for cmd_name in preferred_cmds:
         found_cmd_path = command_exists(cmd_name)
         if found_cmd_path:
             try:
                 print_info(f"PATH'de bulunan '{cmd_name}' deneniyor: {found_cmd_path}")
-                result = run_command([found_cmd_path, "-c", "import sys; assert sys.version_info.major == 3, 'Not Python 3'; print(sys.executable)"], capture_output_flag=True, log_output_on_success=False)
-                if result.returncode == 0 and result.stdout:
-                    resolved_path = result.stdout.strip()
-                    print_info(f"Kullanılacak Python: {resolved_path} ('{cmd_name}' komutu ile bulundu)")
-                    return resolved_path
+
+                result = run_command([found_cmd_path, "-c", "import sys; assert sys.version_info.major == 3 and sys.version_info.minor >= 10, 'Python 3.10+ required'"], 
+                                     capture_output_flag=True, log_output_on_success=False)
+                if result.returncode == 0:
+                    print_info(f"Kullanılacak Python: {found_cmd_path} ('{cmd_name}' komutu ile bulundu)")
+                    return found_cmd_path
             except Exception as e:
                 print_warning(f"'{cmd_name}' ({found_cmd_path}) kontrol edilirken sorun: {e}")
                 
-    print_error("Python 3 sisteminizde bulunamadı veya PATH'e doğru şekilde eklenmemiş.")
-    print_error("Lütfen Python 3'ü (https://www.python.org/downloads/) kurun.")
+    print_error("Python 3.10+ (tercihen 3.11) sisteminizde bulunamadı veya PATH'e doğru şekilde eklenmemiş.")
+    print_error("Lütfen Python 3.11'i (https://www.python.org/downloads/) kurun.")
     sys.exit(1)
 
-
-# --- Kurulum Fonksiyonları ---
 def install_uv(python_exe_path):
     print_info("Adım 1/3: uv kontrol ediliyor/kuruluyor...")
+    
     uv_executable = command_exists("uv")
     if uv_executable:
         print_info(f"uv zaten kurulu: {uv_executable}")
         run_command([uv_executable, "--version"], capture_output_flag=True, log_output_on_success=True)
         return uv_executable
-
     print_info("uv kurulu değil. Kurulum denenecek...")
     try:
         if platform.system() == "Windows":
@@ -143,9 +134,8 @@ def install_uv(python_exe_path):
             if process.stderr: print_warning(f"uv install script stderr:\n{process.stderr}")
             if process.returncode != 0:
                 raise subprocess.CalledProcessError(process.returncode, "curl ... | sh")
-        
         uv_executable = command_exists("uv") 
-        if not uv_executable: # PATH'e hemen yansımamış olabilir, bilinen yerleri kontrol et
+        if not uv_executable:
             common_paths_uv = []
             if platform.system() == "Windows":
                 cargo_uv_path = os.path.join(os.environ.get("USERPROFILE", ""), ".cargo", "bin", "uv.exe")
@@ -159,12 +149,11 @@ def install_uv(python_exe_path):
                 ])
             for p_uv in common_paths_uv:
                 if command_exists(p_uv): uv_executable = p_uv; break
-        
         if uv_executable and command_exists(uv_executable):
             print_info(f"uv başarıyla kuruldu/bulundu: {uv_executable}")
             run_command([uv_executable, "--version"], capture_output_flag=True, log_output_on_success=True)
             return uv_executable
-        else: # Son çare pip
+        else: 
             print_warning("uv resmi script ile kuruldu/bulundu ancak PATH'de doğrulanamadı. pip ile deneniyor...")
             run_command([python_exe_path, "-m", "pip", "install", "uv"])
             uv_executable = command_exists("uv")
@@ -179,21 +168,20 @@ def install_uv(python_exe_path):
         print_warning("Lütfen uv'yi manuel olarak kurmayı deneyin: https://astral.sh/uv")
         return None
 
-def install_fastmcp_cli(python_exe_path, uv_exe_path): # uv_exe_path artık kullanılmıyor
+def install_fastmcp_cli(python_exe_path, uv_exe_path):
     """fastmcp CLI'yi kontrol eder ve gerekirse pip/pip3 ile kurar."""
     print_info("Adım 2/3: fastmcp CLI kontrol ediliyor/kuruluyor...")
+    
     fastmcp_executable = command_exists("fastmcp")
     if fastmcp_executable:
         print_info(f"fastmcp CLI zaten kurulu: {fastmcp_executable}")
         run_command([fastmcp_executable, "version"], capture_output_flag=True, log_output_on_success=True)
         return fastmcp_executable
-
     print_info("fastmcp CLI kurulu değil. pip/pip3 ile kurulum denenecek...")
     try:
         pip_cmd_to_try = [python_exe_path, "-m", "pip", "install", "fastmcp"]
         print_info(f"{' '.join(pip_cmd_to_try)} komutu deneniyor...")
         run_command(pip_cmd_to_try)
-        
         fastmcp_executable = command_exists("fastmcp")
         if fastmcp_executable:
             print_info(f"fastmcp CLI başarıyla kuruldu: {fastmcp_executable}")
@@ -225,9 +213,10 @@ def install_tool_to_claude_desktop(fastmcp_exe_path):
         return False
 
     dependencies_cmd_part = []
-    for dep in DEPENDENCIES_FOR_FASTMCP:
+    for dep in DEPENDENCIES_FOR_FASTMCP: # Bu liste güncellenmişti
         dependencies_cmd_part.extend(["--with", dep])
     
+  
     install_command = [
         fastmcp_exe_path, "install", MCP_SERVER_SCRIPT_NAME,
         "--name", CLAUDE_TOOL_NAME
@@ -241,14 +230,13 @@ def install_tool_to_claude_desktop(fastmcp_exe_path):
             if process.stderr: print_warning(f"fastmcp install stderr:\n{process.stderr.strip()}")
             return True
         else:
+      
             error_output = (process.stdout or "") + (process.stderr or "")
             if "claude app not found" in error_output.lower():
                 print_error("Claude Desktop uygulaması sisteminizde bulunamadı veya algılanamadı.")
                 print_error("Lütfen Claude Desktop'ın kurulu ve çalışır durumda olduğundan emin olun.")
-                print_error("Claude Desktop'ı https://claude.ai/download adresinden indirebilirsiniz.")
             else:
                 print_error(f"Sunucu Claude Desktop'a kurulurken hata oluştu (return code {process.returncode}).")
-                print_error("Lütfen fastmcp CLI'nin düzgün çalıştığından emin olun.")
                 if process.stderr: print_error(f"fastmcp install stderr:\n{process.stderr.strip()}")
                 if process.stdout: print_info(f"fastmcp install stdout (hata durumunda):\n{process.stdout.strip()}")
             return False
@@ -268,10 +256,10 @@ def main():
             print_info("Kurulum kullanıcı tarafından iptal edildi.")
             sys.exit(0)
     
-    python_executable = get_python_executable()
-    uv_executable_path = install_uv(python_executable) # uv hala öneriliyor fastmcp install için
+    python_executable = get_python_executable() 
+    uv_executable_path = install_uv(python_executable) 
     
-    fastmcp_executable_path = install_fastmcp_cli(python_executable, uv_executable_path) # uv_exe_path burada kullanılmıyor
+    fastmcp_executable_path = install_fastmcp_cli(python_executable, uv_executable_path)
     if not fastmcp_executable_path:
         print_error("fastmcp CLI kurulumu başarısız oldu. Kurulum sonlandırılıyor.")
         sys.exit(1)
@@ -286,12 +274,18 @@ def main():
     print_info(f"- \"{CLAUDE_TOOL_NAME}\" aracı Claude Desktop'a eklenmiş olmalıdır.")
     print_info("- Değişikliklerin etkili olması için Claude Desktop'ı yeniden başlatmanız gerekebilir.")
     print_info("- Eğer uv veya fastmcp PATH'e yeni eklendiyse, terminalinizi de yeniden başlatmanız gerekebilir.")
+    # Playwright tarayıcıları için ek not
+    print_warning("- KİK modülünün düzgün çalışması için Playwright tarayıcılarının kurulu olması gerekir.")
+    print_warning("  Eğer KİK araçları çalışmazsa, terminalinizde şu komutu çalıştırmayı deneyin:")
+    print_warning(f"    {os.path.basename(python_executable)} -m playwright install --with-deps chromium")
+    print_warning("  (veya sadece 'playwright install --with-deps chromium' eğer playwright PATH'de ise)")
+
 
 if __name__ == "__main__":
     try:
         main()
     except SystemExit: 
-        pass # sys.exit() çağrıldığında script sonlansın
+        pass 
     except Exception as e:
         print_error(f"Beklenmedik bir genel hata oluştu: {e}")
         sys.exit(1)
