@@ -2,7 +2,7 @@
 
 [![Star History Chart](https://api.star-history.com/svg?repos=saidsurucu/yargi-mcp&type=Date)](https://www.star-history.com/#saidsurucu/yargi-mcp&Date)
 
-Bu proje, çeşitli Türk hukuk kaynaklarına (Yargıtay, Danıştay, Emsal Kararlar, Uyuşmazlık Mahkemesi ve Anayasa Mahkemesi - Norm Denetimi ile Bireysel Başvuru Kararları) erişimi kolaylaştıran bir [FastMCP](https://gofastmcp.com/) sunucusu oluşturur. Bu sayede, bu kaynaklardan veri arama ve belge getirme işlemleri, Model Context Protocol (MCP) destekleyen LLM (Büyük Dil Modeli) uygulamaları (örneğin Claude Desktop) ve diğer istemciler tarafından araç (tool) olarak kullanılabilir hale gelir.
+Bu proje, çeşitli Türk hukuk kaynaklarına (Yargıtay, Danıştay, Emsal Kararlar, Uyuşmazlık Mahkemesi, Anayasa Mahkemesi - Norm Denetimi ile Bireysel Başvuru Kararları ve Kamu İhale Kurulu Kararları) erişimi kolaylaştıran bir [FastMCP](https://gofastmcp.com/) sunucusu oluşturur. Bu sayede, bu kaynaklardan veri arama ve belge getirme işlemleri, Model Context Protocol (MCP) destekleyen LLM (Büyük Dil Modeli) uygulamaları (örneğin Claude Desktop) ve diğer istemciler tarafından araç (tool) olarak kullanılabilir hale gelir.
 
 ![örnek](./ornek.png)
 
@@ -16,6 +16,7 @@ Bu proje, çeşitli Türk hukuk kaynaklarına (Yargıtay, Danıştay, Emsal Kara
     * **Uyuşmazlık Mahkemesi:** Form tabanlı kriterlerle karar arama ve karar metinlerini (URL ile erişilen) Markdown formatında getirme.
     * **Anayasa Mahkemesi (Norm Denetimi):** Kapsamlı kriterlerle norm denetimi kararlarını arama; uzun karar metinlerini (5.000 karakterlik) sayfalanmış Markdown formatında getirme.
     * **Anayasa Mahkemesi (Bireysel Başvuru):** Kapsamlı kriterlerle bireysel başvuru "Karar Arama Raporu" oluşturma ve listedeki kararların metinlerini (5.000 karakterlik) sayfalanmış Markdown formatında getirme.
+    * **KİK (Kamu İhale Kurulu):** Çeşitli kriterlerle Kurul kararlarını arama; uzun karar metinlerini (varsayılan 5.000 karakterlik) sayfalanmış Markdown formatında getirme (Playwright ile tarayıcı otomasyonu kullanılır).
 * Karar metinlerinin daha kolay işlenebilmesi için Markdown formatına çevrilmesi.
 * Claude Desktop uygulaması ile `fastmcp install` komutu kullanılarak kolay entegrasyon.
 
@@ -25,11 +26,22 @@ Bu proje, çeşitli Türk hukuk kaynaklarına (Yargıtay, Danıştay, Emsal Kara
 Bu Yargı MCP aracını Claude Desktop ile kullanabilmek için öncelikle aşağıdaki yazılımların sisteminizde kurulu olması gerekmektedir:
 
 1.  **Claude Desktop:** Henüz kurmadıysanız, [Claude Desktop web sitesinden](https://claude.ai/desktop) işletim sisteminize uygun sürümü indirip kurun.
-2.  **Python Sürümü:** Python 3.10 veya daha yeni bir sürüm.
-    * **Windows Kullanıcıları:** Eğer Python kurulu değilse, [python.org/downloads/windows/](https://www.python.org/downloads/windows/) adresinden en son kararlı sürümü indirip kurabilirsiniz. Kurulum sırasında "**Add Python to PATH**" (Python'ı PATH'e ekle) seçeneğini işaretlemeyi unutmayın.
-    * **macOS Kullanıcıları:** macOS genellikle Python ile birlikte gelir. Terminal'de `python3 --version` yazarak kontrol edebilirsiniz. Eğer kurulu değilse veya eski bir sürümse, [python.org](https://www.python.org/downloads/macos/) adresinden veya [Homebrew](https://brew.sh/) (`brew install python`) ile kurabilirsiniz.
-    * **Linux Kullanıcıları:** Çoğu Linux dağıtımı Python ile gelir. Terminal'de `python3 --version` yazarak kontrol edebilirsiniz. Gerekirse dağıtımınızın paket yöneticisi ile kurabilirsiniz (örn: `sudo apt update && sudo apt install python3 python3-pip python3-venv`).
+2.  **Python Sürümü:** **Python 3.11** sürümü tavsiye edilir. Python 3.12 ve üzeri yeni sürümler, bazı bağımlılıklarda (özellikle `playwright` ve ilişkili tarayıcı sürücüleri) belirli ortamlarda uyumluluk sorunlarına yol açabilir. Bu proje için 3.11 sürümü stabilite açısından önerilmektedir.
+    * **Windows Kullanıcıları:** Eğer Python kurulu değilse, [python.org/downloads/windows/](https://www.python.org/downloads/windows/) adresinden Python 3.11'in uygun bir sürümünü indirip kurabilirsiniz. Kurulum sırasında "**Add Python to PATH**" (Python'ı PATH'e ekle) seçeneğini işaretlemeyi unutmayın.
+    * **macOS Kullanıcıları:** macOS genellikle Python ile birlikte gelir. Terminal'de `python3 --version` yazarak kontrol edebilirsiniz. Eğer Python 3.11 değilse veya eski bir sürümse, [python.org](https://www.python.org/downloads/macos/) adresinden veya [Homebrew](https://brew.sh/) (`brew install python@3.11`) ile kurabilirsiniz.
+    * **Linux Kullanıcıları:** Çoğu Linux dağıtımı Python ile gelir. Terminal'de `python3 --version` yazarak kontrol edebilirsiniz. Gerekirse dağıtımınızın paket yöneticisi ile Python 3.11'i kurabilirsiniz (örn: `sudo apt update && sudo apt install python3.11 python3.11-pip python3.11-venv` veya dağıtımınıza uygun komutlar).
 3.  **Paket Yöneticisi:** `pip` (Python ile birlikte gelir) veya tercihen `uv` ([Astral](https://astral.sh/uv) tarafından geliştirilen hızlı Python paket yöneticisi). Kurulum script'lerimiz `uv`'yi sizin için kurmayı deneyecektir.
+4.  **Playwright Tarayıcıları:** KİK modülü Playwright kullandığı için, ilgili tarayıcıların kurulmuş olması gerekir. `KikApiClient` varsayılan olarak Chromium kullanır. Eğer Playwright veya tarayıcıları manuel kuracaksanız:
+    ```bash
+    # Önce playwright kütüphanesini kurun (uv veya pip ile)
+    # uv pip install playwright 
+    # pip install playwright
+
+    # Sonra tarayıcıları kurun (proje bağımlılıkları kurulduktan sonra da yapılabilir)
+    playwright install --with-deps chromium 
+    # '--with-deps' chromium için gerekli işletim sistemi bağımlılıklarını da kurmaya çalışır.
+    ```
+    Kurulum scriptleri (`install.bat`, `install.sh`, `install.py`) genellikle `playwright` Python kütüphanesini kurar. Tarayıcıların ayrıca `playwright install` ile kurulması gerekebilir; eğer sunucu başlatılırken KİK modülü hata verirse, bu adımı manuel olarak çalıştırmanız gerekebilir.
 
 ---
 🚀 **Kolay Kurulum Adımları (Claude Desktop için)**
@@ -51,7 +63,7 @@ Proje dosyalarını bilgisayarınıza aldıktan sonra, işletim sisteminize uygu
 1.  Proje dosyalarını çıkarttığınız klasörün içine gidin (örneğin, `C:\Users\KULLANICIADINIZ\Documents\yargi-mcp` klasörü).
 2.  `install.bat` adlı dosyayı bulun.
 3.  Bu dosyaya **çift tıklayarak** çalıştırın.
-4.  Kurulum sırasında bir komut istemi penceresi açılacak ve bazı mesajlar göreceksiniz. Script, gerekli araçları (`uv`, `fastmcp` CLI) sisteminize kurmayı deneyecek ve ardından "**Yargı MCP**" aracını Claude Desktop'a entegre edecektir.
+4.  Kurulum sırasında bir komut istemi penceresi açılacak ve bazı mesajlar göreceksiniz. Script, gerekli araçları (`uv`, `fastmcp` CLI, `playwright` ve tarayıcıları) sisteminize kurmayı deneyecek ve ardından "**Yargı MCP**" aracını Claude Desktop'a entegre edecektir.
     * *Not: Bu işlem sırasında script sizden yönetici onayı isteyebilir veya internet bağlantısı gerektirebilir. `uv` kurulumu için PowerShell script çalıştırma politikalarınızda geçici bir değişiklik yapılması gerekebilir; script bunu sizin için halletmeye çalışacaktır.*
 5.  Kurulum tamamlandığında, komut istemi penceresinde bir başarı mesajı göreceksiniz. Pencere, "Devam etmek için bir tuşa basın..." mesajıyla açık kalacaktır. Herhangi bir tuşa basarak pencereyi kapatabilirsiniz.
 6.  **Önemli:** Kurulumun etkili olması için Claude Desktop uygulamasını tamamen kapatıp yeniden başlatmanız gerekebilir.
@@ -81,7 +93,7 @@ Proje dosyalarını bilgisayarınıza aldıktan sonra, işletim sisteminize uygu
 
 ### Python Script ile Kurulum (`install.py`) (Platform Bağımsız Alternatif)
 
-Eğer yukarıdaki işletim sistemine özel script'lerde sorun yaşarsanız veya Python tabanlı bir kurulumu tercih ediyorsanız, `install.py` script'ini kullanabilirsiniz. Bu yöntem, sisteminizde Python'un (sürüm 3.8+ önerilir) ve `pip` paket yöneticisinin kurulu ve çalışır durumda olmasını gerektirir.
+Eğer yukarıdaki işletim sistemine özel script'lerde sorun yaşarsanız veya Python tabanlı bir kurulumu tercih ediyorsanız, `install.py` script'ini kullanabilirsiniz. Bu yöntem, sisteminizde Python 3.11'in ve `pip` paket yöneticisinin kurulu ve çalışır durumda olmasını gerektirir.
 
 1.  Proje dosyalarını çıkarttığınız klasörün içine Terminal veya Komut İstemi ile gidin.
 2.  Aşağıdaki komutu çalıştırın (sisteminizdeki Python 3 komutuna göre `python` veya `python3` kullanın):
@@ -100,7 +112,7 @@ Eğer yukarıdaki işletim sistemine özel script'lerde sorun yaşarsanız veya 
 
 Kurulum başarıyla tamamlandıktan sonra, Claude Desktop uygulamasını (gerekirse yeniden başlatarak) açın. Araçlar menüsünde (genellikle ekranın sağ alt köşesindeki çekiç 🛠️ simgesi altında) "**Yargı MCP**" adlı yeni aracı görmelisiniz.
 
-Herhangi bir sorunla karşılaşırsanız, lütfen [GitHub Issues](https://github.com/KULLANICIADINIZ/yargi-mcp/issues) bölümünden bize bildirin (Kendi GitHub reponuzun Issues linkini buraya ekleyin).
+Herhangi bir sorunla karşılaşırsanız, lütfen [GitHub Issues](https://github.com/saidsurucu/yargi-mcp/issues) bölümünden bize bildirin.
 
 ⚙️ **Kurulum Adımları (Claude Desktop Entegrasyonu Odaklı)**
 
@@ -110,11 +122,11 @@ Claude Desktop uygulamasına yükleme yapabilmek için öncelikle `uv` (önerili
 
 * **macOS ve Linux için:**
     ```bash
-    curl -LsSf [https://astral.sh/uv/install.sh](https://astral.sh/uv/install.sh) | sh
+    curl -LsSf https://astral.sh/uv/install.sh | sh
     ```
 * **Windows için (PowerShell kullanarak):**
     ```powershell
-    powershell -c "irm [https://astral.sh/uv/install.ps1](https://astral.sh/uv/install.ps1) | iex"
+    powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
     ```
 * Kurulumdan sonra, `uv` komutunun sisteminiz tarafından tanınması için terminalinizi yeniden başlatmanız veya `PATH` ortam değişkeninizi güncellemeniz gerekebilir. `uv --version` komutu ile kurulumu doğrulayabilirsiniz.
 
@@ -151,6 +163,7 @@ beautifulsoup4
 markitdown
 pydantic
 aiohttp
+playwright
 ```
 (Eğer sunucuyu bağımsız olarak geliştirmek veya test etmek isterseniz, projenizin kök dizininde bir sanal ortam oluşturup – örn: `uv venv` & `source .venv/bin/activate` – bu bağımlılıkları `uv pip install -r requirements.txt` komutuyla kurabilirsiniz.)
 
@@ -168,13 +181,14 @@ Yukarıdaki kurulum adımlarını tamamladıktan sonra, bu sunucuyu Claude Deskt
         --with beautifulsoup4 \
         --with markitdown \
         --with pydantic \
-        --with aiohttp
+        --with aiohttp \
+        --with playwright
     ```
 
     * `--name "Yargı MCP"`: Araç Claude Desktop'ta bu isimle görünecektir.
     * `--with ...`: Sunucunun çalışması için gereken Python bağımlılıklarını belirtir.
 
-    Bu komut, `uv` kullanarak sunucunuz için izole bir Python ortamı oluşturacak, belirtilen bağımlılıkları kuracak ve aracı Claude Desktop uygulamasına kaydedecektir.
+    Bu komut, `uv` kullanarak (eğer kuruluysa ve bulunabiliyorsa) sunucunuz için izole bir Python ortamı oluşturacak, belirtilen bağımlılıkları kuracak ve aracı Claude Desktop uygulamasına kaydedecektir. Playwright tarayıcılarının (`playwright install chromium` gibi) ayrıca kurulması gerekebilir.
 
 ⚙️ **Claude Desktop Manuel Kurulumu (Yapılandırma Dosyası ile - Alternatif)**
 
@@ -197,6 +211,7 @@ Yukarıdaki kurulum adımlarını tamamladıktan sonra, bu sunucuyu Claude Deskt
             "--with", "markitdown",
             "--with", "pydantic",
             "--with", "aiohttp",
+            "--with", "playwright", 
             "--with", "fastmcp",
             "fastmcp", "run", 
             "/TAM/PROJE/YOLUNUZ/yargi-mcp/mcp_server_main.py" 
@@ -211,6 +226,7 @@ Yukarıdaki kurulum adımlarını tamamladıktan sonra, bu sunucuyu Claude Deskt
 🛠️ **Kullanılabilir Araçlar (MCP Tools)**
 
 Bu FastMCP sunucusu aşağıdaki temel araçları sunar:
+
 
 * **Yargıtay Araçları:**
     * `search_yargitay_detailed(search_query: YargitayDetailedSearchRequest) -> CompactYargitaySearchResult`: Yargıtay kararlarını detaylı kriterlerle arar.
@@ -237,6 +253,9 @@ Bu FastMCP sunucusu aşağıdaki temel araçları sunar:
     * `search_anayasa_bireysel_basvuru_report(search_query: AnayasaBireyselReportSearchRequest) -> AnayasaBireyselReportSearchResult`: AYM Bireysel Başvuru "Karar Arama Raporu" oluşturur.
     * `get_anayasa_bireysel_basvuru_document_markdown(document_url_path: str, page_number: Optional[int] = 1) -> AnayasaBireyselBasvuruDocumentMarkdown`: Belirli bir AYM Bireysel Başvuru kararını URL path'inden alır ve 5.000 karakterlik sayfalanmış Markdown içeriğini getirir.
 
+* **KİK (Kamu İhale Kurulu) Araçları:**
+    * `search_kik_decisions(search_query: KikSearchRequest) -> KikSearchResult`: KİK (Kamu İhale Kurulu) kararlarını arar. 
+    * `get_kik_document_markdown(karar_id: str, page_number: Optional[int] = 1) -> KikDocumentMarkdown`: Belirli bir KİK kararını, Base64 ile encode edilmiş `karar_id`'sini kullanarak alır ve 5.000 karakterlik sayfalanmış Markdown içeriğini getirir.
 
 📜 **Lisans**
 
