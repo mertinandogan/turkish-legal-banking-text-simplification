@@ -116,7 +116,7 @@ class EmsalApiClient:
         markdown_text = None
         temp_file_path = None
         try:
-            md_converter = MarkItDown(enable_plugins=False)
+            md_converter = MarkItDown()
             
             with tempfile.NamedTemporaryFile(mode="w", delete=False, suffix=".html", encoding="utf-8") as tmp_file:
                 tmp_file.write(html_input_for_markdown)

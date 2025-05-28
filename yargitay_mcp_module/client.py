@@ -110,7 +110,7 @@ class YargitayOfficialApiClient:
         markdown_output = None
         temp_file_path = None
         try:
-            md_converter = MarkItDown(enable_plugins=False) # Plugins disabled as per basic usage
+            md_converter = MarkItDown() # Plugins disabled as per basic usage
             
             # Write the HTML to a temporary file for MarkItDown to process
             with tempfile.NamedTemporaryFile(mode="w", delete=False, suffix=".html", encoding="utf-8") as tmp_html_file:

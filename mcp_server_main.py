@@ -4,8 +4,8 @@ import atexit
 import logging
 import os
 from pydantic import HttpUrl, Field 
-from typing import Optional, Dict 
-import urllib.parse # urllib.parse client tarafında kullanılıyor, server'da gerekmeyebilir.
+from typing import Optional, Dict, List, Literal
+import urllib.parse
 
 # --- Logging Configuration Start ---
 LOG_DIRECTORY = os.path.join(os.path.dirname(os.path.abspath(__file__)), "logs")
@@ -49,7 +49,8 @@ from emsal_mcp_module.models import (
 )
 from uyusmazlik_mcp_module.client import UyusmazlikApiClient
 from uyusmazlik_mcp_module.models import (
-    UyusmazlikSearchRequest, UyusmazlikSearchResponse, UyusmazlikDocumentMarkdown
+    UyusmazlikSearchRequest, UyusmazlikSearchResponse, UyusmazlikDocumentMarkdown,
+    UyusmazlikBolumEnum, UyusmazlikTuruEnum, UyusmazlikKararSonucuEnum
 )
 from anayasa_mcp_module.client import AnayasaMahkemesiApiClient
 from anayasa_mcp_module.bireysel_client import AnayasaBireyselBasvuruApiClient
@@ -60,6 +61,8 @@ from anayasa_mcp_module.models import (
     AnayasaBireyselReportSearchRequest,
     AnayasaBireyselReportSearchResult,
     AnayasaBireyselBasvuruDocumentMarkdown,
+    AnayasaDonemEnum, AnayasaBasvuruTuruEnum, AnayasaVarYokEnum,
+    AnayasaNormTuruEnum, AnayasaIncelemeSonucuEnum, AnayasaSonucGerekcesiEnum
 )
 # KIK Module Imports
 from kik_mcp_module.client import KikApiClient
@@ -72,7 +75,7 @@ from kik_mcp_module.models import (
 
 
 app = FastMCP(
-    name="TurkishLawResearchAssistantMCP",
+    name="YargiMCP",
     instructions="MCP server for TR legal databases (Yargitay, Danistay, Emsal, Uyusmazlik, Anayasa-Norm, Anayasa-Bireysel, KIK).",
     dependencies=["httpx", "beautifulsoup4", "markitdown", "pydantic", "aiohttp", "playwright"]
 )
@@ -87,10 +90,46 @@ anayasa_bireysel_client_instance = AnayasaBireyselBasvuruApiClient()
 kik_client_instance = KikApiClient()
 
 # --- MCP Tools for Yargitay ---
-# ... (Yargıtay araçları öncekiyle aynı, docstringler İngilizce) ...
 @app.tool()
-async def search_yargitay_detailed(search_query: YargitayDetailedSearchRequest) -> CompactYargitaySearchResult:
+async def search_yargitay_detailed(
+    arananKelime: str = Field("", description="Keyword to search for."),
+    birimYrgKurulDaire: str = Field("", description="Yargitay Board Unit (e.g., 'Hukuk Genel Kurulu')."),
+    birimYrgHukukDaire: str = Field("", description="Yargitay Civil Chamber (e.g., '1. Hukuk Dairesi')."),
+    birimYrgCezaDaire: str = Field("", description="Yargitay Criminal Chamber."),
+    esasYil: str = Field("", description="Case year for 'Esas No'."),
+    esasIlkSiraNo: str = Field("", description="Starting sequence number for 'Esas No'."),
+    esasSonSiraNo: str = Field("", description="Ending sequence number for 'Esas No'."),
+    kararYil: str = Field("", description="Decision year for 'Karar No'."),
+    kararIlkSiraNo: str = Field("", description="Starting sequence number for 'Karar No'."),
+    kararSonSiraNo: str = Field("", description="Ending sequence number for 'Karar No'."),
+    baslangicTarihi: str = Field("", description="Start date for decision search (DD.MM.YYYY)."),
+    bitisTarihi: str = Field("", description="End date for decision search (DD.MM.YYYY)."),
+    siralama: str = Field("3", description="Sorting criteria (1: Esas No, 2: Karar No, 3: Karar Tarihi)."),
+    siralamaDirection: str = Field("desc", description="Sorting direction ('asc' or 'desc')."),
+    pageSize: int = Field(10, ge=1, le=100, description="Number of results per page."),
+    pageNumber: int = Field(1, ge=1, description="Page number to retrieve.")
+) -> CompactYargitaySearchResult:
     """Searches Yargitay (Court of Cassation) decisions using detailed criteria."""
+    
+    search_query = YargitayDetailedSearchRequest(
+        arananKelime=arananKelime,
+        birimYrgKurulDaire=birimYrgKurulDaire,
+        birimYrgHukukDaire=birimYrgHukukDaire,
+        birimYrgCezaDaire=birimYrgCezaDaire,
+        esasYil=esasYil,
+        esasIlkSiraNo=esasIlkSiraNo,
+        esasSonSiraNo=esasSonSiraNo,
+        kararYil=kararYil,
+        kararIlkSiraNo=kararIlkSiraNo,
+        kararSonSiraNo=kararSonSiraNo,
+        baslangicTarihi=baslangicTarihi,
+        bitisTarihi=bitisTarihi,
+        siralama=siralama,
+        siralamaDirection=siralamaDirection,
+        pageSize=pageSize,
+        pageNumber=pageNumber
+    )
+    
     logger.info(f"Tool 'search_yargitay_detailed' called: {search_query.model_dump_json(exclude_none=True, indent=2)}")
     try:
         api_response = await yargitay_client_instance.search_detailed_decisions(search_query)
@@ -103,7 +142,7 @@ async def search_yargitay_detailed(search_query: YargitayDetailedSearchRequest) 
         logger.warning("API response for Yargitay search did not contain expected data structure.")
         return CompactYargitaySearchResult(decisions=[], total_records=0, requested_page=search_query.pageNumber, page_size=search_query.pageSize)
     except Exception as e:
-        logger.exception(f"Error in tool 'search_yargitay_detailed'.") # Query loglaması kaldırıldı, PII içerebilir
+        logger.exception(f"Error in tool 'search_yargitay_detailed'.")
         raise
 
 @app.tool()
@@ -118,11 +157,27 @@ async def get_yargitay_document_markdown(document_id: str) -> YargitayDocumentMa
         raise
 
 # --- MCP Tools for Danistay ---
-# ... (Danıştay araçları öncekiyle aynı, docstringler İngilizce) ...
 @app.tool()
-async def search_danistay_by_keyword(search_query: DanistayKeywordSearchRequest) -> CompactDanistaySearchResult:
+async def search_danistay_by_keyword(
+    andKelimeler: List[str] = Field(default_factory=list, description="Keywords for AND logic, e.g., ['word1', 'word2']"),
+    orKelimeler: List[str] = Field(default_factory=list, description="Keywords for OR logic."),
+    notAndKelimeler: List[str] = Field(default_factory=list, description="Keywords for NOT AND logic."),
+    notOrKelimeler: List[str] = Field(default_factory=list, description="Keywords for NOT OR logic."),
+    pageNumber: int = Field(1, ge=1, description="Page number."),
+    pageSize: int = Field(10, ge=1, le=100, description="Results per page.")
+) -> CompactDanistaySearchResult:
     """Searches Danıştay (Council of State) decisions using keywords."""
-    logger.info(f"Tool 'search_danistay_by_keyword' called.") # Query loglaması kaldırıldı
+    
+    search_query = DanistayKeywordSearchRequest(
+        andKelimeler=andKelimeler,
+        orKelimeler=orKelimeler,
+        notAndKelimeler=notAndKelimeler,
+        notOrKelimeler=notOrKelimeler,
+        pageNumber=pageNumber,
+        pageSize=pageSize
+    )
+    
+    logger.info(f"Tool 'search_danistay_by_keyword' called.")
     try:
         api_response = await danistay_client_instance.search_keyword_decisions(search_query)
         if api_response.data:
@@ -138,9 +193,46 @@ async def search_danistay_by_keyword(search_query: DanistayKeywordSearchRequest)
         raise
 
 @app.tool()
-async def search_danistay_detailed(search_query: DanistayDetailedSearchRequest) -> CompactDanistaySearchResult:
+async def search_danistay_detailed(
+    daire: Optional[str] = Field(None, description="Chamber/Department name (e.g., '1. Daire')."),
+    esasYil: Optional[str] = Field(None, description="Case year for 'Esas No'."),
+    esasIlkSiraNo: Optional[str] = Field(None, description="Starting sequence for 'Esas No'."),
+    esasSonSiraNo: Optional[str] = Field(None, description="Ending sequence for 'Esas No'."),
+    kararYil: Optional[str] = Field(None, description="Decision year for 'Karar No'."),
+    kararIlkSiraNo: Optional[str] = Field(None, description="Starting sequence for 'Karar No'."),
+    kararSonSiraNo: Optional[str] = Field(None, description="Ending sequence for 'Karar No'."),
+    baslangicTarihi: Optional[str] = Field(None, description="Start date for decision (DD.MM.YYYY)."),
+    bitisTarihi: Optional[str] = Field(None, description="End date for decision (DD.MM.YYYY)."),
+    mevzuatNumarasi: Optional[str] = Field(None, description="Legislation number."),
+    mevzuatAdi: Optional[str] = Field(None, description="Legislation name."),
+    madde: Optional[str] = Field(None, description="Article number."),
+    siralama: str = Field("1", description="Sorting criteria (e.g., 1: Esas No, 3: Karar Tarihi)."),
+    siralamaDirection: str = Field("desc", description="Sorting direction ('asc' or 'desc')."),
+    pageNumber: int = Field(1, ge=1, description="Page number."),
+    pageSize: int = Field(10, ge=1, le=100, description="Results per page.")
+) -> CompactDanistaySearchResult:
     """Performs a detailed search for Danıştay (Council of State) decisions."""
-    logger.info(f"Tool 'search_danistay_detailed' called.") # Query loglaması kaldırıldı
+    
+    search_query = DanistayDetailedSearchRequest(
+        daire=daire,
+        esasYil=esasYil,
+        esasIlkSiraNo=esasIlkSiraNo,
+        esasSonSiraNo=esasSonSiraNo,
+        kararYil=kararYil,
+        kararIlkSiraNo=kararIlkSiraNo,
+        kararSonSiraNo=kararSonSiraNo,
+        baslangicTarihi=baslangicTarihi,
+        bitisTarihi=bitisTarihi,
+        mevzuatNumarasi=mevzuatNumarasi,
+        mevzuatAdi=mevzuatAdi,
+        madde=madde,
+        siralama=siralama,
+        siralamaDirection=siralamaDirection,
+        pageNumber=pageNumber,
+        pageSize=pageSize
+    )
+    
+    logger.info(f"Tool 'search_danistay_detailed' called.")
     try:
         api_response = await danistay_client_instance.search_detailed_decisions(search_query)
         if api_response.data:
@@ -167,11 +259,47 @@ async def get_danistay_document_markdown(document_id: str) -> DanistayDocumentMa
         raise
 
 # --- MCP Tools for Emsal ---
-# ... (Emsal araçları öncekiyle aynı, docstringler İngilizce) ...
 @app.tool()
-async def search_emsal_detailed_decisions(search_query: EmsalSearchRequest) -> CompactEmsalSearchResult:
+async def search_emsal_detailed_decisions(
+    keyword: Optional[str] = Field(None, description="Keyword to search."),
+    selected_bam_civil_court: Optional[str] = Field(None, description="Selected BAM Civil Court."),
+    selected_civil_court: Optional[str] = Field(None, description="Selected Civil Court."),
+    selected_regional_civil_chambers: List[str] = Field(default_factory=list, description="Selected Regional Civil Chambers."),
+    case_year_esas: Optional[str] = Field(None, description="Case year for 'Esas No'."),
+    case_start_seq_esas: Optional[str] = Field(None, description="Starting sequence for 'Esas No'."),
+    case_end_seq_esas: Optional[str] = Field(None, description="Ending sequence for 'Esas No'."),
+    decision_year_karar: Optional[str] = Field(None, description="Decision year for 'Karar No'."),
+    decision_start_seq_karar: Optional[str] = Field(None, description="Starting sequence for 'Karar No'."),
+    decision_end_seq_karar: Optional[str] = Field(None, description="Ending sequence for 'Karar No'."),
+    start_date: Optional[str] = Field(None, description="Start date for decision (DD.MM.YYYY)."),
+    end_date: Optional[str] = Field(None, description="End date for decision (DD.MM.YYYY)."),
+    sort_criteria: str = Field("1", description="Sorting criteria (e.g., 1: Esas No)."),
+    sort_direction: str = Field("desc", description="Sorting direction ('asc' or 'desc')."),
+    page_number: int = Field(1, ge=1, description="Page number."),
+    page_size: int = Field(10, ge=1, le=100, description="Results per page.")
+) -> CompactEmsalSearchResult:
     """Searches for Emsal (UYAP Precedent) decisions using detailed criteria."""
-    logger.info(f"Tool 'search_emsal_detailed_decisions' called.") # Query loglaması kaldırıldı
+    
+    search_query = EmsalSearchRequest(
+        keyword=keyword,
+        selected_bam_civil_court=selected_bam_civil_court,
+        selected_civil_court=selected_civil_court,
+        selected_regional_civil_chambers=selected_regional_civil_chambers,
+        case_year_esas=case_year_esas,
+        case_start_seq_esas=case_start_seq_esas,
+        case_end_seq_esas=case_end_seq_esas,
+        decision_year_karar=decision_year_karar,
+        decision_start_seq_karar=decision_start_seq_karar,
+        decision_end_seq_karar=decision_end_seq_karar,
+        start_date=start_date,
+        end_date=end_date,
+        sort_criteria=sort_criteria,
+        sort_direction=sort_direction,
+        page_number=page_number,
+        page_size=page_size
+    )
+    
+    logger.info(f"Tool 'search_emsal_detailed_decisions' called.")
     try:
         api_response = await emsal_client_instance.search_detailed_decisions(search_query)
         if api_response.data:
@@ -199,13 +327,56 @@ async def get_emsal_document_markdown(document_id: str) -> EmsalDocumentMarkdown
         raise
 
 # --- MCP Tools for Uyusmazlik ---
-# ... (Uyuşmazlık araçları öncekiyle aynı, docstringler İngilizce) ...
 @app.tool()
 async def search_uyusmazlik_decisions(
-    search_params: UyusmazlikSearchRequest
+    icerik: str = Field("", description="Keyword or content for main text search."),
+    bolum: Literal["", "Ceza Bölümü", "Genel Kurul Kararları", "Hukuk Bölümü"] = Field("", description="Select the department (Bölüm)."),
+    uyusmazlik_turu: Literal["", "Görev Uyuşmazlığı", "Hüküm Uyuşmazlığı"] = Field("", description="Select the type of dispute."),
+    karar_sonuclari: List[Literal["Hüküm Uyuşmazlığı Olmadığına Dair", "Hüküm Uyuşmazlığı Olduğuna Dair"]] = Field(default_factory=list, description="List of desired 'Karar Sonucu' types."),
+    esas_yil: str = Field("", description="Case year ('Esas Yılı')."),
+    esas_sayisi: str = Field("", description="Case number ('Esas Sayısı')."),
+    karar_yil: str = Field("", description="Decision year ('Karar Yılı')."),
+    karar_sayisi: str = Field("", description="Decision number ('Karar Sayısı')."),
+    kanun_no: str = Field("", description="Relevant Law Number."),
+    karar_date_begin: str = Field("", description="Decision start date (DD.MM.YYYY)."),
+    karar_date_end: str = Field("", description="Decision end date (DD.MM.YYYY)."),
+    resmi_gazete_sayi: str = Field("", description="Official Gazette number."),
+    resmi_gazete_date: str = Field("", description="Official Gazette date (DD.MM.YYYY)."),
+    tumce: str = Field("", description="Exact phrase search."),
+    wild_card: str = Field("", description="Search for phrase and its inflections."),
+    hepsi: str = Field("", description="Search for texts containing all specified words."),
+    herhangi_birisi: str = Field("", description="Search for texts containing any of the specified words."),
+    not_hepsi: str = Field("", description="Exclude texts containing these specified words.")
 ) -> UyusmazlikSearchResponse:
     """Searches for Uyuşmazlık Mahkemesi (Court of Jurisdictional Disputes) decisions using various criteria."""
-    logger.info(f"Tool 'search_uyusmazlik_decisions' called.") # Query loglaması kaldırıldı
+    
+    # Convert string literals to enums
+    bolum_enum = UyusmazlikBolumEnum(bolum) if bolum else UyusmazlikBolumEnum.TUMU
+    uyusmazlik_turu_enum = UyusmazlikTuruEnum(uyusmazlik_turu) if uyusmazlik_turu else UyusmazlikTuruEnum.TUMU
+    karar_sonuclari_enums = [UyusmazlikKararSonucuEnum(ks) for ks in karar_sonuclari]
+    
+    search_params = UyusmazlikSearchRequest(
+        icerik=icerik,
+        bolum=bolum_enum,
+        uyusmazlik_turu=uyusmazlik_turu_enum,
+        karar_sonuclari=karar_sonuclari_enums,
+        esas_yil=esas_yil,
+        esas_sayisi=esas_sayisi,
+        karar_yil=karar_yil,
+        karar_sayisi=karar_sayisi,
+        kanun_no=kanun_no,
+        karar_date_begin=karar_date_begin,
+        karar_date_end=karar_date_end,
+        resmi_gazete_sayi=resmi_gazete_sayi,
+        resmi_gazete_date=resmi_gazete_date,
+        tumce=tumce,
+        wild_card=wild_card,
+        hepsi=hepsi,
+        herhangi_birisi=herhangi_birisi,
+        not_hepsi=not_hepsi
+    )
+    
+    logger.info(f"Tool 'search_uyusmazlik_decisions' called.")
     try:
         return await uyusmazlik_client_instance.search_decisions(search_params)
     except Exception as e:
@@ -229,16 +400,90 @@ async def get_uyusmazlik_document_markdown_from_url(document_url: HttpUrl) -> Uy
         raise
 
 # --- MCP Tools for Anayasa Mahkemesi (Norm Denetimi) ---
-# ... (Anayasa Norm araçları öncekiyle aynı, docstringler İngilizce) ...
 @app.tool()
 async def search_anayasa_norm_denetimi_decisions(
-    search_query: AnayasaNormDenetimiSearchRequest
+    keywords_all: List[str] = Field(default_factory=list, description="Keywords for AND logic."),
+    keywords_any: List[str] = Field(default_factory=list, description="Keywords for OR logic."),
+    keywords_exclude: List[str] = Field(default_factory=list, description="Keywords to exclude."),
+    period: Literal["", "1", "2"] = Field("", description="Constitutional period ('': All, '1': 1961, '2': 1982)."),
+    case_number_esas: Optional[str] = Field(None, description="Case registry number (e.g., '2023/123')."),
+    decision_number_karar: Optional[str] = Field(None, description="Decision number (e.g., '2023/456')."),
+    first_review_date_start: Optional[str] = Field(None, description="First review start date (DD/MM/YYYY)."),
+    first_review_date_end: Optional[str] = Field(None, description="First review end date (DD/MM/YYYY)."),
+    decision_date_start: Optional[str] = Field(None, description="Decision start date (DD/MM/YYYY)."),
+    decision_date_end: Optional[str] = Field(None, description="Decision end date (DD/MM/YYYY)."),
+    application_type: Literal["", "1", "2", "3"] = Field("", description="Application type ('': All, '1': İptal, '2': İtiraz, '3': Diğer)."),
+    applicant_general_name: Optional[str] = Field(None, description="General applicant name."),
+    applicant_specific_name: Optional[str] = Field(None, description="Specific applicant name."),
+    official_gazette_date_start: Optional[str] = Field(None, description="Official Gazette start date (DD/MM/YYYY)."),
+    official_gazette_date_end: Optional[str] = Field(None, description="Official Gazette end date (DD/MM/YYYY)."),
+    official_gazette_number_start: Optional[str] = Field(None, description="Official Gazette starting number."),
+    official_gazette_number_end: Optional[str] = Field(None, description="Official Gazette ending number."),
+    has_press_release: Literal["", "0", "1"] = Field("", description="Press release ('': All, '0': No, '1': Yes)."),
+    has_dissenting_opinion: Literal["", "0", "1"] = Field("", description="Dissenting opinion ('': All, '0': No, '1': Yes)."),
+    has_different_reasoning: Literal["", "0", "1"] = Field("", description="Different reasoning ('': All, '0': No, '1': Yes)."),
+    attending_members_names: List[str] = Field(default_factory=list, description="List of attending members' exact names."),
+    rapporteur_name: Optional[str] = Field(None, description="Rapporteur's exact name."),
+    norm_type: Literal["", "1", "2", "14", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "0", "13"] = Field("", description="Type of reviewed norm."),
+    norm_id_or_name: Optional[str] = Field(None, description="Number or name of the norm."),
+    norm_article: Optional[str] = Field(None, description="Article number of the norm."),
+    review_outcomes: List[Literal["", "1", "2", "3", "4", "5", "6", "7", "8", "12"]] = Field(default_factory=list, description="List of review outcomes."),
+    reason_for_final_outcome: Literal["", "29", "1", "2", "30", "3", "4", "27", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26"] = Field("", description="Main reason for decision outcome."),
+    basis_constitution_article_numbers: List[str] = Field(default_factory=list, description="List of supporting Constitution article numbers."),
+    results_per_page: int = Field(10, description="Results per page (10, 20, 30, 40, 50)."),
+    page_to_fetch: int = Field(1, ge=1, description="Page number to fetch."),
+    sort_by_criteria: str = Field("KararTarihi", description="Sort criteria ('KararTarihi', 'YayinTarihi', 'Toplam').")
 ) -> AnayasaSearchResult:
     """
     Searches Anayasa Mahkemesi (Constitutional Court) Norm Denetimi (Norm Control) decisions
     using criteria from https://normkararlarbilgibankasi.anayasa.gov.tr.
     """
-    logger.info(f"Tool 'search_anayasa_norm_denetimi_decisions' called.") # Query loglaması kaldırıldı
+    
+    # Convert string literals to enums
+    period_enum = AnayasaDonemEnum(period)
+    application_type_enum = AnayasaBasvuruTuruEnum(application_type)
+    has_press_release_enum = AnayasaVarYokEnum(has_press_release)
+    has_dissenting_opinion_enum = AnayasaVarYokEnum(has_dissenting_opinion)
+    has_different_reasoning_enum = AnayasaVarYokEnum(has_different_reasoning)
+    norm_type_enum = AnayasaNormTuruEnum(norm_type)
+    review_outcomes_enums = [AnayasaIncelemeSonucuEnum(ro) for ro in review_outcomes]
+    reason_for_final_outcome_enum = AnayasaSonucGerekcesiEnum(reason_for_final_outcome)
+    
+    search_query = AnayasaNormDenetimiSearchRequest(
+        keywords_all=keywords_all,
+        keywords_any=keywords_any,
+        keywords_exclude=keywords_exclude,
+        period=period_enum,
+        case_number_esas=case_number_esas,
+        decision_number_karar=decision_number_karar,
+        first_review_date_start=first_review_date_start,
+        first_review_date_end=first_review_date_end,
+        decision_date_start=decision_date_start,
+        decision_date_end=decision_date_end,
+        application_type=application_type_enum,
+        applicant_general_name=applicant_general_name,
+        applicant_specific_name=applicant_specific_name,
+        official_gazette_date_start=official_gazette_date_start,
+        official_gazette_date_end=official_gazette_date_end,
+        official_gazette_number_start=official_gazette_number_start,
+        official_gazette_number_end=official_gazette_number_end,
+        has_press_release=has_press_release_enum,
+        has_dissenting_opinion=has_dissenting_opinion_enum,
+        has_different_reasoning=has_different_reasoning_enum,
+        attending_members_names=attending_members_names,
+        rapporteur_name=rapporteur_name,
+        norm_type=norm_type_enum,
+        norm_id_or_name=norm_id_or_name,
+        norm_article=norm_article,
+        review_outcomes=review_outcomes_enums,
+        reason_for_final_outcome=reason_for_final_outcome_enum,
+        basis_constitution_article_numbers=basis_constitution_article_numbers,
+        results_per_page=results_per_page,
+        page_to_fetch=page_to_fetch,
+        sort_by_criteria=sort_by_criteria
+    )
+    
+    logger.info(f"Tool 'search_anayasa_norm_denetimi_decisions' called.")
     try:
         return await anayasa_norm_client_instance.search_norm_denetimi_decisions(search_query)
     except Exception as e:
@@ -266,17 +511,23 @@ async def get_anayasa_norm_denetimi_document_markdown(
         raise
 
 # --- MCP Tools for Anayasa Mahkemesi (Bireysel Başvuru Karar Raporu & Belgeler) ---
-# ... (Anayasa Bireysel araçları öncekiyle aynı, docstringler İngilizce) ...
 @app.tool()
 async def search_anayasa_bireysel_basvuru_report(
-    search_query: AnayasaBireyselReportSearchRequest
+    keywords: List[str] = Field(default_factory=list, description="Keywords for AND logic."),
+    page_to_fetch: int = Field(1, ge=1, description="Page number to fetch for the report. Default is 1.")
 ) -> AnayasaBireyselReportSearchResult:
     """
     Searches Anayasa Mahkemesi (Constitutional Court) Bireysel Başvuru (Individual Application)
     decisions and generates a 'Karar Arama Raporu' (Decision Search Report).
     This is for https://kararlarbilgibankasi.anayasa.gov.tr (uses KararBulteni=1).
     """
-    logger.info(f"Tool 'search_anayasa_bireysel_basvuru_report' called.") # Query loglaması kaldırıldı
+    
+    search_query = AnayasaBireyselReportSearchRequest(
+        keywords=keywords,
+        page_to_fetch=page_to_fetch
+    )
+    
+    logger.info(f"Tool 'search_anayasa_bireysel_basvuru_report' called.")
     try:
         return await anayasa_bireysel_client_instance.search_bireysel_basvuru_report(search_query)
     except Exception as e:
@@ -305,16 +556,48 @@ async def get_anayasa_bireysel_basvuru_document_markdown(
 
 # --- MCP Tools for KIK (Kamu İhale Kurulu) ---
 @app.tool()
-async def search_kik_decisions(search_query: KikSearchRequest) -> KikSearchResult:
+async def search_kik_decisions(
+    karar_tipi: Literal["rbUyusmazlik", "rbDuzenleyici", "rbMahkeme"] = Field("rbUyusmazlik", description="Type of KIK Decision."),
+    karar_no: Optional[str] = Field(None, description="Decision Number (e.g., '2024/UH.II-1766')."),
+    karar_tarihi_baslangic: Optional[str] = Field(None, description="Decision Date Start (DD.MM.YYYY)."),
+    karar_tarihi_bitis: Optional[str] = Field(None, description="Decision Date End (DD.MM.YYYY)."),
+    basvuru_sahibi: Optional[str] = Field(None, description="Applicant."),
+    ihaleyi_yapan_idare: Optional[str] = Field(None, description="Procuring Entity."),
+    basvuru_konusu_ihale: Optional[str] = Field(None, description="Tender subject of the application."),
+    karar_metni: Optional[str] = Field(None, description="Keyword/phrase in decision text."),
+    yil: Optional[str] = Field(None, description="Year of the decision."),
+    resmi_gazete_tarihi: Optional[str] = Field(None, description="Official Gazette Date (DD.MM.YYYY)."),
+    resmi_gazete_sayisi: Optional[str] = Field(None, description="Official Gazette Number."),
+    page: int = Field(1, ge=1, description="Results page number.")
+) -> KikSearchResult:
     """
     Searches KIK (Public Procurement Authority) decisions.
     """
-    logger.info(f"Tool 'search_kik_decisions' called.") # Query loglaması kaldırıldı
+    
+    # Convert string literal to enum
+    karar_tipi_enum = KikKararTipi(karar_tipi)
+    
+    search_query = KikSearchRequest(
+        karar_tipi=karar_tipi_enum,
+        karar_no=karar_no,
+        karar_tarihi_baslangic=karar_tarihi_baslangic,
+        karar_tarihi_bitis=karar_tarihi_bitis,
+        basvuru_sahibi=basvuru_sahibi,
+        ihaleyi_yapan_idare=ihaleyi_yapan_idare,
+        basvuru_konusu_ihale=basvuru_konusu_ihale,
+        karar_metni=karar_metni,
+        yil=yil,
+        resmi_gazete_tarihi=resmi_gazete_tarihi,
+        resmi_gazete_sayisi=resmi_gazete_sayisi,
+        page=page
+    )
+    
+    logger.info(f"Tool 'search_kik_decisions' called.")
     try:
         api_response = await kik_client_instance.search_decisions(search_query)
         page_param_for_log = search_query.page if hasattr(search_query, 'page') else 1
         if not api_response.decisions and api_response.total_records == 0 and page_param_for_log == 1:
-             logger.warning(f"KIK search returned no decisions for query.") # Query detayı kaldırıldı
+             logger.warning(f"KIK search returned no decisions for query.")
         return api_response
     except Exception as e:
         logger.exception(f"Error in KIK search tool 'search_kik_decisions'.")
@@ -360,7 +643,6 @@ async def get_kik_document_markdown(
         )
 
 # --- Application Shutdown Handling ---
-# ... (perform_cleanup ve main fonksiyonları öncekiyle aynı, değişiklik yok) ...
 def perform_cleanup():
     logger.info("MCP Server performing cleanup...")
     try:
@@ -404,7 +686,9 @@ def perform_cleanup():
     except Exception as e: 
         logger.error(f"Error during atexit cleanup execution: {e}", exc_info=True)
     logger.info("MCP Server atexit cleanup process finished.")
+
 atexit.register(perform_cleanup)
+
 def main():
     logger.info(f"Starting {app.name} server via main() function...")
     logger.info(f"Logs will be written to: {LOG_FILE_PATH}")
@@ -416,5 +700,6 @@ def main():
         logger.exception("Server failed to start or crashed.")
     finally:
         logger.info(f"{app.name} server has shut down.")
+
 if __name__ == "__main__": 
     main()

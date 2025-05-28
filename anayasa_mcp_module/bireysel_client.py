@@ -232,7 +232,7 @@ class AnayasaBireyselBasvuruApiClient:
         markdown_text = None
         temp_file_path = None
         try:
-            md_converter = MarkItDown(enable_plugins=False) 
+            md_converter = MarkItDown() 
             with tempfile.NamedTemporaryFile(mode="w", delete=False, suffix=".html", encoding="utf-8") as tmp_file:
                 if not html_input_for_markdown.strip().lower().startswith(("<html", "<!doctype")):
                     tmp_file.write(f"<html><head><meta charset=\"UTF-8\"></head><body>{html_input_for_markdown}</body></html>")

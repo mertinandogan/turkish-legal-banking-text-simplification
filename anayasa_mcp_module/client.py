@@ -224,7 +224,7 @@ class AnayasaMahkemesiApiClient:
         markdown_text = None
         temp_file_path = None
         try:
-            md_converter = MarkItDown(enable_plugins=False) 
+            md_converter = MarkItDown() 
             with tempfile.NamedTemporaryFile(mode="w", delete=False, suffix=".html", encoding="utf-8") as tmp_file:
                 # Ensure the content is wrapped in basic HTML structure if it's not already
                 if not html_input_for_markdown.strip().lower().startswith(("<html", "<!doctype")):
