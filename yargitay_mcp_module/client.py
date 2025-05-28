@@ -130,15 +130,15 @@ class YargitayOfficialApiClient:
         
         return markdown_output
 
-    async def get_decision_document_as_markdown(self, document_id: str) -> YargitayDocumentMarkdown:
+    async def get_decision_document_as_markdown(self, id: str) -> YargitayDocumentMarkdown:
         """
         Retrieves a specific Yargitay decision by its ID and returns its content
         as Markdown.
         Based on user-provided /getDokuman response structure.
         """
-        document_api_url = f"{self.DOCUMENT_ENDPOINT}?id={document_id}"
+        document_api_url = f"{self.DOCUMENT_ENDPOINT}?id={id}"
         source_url = f"{self.BASE_URL}{document_api_url}" # The original URL of the document
-        logger.info(f"YargitayOfficialApiClient: Fetching document for Markdown conversion (ID: {document_id})")
+        logger.info(f"YargitayOfficialApiClient: Fetching document for Markdown conversion (ID: {id})")
 
         try:
             response = await self.http_client.get(document_api_url)
@@ -149,24 +149,24 @@ class YargitayOfficialApiClient:
             html_content_from_api = response_json.get("data")
 
             if not isinstance(html_content_from_api, str):
-                logger.error(f"YargitayOfficialApiClient: 'data' field in API response is not a string or not found (ID: {document_id}).")
+                logger.error(f"YargitayOfficialApiClient: 'data' field in API response is not a string or not found (ID: {id}).")
                 raise ValueError("Expected HTML content not found in API response's 'data' field.")
 
             markdown_content = self._convert_html_to_markdown(html_content_from_api)
 
             return YargitayDocumentMarkdown(
-                document_id=document_id,
+                id=id,
                 markdown_content=markdown_content,
                 source_url=source_url
             )
         except httpx.RequestError as e:
-            logger.error(f"YargitayOfficialApiClient: HTTP error fetching document for Markdown (ID: {document_id}): {e}")
+            logger.error(f"YargitayOfficialApiClient: HTTP error fetching document for Markdown (ID: {id}): {e}")
             raise
         except ValueError as e: # For JSON parsing errors or missing 'data' field
-             logger.error(f"YargitayOfficialApiClient: Error processing document response for Markdown (ID: {document_id}): {e}")
+             logger.error(f"YargitayOfficialApiClient: Error processing document response for Markdown (ID: {id}): {e}")
              raise
         except Exception as e: # For other unexpected errors
-            logger.error(f"YargitayOfficialApiClient: General error fetching/processing document for Markdown (ID: {document_id}): {e}")
+            logger.error(f"YargitayOfficialApiClient: General error fetching/processing document for Markdown (ID: {id}): {e}")
             raise
 
     async def close_client_session(self):

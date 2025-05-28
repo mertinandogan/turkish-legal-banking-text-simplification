@@ -64,7 +64,7 @@ class YargitayApiSearchResponse(BaseModel):
 
 class YargitayDocumentMarkdown(BaseModel):
     """Model for a Yargitay decision document, containing only Markdown content."""
-    document_id: str = Field(..., description="The unique ID of the document.")
+    id: str = Field(..., description="The unique ID of the document.")
     markdown_content: Optional[str] = Field(None, description="The decision content converted to Markdown.")
     source_url: HttpUrl = Field(..., description="The source URL of the original document.")
 

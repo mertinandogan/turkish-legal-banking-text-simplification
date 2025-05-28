@@ -104,7 +104,7 @@ class DanistayApiResponse(BaseModel):
 
 class DanistayDocumentMarkdown(BaseModel):
     """Model for a Danistay decision document, containing only Markdown content."""
-    document_id: str
+    id: str
     markdown_content: Optional[str] = Field(None, description="The decision content converted to Markdown.")
     source_url: HttpUrl
 

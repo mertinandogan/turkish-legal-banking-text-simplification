@@ -169,12 +169,12 @@ async def search_yargitay_detailed(
         raise
 
 @app.tool()
-async def get_yargitay_document_markdown(document_id: str) -> YargitayDocumentMarkdown:
-    """Retrieves a specific Yargitay decision by its ID and returns its content as Markdown."""
-    logger.info(f"Tool 'get_yargitay_document_markdown' called for ID: {document_id}")
-    if not document_id or not document_id.strip(): raise ValueError("Document ID must be a non-empty string.")
+async def get_yargitay_document_markdown(id: str) -> YargitayDocumentMarkdown:
+    """Retrieves a specific Yargitay decision by its ID and returns its content as Markdown. Use id field from previous Yargıtay search results."""
+    logger.info(f"Tool 'get_yargitay_document_markdown' called for ID: {id}")
+    if not id or not id.strip(): raise ValueError("Document ID must be a non-empty string.")
     try:
-        return await yargitay_client_instance.get_decision_document_as_markdown(document_id)
+        return await yargitay_client_instance.get_decision_document_as_markdown(id)
     except Exception as e:
         logger.exception(f"Error in tool 'get_yargitay_document_markdown'.")
         raise
@@ -271,12 +271,12 @@ async def search_danistay_detailed(
         raise
 
 @app.tool()
-async def get_danistay_document_markdown(document_id: str) -> DanistayDocumentMarkdown:
+async def get_danistay_document_markdown(id: str) -> DanistayDocumentMarkdown:
     """Retrieves a specific Danıştay decision by ID and returns its content as Markdown."""
-    logger.info(f"Tool 'get_danistay_document_markdown' called for ID: {document_id}")
-    if not document_id or not document_id.strip(): raise ValueError("Document ID must be a non-empty string for Danıştay.")
+    logger.info(f"Tool 'get_danistay_document_markdown' called for ID: {id}")
+    if not id or not id.strip(): raise ValueError("Document ID must be a non-empty string for Danıştay.")
     try:
-        return await danistay_client_instance.get_decision_document_as_markdown(document_id)
+        return await danistay_client_instance.get_decision_document_as_markdown(id)
     except Exception as e:
         logger.exception(f"Error in tool 'get_danistay_document_markdown'.")
         raise
@@ -339,12 +339,12 @@ async def search_emsal_detailed_decisions(
         raise
 
 @app.tool()
-async def get_emsal_document_markdown(document_id: str) -> EmsalDocumentMarkdown:
+async def get_emsal_document_markdown(id: str) -> EmsalDocumentMarkdown:
     """Retrieves a specific Emsal decision by ID and returns its content as Markdown."""
-    logger.info(f"Tool 'get_emsal_document_markdown' called for ID: {document_id}")
-    if not document_id or not document_id.strip(): raise ValueError("Document ID required for Emsal.")
+    logger.info(f"Tool 'get_emsal_document_markdown' called for ID: {id}")
+    if not id or not id.strip(): raise ValueError("Document ID required for Emsal.")
     try:
-        return await emsal_client_instance.get_decision_document_as_markdown(document_id)
+        return await emsal_client_instance.get_decision_document_as_markdown(id)
     except Exception as e:
         logger.exception(f"Error in tool 'get_emsal_document_markdown'.")
         raise

@@ -143,14 +143,14 @@ class DanistayApiClient:
         
         return markdown_text
 
-    async def get_decision_document_as_markdown(self, document_id: str) -> DanistayDocumentMarkdown:
+    async def get_decision_document_as_markdown(self, id: str) -> DanistayDocumentMarkdown:
         """
         Retrieves a specific Danıştay decision by ID and returns its content as Markdown.
         The /getDokuman endpoint for Danıştay returns direct HTML.
         """
-        document_api_url = f"{self.DOCUMENT_ENDPOINT}?id={document_id}"
+        document_api_url = f"{self.DOCUMENT_ENDPOINT}?id={id}"
         source_url = f"{self.BASE_URL}{document_api_url}"
-        logger.info(f"DanistayApiClient: Fetching Danistay document for Markdown (ID: {document_id}) from {source_url}")
+        logger.info(f"DanistayApiClient: Fetching Danistay document for Markdown (ID: {id}) from {source_url}")
 
         try:
             # For direct HTML response, we might want different headers if the API is sensitive,
@@ -162,10 +162,10 @@ class DanistayApiClient:
             html_content_from_api = response.text
 
             if not isinstance(html_content_from_api, str) or not html_content_from_api.strip():
-                logger.warning(f"DanistayApiClient: Received empty or non-string HTML content for ID {document_id}.")
+                logger.warning(f"DanistayApiClient: Received empty or non-string HTML content for ID {id}.")
                 # Return with None markdown_content if HTML is effectively empty
                 return DanistayDocumentMarkdown(
-                    document_id=document_id,
+                    id=id,
                     markdown_content=None,
                     source_url=source_url
                 )
@@ -173,16 +173,16 @@ class DanistayApiClient:
             markdown_content = self._convert_html_to_markdown_danistay(html_content_from_api)
 
             return DanistayDocumentMarkdown(
-                document_id=document_id,
+                id=id,
                 markdown_content=markdown_content,
                 source_url=source_url
             )
         except httpx.RequestError as e:
-            logger.error(f"DanistayApiClient: HTTP error fetching Danistay document (ID: {document_id}): {e}")
+            logger.error(f"DanistayApiClient: HTTP error fetching Danistay document (ID: {id}): {e}")
             raise
         # Removed ValueError for JSON as Danistay /getDokuman returns direct HTML
         except Exception as e: # Catches other errors like MarkItDown issues if they propagate
-            logger.error(f"DanistayApiClient: General error processing Danistay document (ID: {document_id}): {e}")
+            logger.error(f"DanistayApiClient: General error processing Danistay document (ID: {id}): {e}")
             raise
 
     async def close_client_session(self):

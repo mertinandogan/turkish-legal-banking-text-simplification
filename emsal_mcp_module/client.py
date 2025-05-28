@@ -133,14 +133,14 @@ class EmsalApiClient:
         
         return markdown_text
 
-    async def get_decision_document_as_markdown(self, document_id: str) -> EmsalDocumentMarkdown:
+    async def get_decision_document_as_markdown(self, id: str) -> EmsalDocumentMarkdown:
         """
         Retrieves a specific Emsal decision by ID and returns its content as Markdown.
         Assumes Emsal /getDokuman endpoint returns JSON with HTML content in the 'data' field.
         """
-        document_api_url = f"{self.DOCUMENT_ENDPOINT}?id={document_id}"
+        document_api_url = f"{self.DOCUMENT_ENDPOINT}?id={id}"
         source_url = f"{self.BASE_URL}{document_api_url}"
-        logger.info(f"EmsalApiClient: Fetching Emsal document for Markdown (ID: {document_id}) from {source_url}")
+        logger.info(f"EmsalApiClient: Fetching Emsal document for Markdown (ID: {id}) from {source_url}")
 
         try:
             response = await self.http_client.get(document_api_url)
@@ -151,24 +151,24 @@ class EmsalApiClient:
             html_content_from_api = response_json.get("data")
 
             if not isinstance(html_content_from_api, str) or not html_content_from_api.strip():
-                logger.warning(f"EmsalApiClient: Received empty or non-string HTML in 'data' field for Emsal ID {document_id}.")
-                return EmsalDocumentMarkdown(document_id=document_id, markdown_content=None, source_url=source_url)
+                logger.warning(f"EmsalApiClient: Received empty or non-string HTML in 'data' field for Emsal ID {id}.")
+                return EmsalDocumentMarkdown(id=id, markdown_content=None, source_url=source_url)
 
             markdown_content = self._clean_html_and_convert_to_markdown_emsal(html_content_from_api)
 
             return EmsalDocumentMarkdown(
-                document_id=document_id,
+                id=id,
                 markdown_content=markdown_content,
                 source_url=source_url
             )
         except httpx.RequestError as e:
-            logger.error(f"EmsalApiClient: HTTP error fetching Emsal document (ID: {document_id}): {e}")
+            logger.error(f"EmsalApiClient: HTTP error fetching Emsal document (ID: {id}): {e}")
             raise
         except ValueError as e: 
-            logger.error(f"EmsalApiClient: ValueError processing Emsal document response (ID: {document_id}): {e}")
+            logger.error(f"EmsalApiClient: ValueError processing Emsal document response (ID: {id}): {e}")
             raise
         except Exception as e:
-            logger.error(f"EmsalApiClient: General error processing Emsal document (ID: {document_id}): {e}")
+            logger.error(f"EmsalApiClient: General error processing Emsal document (ID: {id}): {e}")
             raise
 
     async def close_client_session(self):
