@@ -92,7 +92,15 @@ kik_client_instance = KikApiClient()
 # --- MCP Tools for Yargitay ---
 @app.tool()
 async def search_yargitay_detailed(
-    arananKelime: str = Field("", description="Keyword to search for."),
+    arananKelime: str = Field("", description="""Keyword to search for.
+    Search operators:
+    • Space between words = OR logic (arsa payı → "arsa" OR "payı")
+    • "exact phrase" = Exact match ("arsa payı" → exact phrase)
+    • word1+word2 = AND logic (arsa+payı → both words required)
+    • word* = Wildcard (bozma* → bozma, bozması, bozmanın, etc.)
+    • +"phrase1" +"phrase2" = Multiple required phrases
+    • +"required" -"excluded" = Include and exclude
+    Examples: arsa payı | "arsa payı" | +"arsa payı" +"bozma sebebi" | bozma*"""),
     birimYrgKurulDaire: str = Field("", description="Yargitay Board Unit (e.g., 'Hukuk Genel Kurulu')."),
     birimYrgHukukDaire: str = Field("", description="Yargitay Civil Chamber (e.g., '1. Hukuk Dairesi')."),
     birimYrgCezaDaire: str = Field("", description="Yargitay Criminal Chamber."),
@@ -109,7 +117,22 @@ async def search_yargitay_detailed(
     pageSize: int = Field(10, ge=1, le=100, description="Number of results per page."),
     pageNumber: int = Field(1, ge=1, description="Page number to retrieve.")
 ) -> CompactYargitaySearchResult:
-    """Searches Yargitay (Court of Cassation) decisions using detailed criteria."""
+    """Searches Yargitay (Court of Cassation) decisions using detailed criteria.
+    
+    SEARCH SYNTAX GUIDE:
+    - Words with spaces: OR search (finds documents with ANY of the words)
+    - "Quotes": Exact phrase search
+    - Plus sign (+): AND search (both/all words required)
+    - Asterisk (*): Wildcard (matches word variations)
+    - Minus sign (-): Exclude terms
+    
+    Common patterns:
+    - Simple: arsa payı (finds ~523K results)
+    - Exact: "arsa payı" (finds ~22K results)  
+    - Combined: +"arsa payı" +"bozma sebebi" (finds ~234 results)
+    - Wildcard: inşaat* (matches inşaat, inşaatı, inşaatın, etc.)
+    - Exclusion: +"arsa payı" -"inşaat sözleşmesi"
+    """
     
     search_query = YargitayDetailedSearchRequest(
         arananKelime=arananKelime,
