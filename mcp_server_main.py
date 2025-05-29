@@ -730,7 +730,7 @@ async def search_rekabet_kurumu_decisions(
     )
     logger.info(f"Tool 'search_rekabet_kurumu_decisions' called. Query: {search_query.model_dump_json(exclude_none=True, indent=2)}")
     try:
-        # rekabet_client_instance'ın tanımlı olduğunu varsayıyoruz
+       
         return await rekabet_client_instance.search_decisions(search_query)
     except Exception as e:
         logger.exception("Error in tool 'search_rekabet_kurumu_decisions'.")
@@ -750,7 +750,7 @@ async def get_rekabet_kurumu_document(
     current_page_to_fetch = page_number if page_number is not None and page_number >= 1 else 1
     
     try:
-        # rekabet_client_instance'ın tanımlı olduğunu varsayıyoruz
+      
         return await rekabet_client_instance.get_decision_document(karar_id, page_number=current_page_to_fetch)
     except Exception as e:
         logger.exception(f"Error in tool 'get_rekabet_kurumu_document'. Karar ID: {karar_id}")
