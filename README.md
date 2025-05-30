@@ -31,6 +31,7 @@ Bu proje, çeşitli Türk hukuk kaynaklarına (Yargıtay, Danıştay, Emsal Kara
 * İşletim sisteminize uygun [5ire](https://5ire.app) MCP istemcisini indirip kurun.
 * 5ire'ı açın. Workspace menüsünden Providers'a girin. Buradan kullanmak istediğiniz LLM servisinin API anahtarını girin. Kendi makinenizde çalıştırdığınız yerel modelleri de buradan ayarlayabilirsiniz.
 * Tools menüsüne girin. **+Local** yazan butona basın. Tool Key alanına "yargimcp", Name alanına "Yargı MCP", Command alanına `uvx --from git+https://github.com/saidsurucu/yargi-mcp yargi-mcp` yazın ve Save butonuna basarak kaydedin.
+![5ire-settings](./5ire-settings.png)
 * Şimdi Tools altında Yargı MCP'yi görüyor olmalısınız. Üzerine geldiğinizde yanda bir açma kapama düğmesi çıkacak ona tıklayarak MCP sunucusunu etkileştirin. Eğer kurulum adımlarını doğru yaptıysanız Yargı MCP yazısının yanında yeşil ışık yanacak.
 * Artık istediğiniz LLM modelini kullanarak Yargı MCP ile konuşabilirsiniz. Claude haricindeki modellerde tavsiyem karmaşık aramalar yapacaksanız en iyi sonuçları o4-mini veriyor, üstelik gpt 4.1'den bile ucuz. Çok uzun kararları da 1 milyon token bağlam penceresi olan gpt 4.1 ile okuyabilirsiniz.
 ---
