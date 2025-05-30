@@ -190,7 +190,7 @@ Yukarıdaki kurulum adımlarını tamamladıktan sonra, bu sunucuyu Claude Deskt
 1.  Terminalde `mcp_server_main.py` dosyasının bulunduğu `yargi-mcp` dizininde olduğunuzdan emin olun.
 2.  Aşağıdaki komutu çalıştırın:
 
-    ```bash
+```bash
     fastmcp install mcp_server_main.py \
         --name "Yargı MCP" \
         --with httpx \
@@ -200,10 +200,11 @@ Yukarıdaki kurulum adımlarını tamamladıktan sonra, bu sunucuyu Claude Deskt
         --with aiohttp \
         --with playwright \
         --with pypdf
-    ```
+```
 
-    * `--name "Yargı MCP"`: Araç Claude Desktop'ta bu isimle görünecektir.
-    * `--with ...`: Sunucunun çalışması için gereken Python bağımlılıklarını belirtir.
+
+   * `--name "Yargı MCP"`: Araç Claude Desktop'ta bu isimle görünecektir.
+   * `--with ...`: Sunucunun çalışması için gereken Python bağımlılıklarını belirtir.
 
     Bu komut, `uv` kullanarak (eğer kuruluysa ve bulunabiliyorsa) sunucunuz için izole bir Python ortamı oluşturacak, belirtilen bağımlılıkları kuracak ve aracı Claude Desktop uygulamasına kaydedecektir. Playwright tarayıcılarının (`playwright install chromium` gibi) ayrıca kurulması gerekebilir.
 
