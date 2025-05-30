@@ -22,7 +22,17 @@ Bu proje, çeşitli Türk hukuk kaynaklarına (Yargıtay, Danıştay, Emsal Kara
 * Karar metinlerinin daha kolay işlenebilmesi için Markdown formatına çevrilmesi.
 * Claude Desktop uygulaması ile `fastmcp install` komutu kullanılarak kolay entegrasyon.
 * Yargı MCP artık [5ire](https://5ire.app) gibi Claude Desktop haricindeki MCP istemcilerini de destekliyor!
-
+---
+🚀 **Claude Haricindeki Modellerle Kullanmak İçin Çok Kolay Kurulum (5ire için)**
+* **Windows Kullanıcıları:** Eğer Python kurulu değilse, [python.org/downloads/windows/](https://www.python.org/downloads/windows/) adresinden Python 3.11'in uygun bir sürümünü indirip kurun. Kurulum sırasında "**Add Python to PATH**" (Python'ı PATH'e ekle) seçeneğini işaretlemeyi unutmayın.
+* **Windows Kullanıcıları:** Bilgisayarınıza [git](https://git-scm.com/downloads/win) yazılımını indirip kurun. "Git for Windows/x64 Setup" seçeneğini indirmelisiniz.
+* **Windows Kullanıcıları:** Bir CMD penceresi açın ve içine bu komutu yapıştırıp çalıştırın. Kurulumun bitmesini bekleyin: `powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"`
+* **Mac Kullanıcıları:** Bir CMD penceresi açın ve içine bu komutu yapıştırıp çalıştırın. Kurulumun bitmesini bekleyin: `curl -LsSf https://astral.sh/uv/install.sh | sh`
+* İşletim sisteminize uygun [5ire](https://5ire.app) MCP istemcisini indirip kurun.
+* 5ire'ı açın. Workspace menüsünden Providers'a girin. Buradan kullanmak istediğiniz LLM servisinin API anahtarını girin. Kendi makinenizde çalıştırdığınız yerel modelleri de buradan ayarlayabilirsiniz.
+* Tools menüsüne girin. **+Local** yazan butona basın. Tool Key alanına "yargimcp", Name alanına "Yargı MCP", Command alanına `uvx --from git+https://github.com/saidsurucu/yargi-mcp yargi-mcp` yazın ve Save butonuna basarak kaydedin.
+* Şimdi Tools altında Yargı MCP'yi görüyor olmalısınız. Üzerine geldiğinizde yanda bir açma kapama düğmesi çıkacak ona tıklayarak MCP sunucusunu etkileştirin. Eğer kurulum adımlarını doğru yaptıysanız Yargı MCP yazısının yanında yeşil ışık yanacak.
+* Artık istediğiniz LLM modelini kullanarak Yargı MCP ile konuşabilirsiniz. Claude haricindeki modellerde tavsiyem karmaşık aramalar yapacaksanız en iyi sonuçları o4-mini veriyor, üstelik gpt 4.1'den bile ucuz. Çok uzun kararları da 1 milyon token bağlam penceresi olan gpt 4.1 ile okuyabilirsiniz.
 ---
 📋 **Ön Gereksinimler**
 
@@ -45,18 +55,6 @@ Bu Yargı MCP aracını Claude Desktop ile kullanabilmek için öncelikle aşağ
     # '--with-deps' chromium için gerekli işletim sistemi bağımlılıklarını da kurmaya çalışır.
     ```
     Kurulum scriptleri (`install.bat`, `install.sh`, `install.py`) genellikle `playwright` Python kütüphanesini kurar. Tarayıcıların ayrıca `playwright install` ile kurulması gerekebilir; eğer sunucu başlatılırken KİK modülü hata verirse, bu adımı manuel olarak çalıştırmanız gerekebilir.
-
----
-🚀 **Claude Haricindeki Modellerle Kullanmak İçin Çok Kolay Kurulum (5ire için)**
-* **Windows Kullanıcıları:** Eğer Python kurulu değilse, [python.org/downloads/windows/](https://www.python.org/downloads/windows/) adresinden Python 3.11'in uygun bir sürümünü indirip kurun. Kurulum sırasında "**Add Python to PATH**" (Python'ı PATH'e ekle) seçeneğini işaretlemeyi unutmayın.
-* **Windows Kullanıcıları:** Bilgisayarınıza [git](https://git-scm.com/downloads/win) yazılımını indirip kurun. "Git for Windows/x64 Setup" seçeneğini indirmelisiniz.
-* **Windows Kullanıcıları:** Bir CMD penceresi açın ve içine bu komutu yapıştırıp çalıştırın. Kurulumun bitmesini bekleyin: `powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"`
-* **Mac Kullanıcıları:** Bir CMD penceresi açın ve içine bu komutu yapıştırıp çalıştırın. Kurulumun bitmesini bekleyin: `curl -LsSf https://astral.sh/uv/install.sh | sh`
-* İşletim sisteminize uygun [5ire](https://5ire.app) MCP istemcisini indirip kurun.
-* 5ire'ı açın. Workspace menüsünden Providers'a girin. Buradan kullanmak istediğiniz LLM servisinin API anahtarını girin. Kendi makinenizde çalıştırdığınız yerel modelleri de buradan ayarlayabilirsiniz.
-* Tools menüsüne girin. **+Local** yazan butona basın. Tool Key alanına "yargimcp", Name alanına "Yargı MCP", Command alanına `uvx --from git+https://github.com/saidsurucu/yargi-mcp yargi-mcp` yazın ve Save butonuna basarak kaydedin.
-* Şimdi Tools altında Yargı MCP'yi görüyor olmalısınız. Üzerine geldiğinizde yanda bir açma kapama düğmesi çıkacak ona tıklayarak MCP sunucusunu etkileştirin. Eğer kurulum adımlarını doğru yaptıysanız Yargı MCP yazısının yanında yeşil ışık yanacak.
-* Artık istediğiniz LLM modelini kullanarak Yargı MCP ile konuşabilirsiniz. Claude haricindeki modellerde tavsiyem karmaşık aramalar yapacaksanız en iyi sonuçları o4-mini veriyor, üstelik gpt 4.1'den bile ucuz. Çok uzun kararları da 1 milyon token bağlam penceresi olan gpt 4.1 ile okuyabilirsiniz.
 
 ---
 🚀 **Kolay Kurulum Adımları (Claude Desktop için)**
