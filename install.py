@@ -11,7 +11,7 @@ MCP_SERVER_SCRIPT_NAME = "mcp_server_main.py"
 CLAUDE_TOOL_NAME = "Yargı MCP"
 # playwright bağımlılıklara eklendi
 DEPENDENCIES_FOR_FASTMCP = [
-    "httpx", "beautifulsoup4", "markitdown", "pydantic", "aiohttp", "playwright"
+    "httpx", "beautifulsoup4", "markitdown[pdf]", "pydantic", "aiohttp", "playwright", "pypdf"
 ]
 
 # --- Yardımcı Fonksiyonlar ---
