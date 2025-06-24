@@ -791,6 +791,16 @@ async def search_yargitay_bedesten(
         • 'Ceza Daireleri Başkanlar Kurulu' (Criminal Chambers Presidents Board)
         • 'Büyük Genel Kurulu' (Grand General Assembly)
         Total: 49 chamber options
+    """),
+    kararTarihiStart: Optional[str] = Field(None, description="""
+        Decision start date filter (optional). Format: YYYY-MM-DDTHH:MM:SS.000Z
+        Example: "2024-01-01T00:00:00.000Z" for decisions from Jan 1, 2024
+        Use with kararTarihiEnd for date range filtering
+    """),
+    kararTarihiEnd: Optional[str] = Field(None, description="""
+        Decision end date filter (optional). Format: YYYY-MM-DDTHH:MM:SS.000Z
+        Example: "2024-12-31T23:59:59.999Z" for decisions until Dec 31, 2024
+        Use with kararTarihiStart for date range filtering
     """)
 ) -> dict:
     """
@@ -805,12 +815,14 @@ async def search_yargitay_bedesten(
         pageNumber=pageNumber,
         itemTypeList=["YARGITAYKARARI"],  # Only Yargıtay decisions
         phrase=phrase,
-        birimAdi=birimAdi
+        birimAdi=birimAdi,
+        kararTarihiStart=kararTarihiStart,
+        kararTarihiEnd=kararTarihiEnd
     )
     
     search_request = BedestenSearchRequest(data=search_data)
     
-    logger.info(f"Tool 'search_yargitay_bedesten' called: phrase='{phrase}', birimAdi='{birimAdi}', page={pageNumber}")
+    logger.info(f"Tool 'search_yargitay_bedesten' called: phrase='{phrase}', birimAdi='{birimAdi}', dateRange='{kararTarihiStart}' to '{kararTarihiEnd}', page={pageNumber}")
     
     try:
         response = await bedesten_client_instance.search_documents(search_request)
@@ -860,6 +872,16 @@ async def search_danistay_bedesten(
         • Special Councils: 'İçtihatları Birleştirme Kurulu', 'İdari İşler Kurulu', 'Başkanlar Kurulu'
         • Military: 'Askeri Yüksek İdare Mahkemesi' and its chambers/councils
         Total: 27 chamber options
+    """),
+    kararTarihiStart: Optional[str] = Field(None, description="""
+        Decision start date filter (optional). Format: YYYY-MM-DDTHH:MM:SS.000Z
+        Example: "2024-01-01T00:00:00.000Z" for decisions from Jan 1, 2024
+        Use with kararTarihiEnd for date range filtering
+    """),
+    kararTarihiEnd: Optional[str] = Field(None, description="""
+        Decision end date filter (optional). Format: YYYY-MM-DDTHH:MM:SS.000Z
+        Example: "2024-12-31T23:59:59.999Z" for decisions until Dec 31, 2024
+        Use with kararTarihiStart for date range filtering
     """)
 ) -> dict:
     """
@@ -874,12 +896,14 @@ async def search_danistay_bedesten(
         pageNumber=pageNumber,
         itemTypeList=["DANISTAYKARAR"],  # Only Danıştay decisions
         phrase=phrase,
-        birimAdi=birimAdi
+        birimAdi=birimAdi,
+        kararTarihiStart=kararTarihiStart,
+        kararTarihiEnd=kararTarihiEnd
     )
     
     search_request = BedestenSearchRequest(data=search_data)
     
-    logger.info(f"Tool 'search_danistay_bedesten' called: phrase='{phrase}', birimAdi='{birimAdi}', page={pageNumber}")
+    logger.info(f"Tool 'search_danistay_bedesten' called: phrase='{phrase}', birimAdi='{birimAdi}', dateRange='{kararTarihiStart}' to '{kararTarihiEnd}', page={pageNumber}")
     
     try:
         response = await bedesten_client_instance.search_documents(search_request)
@@ -920,7 +944,17 @@ async def get_danistay_bedesten_document_markdown(
 async def search_yerel_hukuk_bedesten(
     phrase: str = Field(..., description="Aranacak kavram/kelime"),
     pageSize: int = Field(10, ge=1, le=100, description="Sayfa başına sonuç sayısı"),
-    pageNumber: int = Field(1, ge=1, description="Sayfa numarası")
+    pageNumber: int = Field(1, ge=1, description="Sayfa numarası"),
+    kararTarihiStart: Optional[str] = Field(None, description="""
+        Decision start date filter (optional). Format: YYYY-MM-DDTHH:MM:SS.000Z
+        Example: "2024-01-01T00:00:00.000Z" for decisions from Jan 1, 2024
+        Use with kararTarihiEnd for date range filtering
+    """),
+    kararTarihiEnd: Optional[str] = Field(None, description="""
+        Decision end date filter (optional). Format: YYYY-MM-DDTHH:MM:SS.000Z
+        Example: "2024-12-31T23:59:59.999Z" for decisions until Dec 31, 2024
+        Use with kararTarihiStart for date range filtering
+    """)
 ) -> dict:
     """
     Searches Yerel Hukuk Mahkemesi (Local Civil Court) decisions using Bedesten API.
@@ -933,12 +967,14 @@ async def search_yerel_hukuk_bedesten(
         pageSize=pageSize,
         pageNumber=pageNumber,
         itemTypeList=["YERELHUKUK"],  # Local Civil Court decisions
-        phrase=phrase
+        phrase=phrase,
+        kararTarihiStart=kararTarihiStart,
+        kararTarihiEnd=kararTarihiEnd
     )
     
     search_request = BedestenSearchRequest(data=search_data)
     
-    logger.info(f"Tool 'search_yerel_hukuk_bedesten' called: phrase='{phrase}', page={pageNumber}")
+    logger.info(f"Tool 'search_yerel_hukuk_bedesten' called: phrase='{phrase}', dateRange='{kararTarihiStart}' to '{kararTarihiEnd}', page={pageNumber}")
     
     try:
         response = await bedesten_client_instance.search_documents(search_request)
@@ -979,7 +1015,17 @@ async def get_yerel_hukuk_bedesten_document_markdown(
 async def search_istinaf_hukuk_bedesten(
     phrase: str = Field(..., description="Aranacak kavram/kelime"),
     pageSize: int = Field(10, ge=1, le=100, description="Sayfa başına sonuç sayısı"),
-    pageNumber: int = Field(1, ge=1, description="Sayfa numarası")
+    pageNumber: int = Field(1, ge=1, description="Sayfa numarası"),
+    kararTarihiStart: Optional[str] = Field(None, description="""
+        Decision start date filter (optional). Format: YYYY-MM-DDTHH:MM:SS.000Z
+        Example: "2024-01-01T00:00:00.000Z" for decisions from Jan 1, 2024
+        Use with kararTarihiEnd for date range filtering
+    """),
+    kararTarihiEnd: Optional[str] = Field(None, description="""
+        Decision end date filter (optional). Format: YYYY-MM-DDTHH:MM:SS.000Z
+        Example: "2024-12-31T23:59:59.999Z" for decisions until Dec 31, 2024
+        Use with kararTarihiStart for date range filtering
+    """)
 ) -> dict:
     """
     Searches İstinaf Hukuk Mahkemesi (Civil Court of Appeals) decisions using Bedesten API.
@@ -995,12 +1041,14 @@ async def search_istinaf_hukuk_bedesten(
         pageSize=pageSize,
         pageNumber=pageNumber,
         itemTypeList=["ISTINAFHUKUK"],  # Civil Court of Appeals decisions
-        phrase=phrase
+        phrase=phrase,
+        kararTarihiStart=kararTarihiStart,
+        kararTarihiEnd=kararTarihiEnd
     )
     
     search_request = BedestenSearchRequest(data=search_data)
     
-    logger.info(f"Tool 'search_istinaf_hukuk_bedesten' called: phrase='{phrase}', page={pageNumber}")
+    logger.info(f"Tool 'search_istinaf_hukuk_bedesten' called: phrase='{phrase}', dateRange='{kararTarihiStart}' to '{kararTarihiEnd}', page={pageNumber}")
     
     try:
         response = await bedesten_client_instance.search_documents(search_request)
@@ -1041,7 +1089,17 @@ async def get_istinaf_hukuk_bedesten_document_markdown(
 async def search_kyb_bedesten(
     phrase: str = Field(..., description="Aranacak kavram/kelime"),
     pageSize: int = Field(10, ge=1, le=100, description="Sayfa başına sonuç sayısı"),
-    pageNumber: int = Field(1, ge=1, description="Sayfa numarası")
+    pageNumber: int = Field(1, ge=1, description="Sayfa numarası"),
+    kararTarihiStart: Optional[str] = Field(None, description="""
+        Decision start date filter (optional). Format: YYYY-MM-DDTHH:MM:SS.000Z
+        Example: "2024-01-01T00:00:00.000Z" for decisions from Jan 1, 2024
+        Use with kararTarihiEnd for date range filtering
+    """),
+    kararTarihiEnd: Optional[str] = Field(None, description="""
+        Decision end date filter (optional). Format: YYYY-MM-DDTHH:MM:SS.000Z
+        Example: "2024-12-31T23:59:59.999Z" for decisions until Dec 31, 2024
+        Use with kararTarihiStart for date range filtering
+    """)
 ) -> dict:
     """
     Searches Kanun Yararına Bozma (KYB - Extraordinary Appeal) decisions using Bedesten API.
@@ -1058,12 +1116,14 @@ async def search_kyb_bedesten(
         pageSize=pageSize,
         pageNumber=pageNumber,
         itemTypeList=["KYB"],  # Kanun Yararına Bozma decisions
-        phrase=phrase
+        phrase=phrase,
+        kararTarihiStart=kararTarihiStart,
+        kararTarihiEnd=kararTarihiEnd
     )
     
     search_request = BedestenSearchRequest(data=search_data)
     
-    logger.info(f"Tool 'search_kyb_bedesten' called: phrase='{phrase}', page={pageNumber}")
+    logger.info(f"Tool 'search_kyb_bedesten' called: phrase='{phrase}', dateRange='{kararTarihiStart}' to '{kararTarihiEnd}', page={pageNumber}")
     
     try:
         response = await bedesten_client_instance.search_documents(search_request)

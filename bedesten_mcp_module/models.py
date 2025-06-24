@@ -2,6 +2,7 @@
 
 from pydantic import BaseModel, Field
 from typing import List, Optional, Dict, Any, Literal, Union
+from datetime import datetime
 
 # Import YargitayBirimEnum for chamber filtering
 from yargitay_mcp_module.models import YargitayBirimEnum
@@ -52,6 +53,16 @@ class BedestenSearchData(BaseModel):
         - '1. Daire' through '17. Daire'
         - 'İçtihatları Birleştirme Kurulu', 'İdari İşler Kurulu', 'Başkanlar Kurulu'
         - Military courts: 'Askeri Yüksek İdare Mahkemesi' variants
+    """)
+    kararTarihiStart: Optional[str] = Field(None, description="""
+        Decision start date filter (optional). Format: YYYY-MM-DDTHH:MM:SS.000Z
+        Example: "2024-01-01T00:00:00.000Z"
+        Use with kararTarihiEnd for date range filtering
+    """)
+    kararTarihiEnd: Optional[str] = Field(None, description="""
+        Decision end date filter (optional). Format: YYYY-MM-DDTHH:MM:SS.000Z  
+        Example: "2024-12-31T23:59:59.999Z"
+        Use with kararTarihiStart for date range filtering
     """)
     sortFields: List[str] = ["KARAR_TARIHI"]
     sortDirection: str = "desc"
