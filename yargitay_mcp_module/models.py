@@ -81,7 +81,7 @@ class YargitayDetailedSearchRequest(BaseModel):
     bitisTarihi: Optional[str] = Field("", description="""End date for decision search.
         Format: DD.MM.YYYY (e.g., '31.12.2024')
         Creates date range from baslangicTarihi to this date
-        Examples: '31.12.2024', '30.06.2023'""")""")
+        Examples: '31.12.2024', '30.06.2023'""")
     
     siralama: Optional[str] = Field("3", description="""Sorting criteria for search results:
         • '1': Esas No (Case Number) - sorts by case registration order

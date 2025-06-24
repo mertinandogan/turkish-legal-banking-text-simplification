@@ -77,17 +77,17 @@ class BedestenSearchData(BaseModel):
         • "2024-01-01T00:00:00.000Z" - from beginning of 2024
         • "2023-06-15T00:00:00.000Z" - from June 15, 2023
         • "2024-03-01T00:00:00.000Z" - from March 1, 2024
-        Use with kararTarihiEnd for date range, or alone for "from date" filtering"""
+        Use with kararTarihiEnd for date range, or alone for "from date" filtering""")
     kararTarihiEnd: Optional[str] = Field(None, description="""Decision end date (Karar Tarihi Bitiş) filter (optional).
         Format: YYYY-MM-DDTHH:MM:SS.000Z (ISO 8601 with Z timezone)
         Examples:
         • "2024-12-31T23:59:59.999Z" - until end of 2024
         • "2023-12-31T23:59:59.999Z" - until end of 2023  
         • "2024-06-30T23:59:59.999Z" - until end of June 2024
-        Use with kararTarihiStart for date range, or alone for "until date" filtering"""
+        Use with kararTarihiStart for date range, or alone for "until date" filtering""")
     sortFields: List[str] = Field(default=["KARAR_TARIHI"], description="""Sorting field (Sıralama Alanı) specification.
         ["KARAR_TARIHI"]: Sort by decision date (Karar Tarihi) [DEFAULT]
-        Most common use case for chronological ordering"""
+        Most common use case for chronological ordering""")
     sortDirection: str = Field(default="desc", description="""Sort direction (Sıralama Yönü) for results.
         "desc": Descending order - newest decisions first [DEFAULT]
         "asc": Ascending order - oldest decisions first
