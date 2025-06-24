@@ -1853,7 +1853,7 @@ async def get_istinaf_hukuk_bedesten_document_markdown(
 
 # --- MCP Tools for Bedesten (Kanun Yararına Bozma Search) ---
 @app.tool(
-    description="Search Extraordinary Appeal (Kanun Yararına Bozma - KYB) decisions using Bedesten API with date filtering and exact phrase search support"
+    description="Search Extraordinary Appeal (Kanun Yararına Bozma - KYB) decisions using Bedesten API with date filtering and exact phrase search support",
     annotations={
         "readOnlyHint": True,
         "openWorldHint": True,
