@@ -33,10 +33,27 @@ DanistayBirimEnum = Literal[
 
 # Search Request Models
 class BedestenSearchData(BaseModel):
-    pageSize: int
-    pageNumber: int  
-    itemTypeList: List[str]
-    phrase: str
+    pageSize: int = Field(..., description="""Number of results per page.
+        Range: 1-100 results per page
+        Recommended: 10-50 for balanced performance
+        Higher values for comprehensive analysis""")
+    pageNumber: int = Field(..., description="""Page number to retrieve (1-indexed).
+        Start with 1 for first page
+        Calculate total pages from response.data.total / pageSize
+        Navigate: pageNumber=2 gets next set of results""")
+    itemTypeList: List[str] = Field(..., description="""Court type filter - determines which court decisions to search:
+        • ["YARGITAYKARARI"]: Yargıtay (Court of Cassation) - supreme court civil/criminal
+        • ["DANISTAYKARAR"]: Danıştay (Council of State) - administrative court decisions
+        • ["YERELHUKUK"]: Yerel Hukuk Mahkemesi - local civil court decisions
+        • ["ISTINAFHUKUK"]: İstinaf Hukuk Mahkemesi - civil appellate court decisions
+        • ["KYB"]: Kanun Yararına Bozma - extraordinary appeal decisions
+        Note: Use single-item list for specific court type targeting""")
+    phrase: str = Field(..., description="""Search phrase/keyword with advanced search support:
+        • Regular search: "mülkiyet kararı" - searches words separately
+        • Exact phrase: "\"mülkiyet kararı\"" - searches exact phrase (more precise)
+        • Legal concepts: "\"idari işlem\"", "\"sözleşme ihlali\""
+        • Empty string: searches all documents (use with filters)
+        Exact phrases significantly reduce false positives""")
     birimAdi: Optional[Union[YargitayBirimEnum, DanistayBirimEnum]] = Field(None, description="""
         Chamber/Board filter (optional). Available options depend on itemTypeList:
         
@@ -54,18 +71,27 @@ class BedestenSearchData(BaseModel):
         - 'İçtihatları Birleştirme Kurulu', 'İdari İşler Kurulu', 'Başkanlar Kurulu'
         - Military courts: 'Askeri Yüksek İdare Mahkemesi' variants
     """)
-    kararTarihiStart: Optional[str] = Field(None, description="""
-        Decision start date filter (optional). Format: YYYY-MM-DDTHH:MM:SS.000Z
-        Example: "2024-01-01T00:00:00.000Z"
-        Use with kararTarihiEnd for date range filtering
-    """)
-    kararTarihiEnd: Optional[str] = Field(None, description="""
-        Decision end date filter (optional). Format: YYYY-MM-DDTHH:MM:SS.000Z  
-        Example: "2024-12-31T23:59:59.999Z"
-        Use with kararTarihiStart for date range filtering
-    """)
-    sortFields: List[str] = ["KARAR_TARIHI"]
-    sortDirection: str = "desc"
+    kararTarihiStart: Optional[str] = Field(None, description="""Decision start date filter (optional).
+        Format: YYYY-MM-DDTHH:MM:SS.000Z (ISO 8601 with Z timezone)
+        Examples:
+        • "2024-01-01T00:00:00.000Z" - from beginning of 2024
+        • "2023-06-15T00:00:00.000Z" - from June 15, 2023
+        • "2024-03-01T00:00:00.000Z" - from March 1, 2024
+        Use with kararTarihiEnd for date range, or alone for "from date" filtering""")
+    kararTarihiEnd: Optional[str] = Field(None, description="""Decision end date filter (optional).
+        Format: YYYY-MM-DDTHH:MM:SS.000Z (ISO 8601 with Z timezone)
+        Examples:
+        • "2024-12-31T23:59:59.999Z" - until end of 2024
+        • "2023-12-31T23:59:59.999Z" - until end of 2023  
+        • "2024-06-30T23:59:59.999Z" - until end of June 2024
+        Use with kararTarihiStart for date range, or alone for "until date" filtering""")
+    sortFields: List[str] = Field(default=["KARAR_TARIHI"], description="""Sorting field specification.
+        ["KARAR_TARIHI"]: Sort by decision date [DEFAULT]
+        Most common use case for chronological ordering""")
+    sortDirection: str = Field(default="desc", description="""Sort direction for results.
+        "desc": Descending order - newest decisions first [DEFAULT]
+        "asc": Ascending order - oldest decisions first
+        Recommended: "desc" for latest legal developments""")""")
 
 class BedestenSearchRequest(BaseModel):
     data: BedestenSearchData
