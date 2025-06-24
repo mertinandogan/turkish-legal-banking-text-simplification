@@ -777,7 +777,12 @@ async def get_rekabet_kurumu_document(
 # --- MCP Tools for Bedesten (Alternative Yargitay Search) ---
 @app.tool()
 async def search_yargitay_bedesten(
-    phrase: str = Field(..., description="Aranacak kavram/kelime"),
+    phrase: str = Field(..., description="""
+        Aranacak kavram/kelime. İki farklı arama türü desteklenir:
+        • Normal arama: "mülkiyet kararı" - kelimeler ayrı ayrı aranır
+        • Tam cümle arama: "\"mülkiyet kararı\"" - tırnak içindeki ifade aynen aranır
+        Tam cümle aramalar daha kesin sonuçlar verir.
+    """),
     pageSize: int = Field(10, ge=1, le=100, description="Sayfa başına sonuç sayısı"),
     pageNumber: int = Field(1, ge=1, description="Sayfa numarası"),
     birimAdi: Optional[YargitayBirimEnum] = Field(None, description="""
@@ -861,7 +866,12 @@ async def get_yargitay_bedesten_document_markdown(
 # --- MCP Tools for Bedesten (Alternative Danıştay Search) ---
 @app.tool()
 async def search_danistay_bedesten(
-    phrase: str = Field(..., description="Aranacak kavram/kelime"),
+    phrase: str = Field(..., description="""
+        Aranacak kavram/kelime. İki farklı arama türü desteklenir:
+        • Normal arama: "mülkiyet kararı" - kelimeler ayrı ayrı aranır
+        • Tam cümle arama: "\"mülkiyet kararı\"" - tırnak içindeki ifade aynen aranır
+        Tam cümle aramalar daha kesin sonuçlar verir.
+    """),
     pageSize: int = Field(10, ge=1, le=100, description="Sayfa başına sonuç sayısı"),
     pageNumber: int = Field(1, ge=1, description="Sayfa numarası"),
     birimAdi: Optional[DanistayBirimEnum] = Field(None, description="""
@@ -942,7 +952,12 @@ async def get_danistay_bedesten_document_markdown(
 # --- MCP Tools for Bedesten (Yerel Hukuk Mahkemesi Search) ---
 @app.tool()
 async def search_yerel_hukuk_bedesten(
-    phrase: str = Field(..., description="Aranacak kavram/kelime"),
+    phrase: str = Field(..., description="""
+        Aranacak kavram/kelime. İki farklı arama türü desteklenir:
+        • Normal arama: "mülkiyet kararı" - kelimeler ayrı ayrı aranır
+        • Tam cümle arama: "\"mülkiyet kararı\"" - tırnak içindeki ifade aynen aranır
+        Tam cümle aramalar daha kesin sonuçlar verir.
+    """),
     pageSize: int = Field(10, ge=1, le=100, description="Sayfa başına sonuç sayısı"),
     pageNumber: int = Field(1, ge=1, description="Sayfa numarası"),
     kararTarihiStart: Optional[str] = Field(None, description="""
@@ -1013,7 +1028,12 @@ async def get_yerel_hukuk_bedesten_document_markdown(
 # --- MCP Tools for Bedesten (İstinaf Hukuk Mahkemesi Search) ---
 @app.tool()
 async def search_istinaf_hukuk_bedesten(
-    phrase: str = Field(..., description="Aranacak kavram/kelime"),
+    phrase: str = Field(..., description="""
+        Aranacak kavram/kelime. İki farklı arama türü desteklenir:
+        • Normal arama: "mülkiyet kararı" - kelimeler ayrı ayrı aranır
+        • Tam cümle arama: "\"mülkiyet kararı\"" - tırnak içindeki ifade aynen aranır
+        Tam cümle aramalar daha kesin sonuçlar verir.
+    """),
     pageSize: int = Field(10, ge=1, le=100, description="Sayfa başına sonuç sayısı"),
     pageNumber: int = Field(1, ge=1, description="Sayfa numarası"),
     kararTarihiStart: Optional[str] = Field(None, description="""
@@ -1087,7 +1107,12 @@ async def get_istinaf_hukuk_bedesten_document_markdown(
 # --- MCP Tools for Bedesten (Kanun Yararına Bozma Search) ---
 @app.tool()
 async def search_kyb_bedesten(
-    phrase: str = Field(..., description="Aranacak kavram/kelime"),
+    phrase: str = Field(..., description="""
+        Aranacak kavram/kelime. İki farklı arama türü desteklenir:
+        • Normal arama: "mülkiyet kararı" - kelimeler ayrı ayrı aranır
+        • Tam cümle arama: "\"mülkiyet kararı\"" - tırnak içindeki ifade aynen aranır
+        Tam cümle aramalar daha kesin sonuçlar verir.
+    """),
     pageSize: int = Field(10, ge=1, le=100, description="Sayfa başına sonuç sayısı"),
     pageNumber: int = Field(1, ge=1, description="Sayfa numarası"),
     kararTarihiStart: Optional[str] = Field(None, description="""

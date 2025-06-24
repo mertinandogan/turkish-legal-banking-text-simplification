@@ -12,12 +12,13 @@ Bu proje, çeşitli Türk hukuk kaynaklarına (Yargıtay, Danıştay, Emsal Kara
 * **Kapsamlı Mahkeme Daire/Kurul Filtreleme:** 79 farklı daire/kurul filtreleme seçeneği
 * **Dual/Triple API Desteği:** Her mahkeme için birden fazla API kaynağı ile maksimum kapsama
 * **Kapsamlı Tarih Filtreleme:** Tüm Bedesten API araçlarında ISO 8601 formatında tarih aralığı filtreleme
+* **Kesin Cümle Arama:** Tüm Bedesten API araçlarında çift tırnak ile tam cümle arama desteği
 * Aşağıdaki kurumların kararlarını arama ve getirme yeteneği:
-    * **Yargıtay:** Detaylı kriterlerle karar arama ve karar metinlerini Markdown formatında getirme. **Dual API** (Ana + Bedesten) + **52 Daire/Kurul Filtreleme** + **Tarih Filtreleme** (Hukuk/Ceza Daireleri, Genel Kurullar)
-    * **Danıştay:** Anahtar kelime bazlı ve detaylı kriterlerle karar arama; karar metinlerini Markdown formatında getirme. **Triple API** (Keyword + Detailed + Bedesten) + **27 Daire/Kurul Filtreleme** + **Tarih Filtreleme** (İdari Daireler, Vergi/İdare Kurulları, Askeri Yüksek İdare Mahkemesi)
-    * **Yerel Hukuk Mahkemeleri:** Bedesten API ile yerel hukuk mahkemesi kararlarına erişim + **Tarih Filtreleme**
-    * **İstinaf Hukuk Mahkemeleri:** Bedesten API ile istinaf mahkemesi kararlarına erişim + **Tarih Filtreleme**
-    * **Kanun Yararına Bozma (KYB):** Bedesten API ile olağanüstü kanun yoluna erişim + **Tarih Filtreleme**
+    * **Yargıtay:** Detaylı kriterlerle karar arama ve karar metinlerini Markdown formatında getirme. **Dual API** (Ana + Bedesten) + **52 Daire/Kurul Filtreleme** + **Tarih & Kesin Cümle Arama** (Hukuk/Ceza Daireleri, Genel Kurullar)
+    * **Danıştay:** Anahtar kelime bazlı ve detaylı kriterlerle karar arama; karar metinlerini Markdown formatında getirme. **Triple API** (Keyword + Detailed + Bedesten) + **27 Daire/Kurul Filtreleme** + **Tarih & Kesin Cümle Arama** (İdari Daireler, Vergi/İdare Kurulları, Askeri Yüksek İdare Mahkemesi)
+    * **Yerel Hukuk Mahkemeleri:** Bedesten API ile yerel hukuk mahkemesi kararlarına erişim + **Tarih & Kesin Cümle Arama**
+    * **İstinaf Hukuk Mahkemeleri:** Bedesten API ile istinaf mahkemesi kararlarına erişim + **Tarih & Kesin Cümle Arama**
+    * **Kanun Yararına Bozma (KYB):** Bedesten API ile olağanüstü kanun yoluna erişim + **Tarih & Kesin Cümle Arama**
     * **Emsal (UYAP):** Detaylı kriterlerle emsal karar arama ve karar metinlerini Markdown formatında getirme.
     * **Uyuşmazlık Mahkemesi:** Form tabanlı kriterlerle karar arama ve karar metinlerini (URL ile erişilen) Markdown formatında getirme.
     * **Anayasa Mahkemesi (Norm Denetimi):** Kapsamlı kriterlerle norm denetimi kararlarını arama; uzun karar metinlerini (5.000 karakterlik) sayfalanmış Markdown formatında getirme.
@@ -86,7 +87,7 @@ Bu FastMCP sunucusu aşağıdaki temel araçları sunar:
     * `search_yargitay_detailed(arananKelime, birimYrgKurulDaire, ...)`: Yargıtay kararlarını detaylı kriterlerle arar. **52 daire/kurul seçeneği** (Hukuk/Ceza Daireleri 1-23, Genel Kurullar, Başkanlar Kurulu)
     * `get_yargitay_document_markdown(id: str)`: Belirli bir Yargıtay kararının metnini Markdown formatında getirir.
 * **Bedesten API (Alternatif):**
-    * `search_yargitay_bedesten(phrase, birimAdi, kararTarihiStart, kararTarihiEnd, ...)`: Bedesten API ile Yargıtay kararlarını arar. **Aynı 52 daire filtreleme** + **Tarih Filtreleme**
+    * `search_yargitay_bedesten(phrase, birimAdi, kararTarihiStart, kararTarihiEnd, ...)`: Bedesten API ile Yargıtay kararlarını arar. **Aynı 52 daire filtreleme** + **Tarih Filtreleme** + **Kesin Cümle Arama** (`"\"mülkiyet kararı\""`)
     * `get_yargitay_bedesten_document_markdown(documentId: str)`: Bedesten'den karar metni (HTML/PDF → Markdown)
 
 ### **Danıştay Araçları (Triple API + 27 Daire Filtreleme)**
@@ -95,18 +96,18 @@ Bu FastMCP sunucusu aşağıdaki temel araçları sunar:
     * `search_danistay_detailed(daire, esasYil, ...)`: Danıştay kararlarını detaylı kriterlerle arar.
     * `get_danistay_document_markdown(id: str)`: Belirli bir Danıştay kararının metnini Markdown formatında getirir.
 * **Bedesten API (Alternatif):**
-    * `search_danistay_bedesten(phrase, birimAdi, kararTarihiStart, kararTarihiEnd, ...)`: Bedesten API ile Danıştay kararlarını arar. **27 daire/kurul seçeneği** + **Tarih Filtreleme** (1-17. Daireler, Vergi/İdare Kurulları, Askeri Mahkemeler)
+    * `search_danistay_bedesten(phrase, birimAdi, kararTarihiStart, kararTarihiEnd, ...)`: Bedesten API ile Danıştay kararlarını arar. **27 daire/kurul seçeneği** + **Tarih Filtreleme** + **Kesin Cümle Arama** (`"\"idari işlem\""`) (1-17. Daireler, Vergi/İdare Kurulları, Askeri Mahkemeler)
     * `get_danistay_bedesten_document_markdown(documentId: str)`: Bedesten'den karar metni
 
-### **Diğer Mahkemeler (Bedesten API + Tarih Filtreleme)**
+### **Diğer Mahkemeler (Bedesten API + Gelişmiş Arama)**
 * **Yerel Hukuk Mahkemeleri:**
-    * `search_yerel_hukuk_bedesten(phrase, kararTarihiStart, kararTarihiEnd, ...)`: Yerel hukuk mahkemesi kararlarını arar + **Tarih Filtreleme**
+    * `search_yerel_hukuk_bedesten(phrase, kararTarihiStart, kararTarihiEnd, ...)`: Yerel hukuk mahkemesi kararlarını arar + **Tarih & Kesin Cümle Arama** (`"\"sözleşme ihlali\""`)
     * `get_yerel_hukuk_bedesten_document_markdown(documentId: str)`: Karar metni
 * **İstinaf Hukuk Mahkemeleri:**
-    * `search_istinaf_hukuk_bedesten(phrase, kararTarihiStart, kararTarihiEnd, ...)`: İstinaf mahkemesi kararlarını arar + **Tarih Filtreleme**
+    * `search_istinaf_hukuk_bedesten(phrase, kararTarihiStart, kararTarihiEnd, ...)`: İstinaf mahkemesi kararlarını arar + **Tarih & Kesin Cümle Arama** (`"\"temyiz incelemesi\""`)
     * `get_istinaf_hukuk_bedesten_document_markdown(documentId: str)`: Karar metni
 * **Kanun Yararına Bozma (KYB):**
-    * `search_kyb_bedesten(phrase, kararTarihiStart, kararTarihiEnd, ...)`: Olağanüstü kanun yolu kararlarını arar + **Tarih Filtreleme**
+    * `search_kyb_bedesten(phrase, kararTarihiStart, kararTarihiEnd, ...)`: Olağanüstü kanun yolu kararlarını arar + **Tarih & Kesin Cümle Arama** (`"\"kanun yararına bozma\""`)
     * `get_kyb_bedesten_document_markdown(documentId: str)`: Karar metni
 
 * **Emsal Karar Araçları:**
@@ -140,6 +141,7 @@ Bu FastMCP sunucusu aşağıdaki temel araçları sunar:
 - **Toplam MCP Tool:** 30+ arama ve belge getirme aracı  
 - **Daire/Kurul Filtreleme:** 79 farklı seçenek (52 Yargıtay + 27 Danıştay)
 - **Tarih Filtreleme:** 5 Bedesten API aracında ISO 8601 formatında tam tarih aralığı desteği
+- **Kesin Cümle Arama:** 5 Bedesten API aracında çift tırnak ile tam cümle arama (`"\"mülkiyet kararı\""` formatı)
 - **API Kaynağı:** Dual/Triple API desteği ile maksimum kapsama
 - **Tam Türk Adalet Sistemi:** Yerel mahkemelerden en yüksek mahkemelere kadar
 
@@ -148,8 +150,8 @@ Bu FastMCP sunucusu aşağıdaki temel araçları sunar:
 Yerel Mahkemeler → İstinaf → Yargıtay/Danıştay → Anayasa Mahkemesi
      ↓              ↓            ↓                    ↓
 Bedesten API   Bedesten API   Dual/Triple API   Norm+Bireysel API
-  + Tarih        + Tarih       + Daire + Tarih    + Gelişmiş
-  Filtreleme     Filtreleme    Filtreleme         Arama
++ Tarih + Kesin + Tarih + Kesin + Daire + Tarih   + Gelişmiş
+  Cümle Arama    Cümle Arama   + Kesin Cümle     Arama
 ```
 
 **⚖️ Kapsamlı Filtreleme Özellikleri:**
@@ -159,6 +161,10 @@ Bedesten API   Bedesten API   Dual/Triple API   Norm+Bireysel API
 - **Tarih Filtreleme:** 5 Bedesten API aracında ISO 8601 formatı (YYYY-MM-DDTHH:MM:SS.000Z)
   - Tek tarih, tarih aralığı, tek taraflı filtreleme desteği
   - Yargıtay, Danıştay, Yerel Hukuk, İstinaf Hukuk, KYB kararları
+- **Kesin Cümle Arama:** 5 Bedesten API aracında çift tırnak formatı
+  - Normal arama: `"mülkiyet kararı"` (kelimeler ayrı ayrı)
+  - Kesin arama: `"\"mülkiyet kararı\""` (tam cümle olarak)
+  - Daha kesin sonuçlar için hukuki terimler ve kavramlar
 
 📜 **Lisans**
 
