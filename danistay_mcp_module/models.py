@@ -21,10 +21,10 @@ class DanistayKeywordSearchRequestData(BaseModel):
 
 class DanistayKeywordSearchRequest(BaseModel): # This is the model the MCP tool will accept
     """Model for keyword-based search request for Danistay."""
-    andKelimeler: List[str] = Field(default_factory=list, description="Keywords for AND logic, e.g., ['word1', 'word2']")
-    orKelimeler: List[str] = Field(default_factory=list, description="Keywords for OR logic.")
-    notAndKelimeler: List[str] = Field(default_factory=list, description="Keywords for NOT AND logic.")
-    notOrKelimeler: List[str] = Field(default_factory=list, description="Keywords for NOT OR logic.")
+    andKelimeler: List[str] = Field(default_factory=list, description="Keywords for AND logic (VE Mantığı), e.g., ['word1', 'word2']")
+    orKelimeler: List[str] = Field(default_factory=list, description="Keywords for OR logic (VEYA Mantığı).")
+    notAndKelimeler: List[str] = Field(default_factory=list, description="Keywords for NOT AND logic (VE DEĞİL Mantığı).")
+    notOrKelimeler: List[str] = Field(default_factory=list, description="Keywords for NOT OR logic (VEYA DEĞİL Mantığı).")
     pageSize: int = Field(default=10, ge=1, le=100)
     pageNumber: int = Field(default=1, ge=1)
 
@@ -80,11 +80,11 @@ class DanistayApiDecisionEntry(BaseModel):
     esasNo: Optional[str] = Field(None)
     kararNo: Optional[str] = Field(None)
     kararTarihi: Optional[str] = Field(None)
-    arananKelime: Optional[str] = Field(None, description="Matched keyword if provided in response.")
+    arananKelime: Optional[str] = Field(None, description="Matched keyword (Aranan Kelime) if provided in response.")
     # index: Optional[int] = None # Present in response, can be added if needed by MCP tool
     # siraNo: Optional[int] = None # Present in detailed response, can be added
 
-    document_url: Optional[HttpUrl] = Field(None, description="URL to the full document, constructed by the client.")
+    document_url: Optional[HttpUrl] = Field(None, description="URL (Belge URL) to the full document, constructed by the client.")
 
     class Config:
         populate_by_name = True # Important for alias to work
@@ -95,17 +95,17 @@ class DanistayApiResponseInnerData(BaseModel):
     data: List[DanistayApiDecisionEntry]
     recordsTotal: int
     recordsFiltered: int
-    draw: Optional[int] = Field(None, description="Draw counter from API, usually for DataTables.")
+    draw: Optional[int] = Field(None, description="Draw counter (Çizim Sayıcısı) from API, usually for DataTables.")
 
 class DanistayApiResponse(BaseModel):
     """Model for the complete search response from the Danistay API."""
     data: DanistayApiResponseInnerData
-    metadata: Optional[Dict[str, Any]] = Field(None, description="Optional metadata from API.")
+    metadata: Optional[Dict[str, Any]] = Field(None, description="Optional metadata (Meta Veri) from API.")
 
 class DanistayDocumentMarkdown(BaseModel):
     """Model for a Danistay decision document, containing only Markdown content."""
     id: str
-    markdown_content: Optional[str] = Field(None, description="The decision content converted to Markdown.")
+    markdown_content: Optional[str] = Field(None, description="The decision content (Karar İçeriği) converted to Markdown.")
     source_url: HttpUrl
 
 class CompactDanistaySearchResult(BaseModel):

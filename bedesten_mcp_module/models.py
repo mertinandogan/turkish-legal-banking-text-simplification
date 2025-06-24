@@ -42,56 +42,56 @@ class BedestenSearchData(BaseModel):
         Calculate total pages from response.data.total / pageSize
         Navigate: pageNumber=2 gets next set of results""")
     itemTypeList: List[str] = Field(..., description="""Court type filter - determines which court decisions to search:
-        • ["YARGITAYKARARI"]: Yargıtay (Court of Cassation) - supreme court civil/criminal
-        • ["DANISTAYKARAR"]: Danıştay (Council of State) - administrative court decisions
-        • ["YERELHUKUK"]: Yerel Hukuk Mahkemesi - local civil court decisions
-        • ["ISTINAFHUKUK"]: İstinaf Hukuk Mahkemesi - civil appellate court decisions
-        • ["KYB"]: Kanun Yararına Bozma - extraordinary appeal decisions
+        • ["YARGITAYKARARI"]: Court of Cassation (Yargıtay) - supreme court civil/criminal decisions
+        • ["DANISTAYKARAR"]: Council of State (Danıştay) - administrative court decisions
+        • ["YERELHUKUK"]: Local Civil Courts (Yerel Hukuk Mahkemeleri) - first instance civil decisions
+        • ["ISTINAFHUKUK"]: Civil Courts of Appeals (İstinaf Hukuk Mahkemeleri) - appellate court decisions
+        • ["KYB"]: Extraordinary Appeal (Kanun Yararına Bozma) - extraordinary appeal decisions
         Note: Use single-item list for specific court type targeting""")
     phrase: str = Field(..., description="""Search phrase/keyword with advanced search support:
         • Regular search: "mülkiyet kararı" - searches words separately
         • Exact phrase: "\"mülkiyet kararı\"" - searches exact phrase (more precise)
-        • Legal concepts: "\"idari işlem\"", "\"sözleşme ihlali\""
+        • Legal concepts: "\"idari işlem\"", "\"sözleşme ihlali\"", "\"tazminat davası\""
         • Empty string: searches all documents (use with filters)
-        Exact phrases significantly reduce false positives""")
+        Exact phrases significantly reduce false positives for precise legal research""")
     birimAdi: Optional[Union[YargitayBirimEnum, DanistayBirimEnum]] = Field(None, description="""
-        Chamber/Board filter (optional). Available options depend on itemTypeList:
+        Chamber/Department (Daire) filter (optional). Available options depend on itemTypeList:
         
-        For YARGITAYKARARI (52 options):
+        For YARGITAYKARARI - Court of Cassation (52 options):
         - None/null for ALL chambers
-        - 'Hukuk Genel Kurulu', '1. Hukuk Dairesi' through '23. Hukuk Dairesi'
-        - 'Ceza Genel Kurulu', '1. Ceza Dairesi' through '23. Ceza Dairesi'  
-        - 'Hukuk Daireleri Başkanlar Kurulu', 'Ceza Daireleri Başkanlar Kurulu'
-        - 'Büyük Genel Kurulu'
+        - 'Civil General Assembly (Hukuk Genel Kurulu)', '1st Civil Chamber (1. Hukuk Dairesi)' through '23rd Civil Chamber (23. Hukuk Dairesi)'
+        - 'Criminal General Assembly (Ceza Genel Kurulu)', '1st Criminal Chamber (1. Ceza Dairesi)' through '23rd Criminal Chamber (23. Ceza Dairesi)'  
+        - 'Civil Chambers Presidents Board (Hukuk Daireleri Başkanlar Kurulu)', 'Criminal Chambers Presidents Board (Ceza Daireleri Başkanlar Kurulu)'
+        - 'Grand General Assembly (Büyük Genel Kurulu)'
         
-        For DANISTAYKARAR (27 options):
+        For DANISTAYKARAR - Council of State (27 options):
         - None/null for ALL chambers
-        - 'Büyük Gen.Kur.', 'İdare Dava Daireleri Kurulu', 'Vergi Dava Daireleri Kurulu'
-        - '1. Daire' through '17. Daire'
-        - 'İçtihatları Birleştirme Kurulu', 'İdari İşler Kurulu', 'Başkanlar Kurulu'
-        - Military courts: 'Askeri Yüksek İdare Mahkemesi' variants
+        - 'Grand General Assembly (Büyük Gen.Kur.)', 'Administrative Cases Chambers Council (İdare Dava Daireleri Kurulu)', 'Tax Cases Chambers Council (Vergi Dava Daireleri Kurulu)'
+        - '1st Chamber (1. Daire)' through '17th Chamber (17. Daire)'
+        - 'Precedents Unification Council (İçtihatları Birleştirme Kurulu)', 'Administrative Affairs Council (İdari İşler Kurulu)', 'Presidents Council (Başkanlar Kurulu)'
+        - Military courts: 'Military High Administrative Court (Askeri Yüksek İdare Mahkemesi)' variants
     """)
-    kararTarihiStart: Optional[str] = Field(None, description="""Decision start date filter (optional).
+    kararTarihiStart: Optional[str] = Field(None, description="""Decision start date (Karar Tarihi Başlangıç) filter (optional).
         Format: YYYY-MM-DDTHH:MM:SS.000Z (ISO 8601 with Z timezone)
         Examples:
         • "2024-01-01T00:00:00.000Z" - from beginning of 2024
         • "2023-06-15T00:00:00.000Z" - from June 15, 2023
         • "2024-03-01T00:00:00.000Z" - from March 1, 2024
-        Use with kararTarihiEnd for date range, or alone for "from date" filtering""")
-    kararTarihiEnd: Optional[str] = Field(None, description="""Decision end date filter (optional).
+        Use with kararTarihiEnd for date range, or alone for "from date" filtering"""
+    kararTarihiEnd: Optional[str] = Field(None, description="""Decision end date (Karar Tarihi Bitiş) filter (optional).
         Format: YYYY-MM-DDTHH:MM:SS.000Z (ISO 8601 with Z timezone)
         Examples:
         • "2024-12-31T23:59:59.999Z" - until end of 2024
         • "2023-12-31T23:59:59.999Z" - until end of 2023  
         • "2024-06-30T23:59:59.999Z" - until end of June 2024
-        Use with kararTarihiStart for date range, or alone for "until date" filtering""")
-    sortFields: List[str] = Field(default=["KARAR_TARIHI"], description="""Sorting field specification.
-        ["KARAR_TARIHI"]: Sort by decision date [DEFAULT]
-        Most common use case for chronological ordering""")
-    sortDirection: str = Field(default="desc", description="""Sort direction for results.
+        Use with kararTarihiStart for date range, or alone for "until date" filtering"""
+    sortFields: List[str] = Field(default=["KARAR_TARIHI"], description="""Sorting field (Sıralama Alanı) specification.
+        ["KARAR_TARIHI"]: Sort by decision date (Karar Tarihi) [DEFAULT]
+        Most common use case for chronological ordering"""
+    sortDirection: str = Field(default="desc", description="""Sort direction (Sıralama Yönü) for results.
         "desc": Descending order - newest decisions first [DEFAULT]
         "asc": Ascending order - oldest decisions first
-        Recommended: "desc" for latest legal developments""")""")
+        Recommended: "desc" for latest legal developments""")
 
 class BedestenSearchRequest(BaseModel):
     data: BedestenSearchData
@@ -146,7 +146,7 @@ class BedestenDocumentResponse(BaseModel):
     metadata: Dict[str, Any]
 
 class BedestenDocumentMarkdown(BaseModel):
-    documentId: str = Field(..., description="The document ID from Bedesten")
-    markdown_content: Optional[str] = Field(None, description="The decision content converted to Markdown")
-    source_url: str = Field(..., description="The source URL of the document")
-    mime_type: Optional[str] = Field(None, description="Original content type (text/html or application/pdf)")
+    documentId: str = Field(..., description="The document ID (Belge Kimliği) from Bedesten")
+    markdown_content: Optional[str] = Field(None, description="The decision content (Karar İçeriği) converted to Markdown")
+    source_url: str = Field(..., description="The source URL (Kaynak URL) of the document")
+    mime_type: Optional[str] = Field(None, description="Original content type (İçerik Türü) (text/html or application/pdf)")

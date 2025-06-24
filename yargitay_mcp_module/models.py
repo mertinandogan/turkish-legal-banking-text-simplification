@@ -41,18 +41,18 @@ class YargitayDetailedSearchRequest(BaseModel):
         • Wildcards: 'bozma*' (matches bozma, bozması, bozmanın, etc.)
         • Multiple required: '+"arsa payı" +"bozma sebebi"'
         • Exclusion: '+"arsa payı" -"inşaat sözleşmesi"'
-        Examples: arsa payı | "arsa payı" | +"property right" +"cancellation reason" | legal*""")
-    # Department/Board selection - Complete Yargıtay chamber hierarchy
+        Examples: arsa payı | "arsa payı" | +"mülkiyet hakkı" +"bozma sebebi" | hukuk*""")
+    # Department/Board selection - Complete Court of Cassation chamber hierarchy
     birimYrgKurulDaire: YargitayBirimEnum = Field("", description="""
-        Yargıtay chamber/board selection. Options include:
+        Court of Cassation (Yargıtay) chamber/board selection. Options include:
         - Empty string ('') for ALL chambers
-        - Civil: 'Hukuk Genel Kurulu', '1. Hukuk Dairesi' through '23. Hukuk Dairesi', 'Hukuk Daireleri Başkanlar Kurulu'
-        - Criminal: 'Ceza Genel Kurulu', '1. Ceza Dairesi' through '23. Ceza Dairesi', 'Ceza Daireleri Başkanlar Kurulu'
-        - General: 'Büyük Genel Kurulu'
-        Total: 49 possible values (including empty string for all chambers)
+        - Civil: 'Civil General Assembly (Hukuk Genel Kurulu)', '1st Civil Chamber (1. Hukuk Dairesi)' through '23rd Civil Chamber (23. Hukuk Dairesi)', 'Civil Chambers Presidents Board (Hukuk Daireleri Başkanlar Kurulu)'
+        - Criminal: 'Criminal General Assembly (Ceza Genel Kurulu)', '1st Criminal Chamber (1. Ceza Dairesi)' through '23rd Criminal Chamber (23. Ceza Dairesi)', 'Criminal Chambers Presidents Board (Ceza Daireleri Başkanlar Kurulu)'
+        - General: 'Grand General Assembly (Büyük Genel Kurulu)'
+        Total: 52 possible values (including empty string for all chambers)
     """)
-    birimYrgHukukDaire: Optional[str] = Field("", description="Legacy field - use birimYrgKurulDaire instead")
-    birimYrgCezaDaire: Optional[str] = Field("", description="Legacy field - use birimYrgKurulDaire instead")
+    birimYrgHukukDaire: Optional[str] = Field("", description="Legacy field - use birimYrgKurulDaire instead for chamber selection")
+    birimYrgCezaDaire: Optional[str] = Field("", description="Legacy field - use birimYrgKurulDaire instead for chamber selection")
     
     esasYil: Optional[str] = Field("", description="""Case year for 'Esas No' filtering. 
         Format: YYYY (e.g., '2024')
@@ -105,15 +105,15 @@ class YargitayDetailedSearchRequest(BaseModel):
 class YargitayApiDecisionEntry(BaseModel):
     """Model for an individual decision entry from the Yargitay API search response."""
     id: str # Unique system ID of the decision
-    daire: Optional[str] = Field(None, description="The chamber that made the decision.")
-    esasNo: Optional[str] = Field(None, alias="esasNo", description="Case registry number ('Esas No').")
-    kararNo: Optional[str] = Field(None, alias="kararNo", description="Decision number ('Karar No').")
-    kararTarihi: Optional[str] = Field(None, alias="kararTarihi", description="Date of the decision.")
-    arananKelime: Optional[str] = Field(None, alias="arananKelime", description="Matched keyword in the search result item.")
+    daire: Optional[str] = Field(None, description="The chamber (Daire) that made the decision.")
+    esasNo: Optional[str] = Field(None, alias="esasNo", description="Case registry number (Esas No).")
+    kararNo: Optional[str] = Field(None, alias="kararNo", description="Decision number (Karar No).")
+    kararTarihi: Optional[str] = Field(None, alias="kararTarihi", description="Date of the decision (Karar Tarihi).")
+    arananKelime: Optional[str] = Field(None, alias="arananKelime", description="Matched keyword (Aranan Kelime) in the search result item.")
     # 'index' and 'siraNo' from API response are not critical for MCP tool, so omitted for brevity
     
     # This field will be populated by the client after fetching the search list
-    document_url: Optional[HttpUrl] = Field(None, description="Direct URL to the decision document.")
+    document_url: Optional[HttpUrl] = Field(None, description="Direct URL (Belge URL) to the decision document.")
 
     class Config:
         populate_by_name = True # To allow populating by alias from API response
@@ -133,9 +133,9 @@ class YargitayApiSearchResponse(BaseModel):
 
 class YargitayDocumentMarkdown(BaseModel):
     """Model for a Yargitay decision document, containing only Markdown content."""
-    id: str = Field(..., description="The unique ID of the document.")
-    markdown_content: Optional[str] = Field(None, description="The decision content converted to Markdown.")
-    source_url: HttpUrl = Field(..., description="The source URL of the original document.")
+    id: str = Field(..., description="The unique ID (Belge Kimliği) of the document.")
+    markdown_content: Optional[str] = Field(None, description="The decision content (Karar İçeriği) converted to Markdown.")
+    source_url: HttpUrl = Field(..., description="The source URL (Kaynak URL) of the original document.")
 
 class CompactYargitaySearchResult(BaseModel):
     """A more compact search result model for the MCP tool to return."""
