@@ -1,6 +1,6 @@
 # emsal_mcp_module/models.py
 
-from pydantic import BaseModel, Field, HttpUrl
+from pydantic import BaseModel, Field, HttpUrl, ConfigDict
 from typing import List, Optional, Dict, Any
 
 class EmsalDetailedSearchRequestData(BaseModel):
@@ -32,9 +32,7 @@ class EmsalDetailedSearchRequestData(BaseModel):
     pageSize: int
     pageNumber: int
     
-    class Config:
-        populate_by_name = True # Enables use of alias in serialization (when dumping to dict for payload)
-        # anystr_strip_whitespace = True # Optional: strip whitespace from strings
+    model_config = ConfigDict(populate_by_name=True)  # Enables use of alias in serialization (when dumping to dict for payload)
 
 class EmsalSearchRequest(BaseModel): # This is the model the MCP tool will accept
     """Model for Emsal detailed search request, with user-friendly field names."""
@@ -75,8 +73,7 @@ class EmsalApiDecisionEntry(BaseModel):
 
     document_url: Optional[HttpUrl] = Field(None, description="URL (Belge URL) to the full document, constructed by the client.")
 
-    class Config:
-        extra = 'ignore'
+    model_config = ConfigDict(extra='ignore')
 
 class EmsalApiResponseInnerData(BaseModel):
     """Model for the inner 'data' object in the Emsal API search response."""

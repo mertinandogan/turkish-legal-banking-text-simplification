@@ -1,6 +1,6 @@
 # danistay_mcp_module/models.py
 
-from pydantic import BaseModel, Field, HttpUrl
+from pydantic import BaseModel, Field, HttpUrl, ConfigDict
 from typing import List, Optional, Dict, Any
 
 class DanistayBaseSearchRequest(BaseModel):
@@ -76,7 +76,7 @@ class DanistayApiDecisionEntry(BaseModel):
     id: str
     # The API response for keyword search uses "daireKurul", detailed search example uses "daire".
     # We use an alias to handle both and map to a consistent field name "chamber".
-    chamber: Optional[str] = Field(None, alias="daire", alt_alias="daireKurul", description="The chamber or board.")
+    chamber: Optional[str] = Field(None, alias="daire", description="The chamber or board.")
     esasNo: Optional[str] = Field(None)
     kararNo: Optional[str] = Field(None)
     kararTarihi: Optional[str] = Field(None)
@@ -86,9 +86,7 @@ class DanistayApiDecisionEntry(BaseModel):
 
     document_url: Optional[HttpUrl] = Field(None, description="URL (Belge URL) to the full document, constructed by the client.")
 
-    class Config:
-        populate_by_name = True # Important for alias to work
-        extra = 'ignore' # Ignore any extra fields from API not defined in model
+    model_config = ConfigDict(populate_by_name=True, extra='ignore')  # Important for alias to work and ignore extra fields
 
 class DanistayApiResponseInnerData(BaseModel):
     """Model for the inner 'data' object in the Danistay API search response."""

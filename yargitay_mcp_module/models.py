@@ -1,6 +1,6 @@
 # yargitay_mcp_module/models.py
 
-from pydantic import BaseModel, Field, HttpUrl
+from pydantic import BaseModel, Field, HttpUrl, ConfigDict
 from typing import List, Optional, Dict, Any, Literal
 
 # Yargıtay Chamber/Board Options
@@ -115,8 +115,7 @@ class YargitayApiDecisionEntry(BaseModel):
     # This field will be populated by the client after fetching the search list
     document_url: Optional[HttpUrl] = Field(None, description="Direct URL (Belge URL) to the decision document.")
 
-    class Config:
-        populate_by_name = True # To allow populating by alias from API response
+    model_config = ConfigDict(populate_by_name=True)  # To allow populating by alias from API response
 
 
 class YargitayApiResponseInnerData(BaseModel):

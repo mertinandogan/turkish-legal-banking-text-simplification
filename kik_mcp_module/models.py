@@ -1,5 +1,5 @@
 # kik_mcp_module/models.py
-from pydantic import BaseModel, Field, HttpUrl, computed_field
+from pydantic import BaseModel, Field, HttpUrl, computed_field, ConfigDict
 from typing import List, Optional
 from enum import Enum
 import base64 # Base64 encoding/decoding için
@@ -46,8 +46,7 @@ class KikDecisionEntry(BaseModel):
         combined_key = f"{self.karar_tipi.value}|{self.karar_no_str}"
         return base64.b64encode(combined_key.encode('utf-8')).decode('utf-8')
 
-    class Config:
-        populate_by_name = True
+    model_config = ConfigDict(populate_by_name=True)
 
 class KikSearchResult(BaseModel):
     """Model for KIK search results."""
@@ -73,5 +72,4 @@ class KikDocumentMarkdown(BaseModel):
     is_paginated: bool = Field(False, description="True if the full markdown content is split into multiple pages.")
     full_content_char_count: Optional[int] = Field(None, description="Total character count of the full markdown content before chunking.")
 
-    class Config:
-        populate_by_name = True
+    model_config = ConfigDict(populate_by_name=True)
