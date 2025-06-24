@@ -162,5 +162,9 @@ cython_debug/
 hello.py
 
 *.html
-test_kik_client.py
-debug_rekabet_arama.py
+fast-mcp-docs.md
+
+# Debug and test files
+debug_*
+test_*
+CLAUDE.md
