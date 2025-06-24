@@ -1,7 +1,32 @@
 # yargitay_mcp_module/models.py
 
 from pydantic import BaseModel, Field, HttpUrl
-from typing import List, Optional, Dict, Any
+from typing import List, Optional, Dict, Any, Literal
+
+# Yargıtay Chamber/Board Options
+YargitayBirimEnum = Literal[
+    "",  # Empty string for "All" chambers
+    # Hukuk (Civil) Chambers
+    "Hukuk Genel Kurulu",
+    "1. Hukuk Dairesi", "2. Hukuk Dairesi", "3. Hukuk Dairesi", "4. Hukuk Dairesi",
+    "5. Hukuk Dairesi", "6. Hukuk Dairesi", "7. Hukuk Dairesi", "8. Hukuk Dairesi",
+    "9. Hukuk Dairesi", "10. Hukuk Dairesi", "11. Hukuk Dairesi", "12. Hukuk Dairesi",
+    "13. Hukuk Dairesi", "14. Hukuk Dairesi", "15. Hukuk Dairesi", "16. Hukuk Dairesi",
+    "17. Hukuk Dairesi", "18. Hukuk Dairesi", "19. Hukuk Dairesi", "20. Hukuk Dairesi",
+    "21. Hukuk Dairesi", "22. Hukuk Dairesi", "23. Hukuk Dairesi",
+    "Hukuk Daireleri Başkanlar Kurulu",
+    # Ceza (Criminal) Chambers
+    "Ceza Genel Kurulu", 
+    "1. Ceza Dairesi", "2. Ceza Dairesi", "3. Ceza Dairesi", "4. Ceza Dairesi",
+    "5. Ceza Dairesi", "6. Ceza Dairesi", "7. Ceza Dairesi", "8. Ceza Dairesi",
+    "9. Ceza Dairesi", "10. Ceza Dairesi", "11. Ceza Dairesi", "12. Ceza Dairesi",
+    "13. Ceza Dairesi", "14. Ceza Dairesi", "15. Ceza Dairesi", "16. Ceza Dairesi",
+    "17. Ceza Dairesi", "18. Ceza Dairesi", "19. Ceza Dairesi", "20. Ceza Dairesi",
+    "21. Ceza Dairesi", "22. Ceza Dairesi", "23. Ceza Dairesi",
+    "Ceza Daireleri Başkanlar Kurulu",
+    # General Assembly
+    "Büyük Genel Kurulu"
+]
 
 class YargitayDetailedSearchRequest(BaseModel):
     """
@@ -10,11 +35,17 @@ class YargitayDetailedSearchRequest(BaseModel):
     Based on the payload provided by the user.
     """
     arananKelime: Optional[str] = Field("", description="Keyword to search for.")
-    # Department/Board selection. Based on user provided payload.
-    # birimYrg* fields seem to be the ones used for filtering.
-    birimYrgKurulDaire: Optional[str] = Field("", description="Yargitay Board Unit (e.g., 'Hukuk Genel Kurulu').")
-    birimYrgHukukDaire: Optional[str] = Field("", description="Yargitay Civil Chamber (e.g., '1. Hukuk Dairesi').")
-    birimYrgCezaDaire: Optional[str] = Field("", description="Yargitay Criminal Chamber.")
+    # Department/Board selection - Complete Yargıtay chamber hierarchy
+    birimYrgKurulDaire: YargitayBirimEnum = Field("", description="""
+        Yargıtay chamber/board selection. Options include:
+        - Empty string ('') for ALL chambers
+        - Civil: 'Hukuk Genel Kurulu', '1. Hukuk Dairesi' through '23. Hukuk Dairesi', 'Hukuk Daireleri Başkanlar Kurulu'
+        - Criminal: 'Ceza Genel Kurulu', '1. Ceza Dairesi' through '23. Ceza Dairesi', 'Ceza Daireleri Başkanlar Kurulu'
+        - General: 'Büyük Genel Kurulu'
+        Total: 49 possible values (including empty string for all chambers)
+    """)
+    birimYrgHukukDaire: Optional[str] = Field("", description="Legacy field - use birimYrgKurulDaire instead")
+    birimYrgCezaDaire: Optional[str] = Field("", description="Legacy field - use birimYrgKurulDaire instead")
     
     esasYil: Optional[str] = Field("", description="Case year for 'Esas No'.")
     esasIlkSiraNo: Optional[str] = Field("", description="Starting sequence number for 'Esas No'.")

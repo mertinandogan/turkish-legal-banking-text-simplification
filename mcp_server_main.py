@@ -36,7 +36,13 @@ from fastmcp import FastMCP
 # --- Module Imports ---
 from yargitay_mcp_module.client import YargitayOfficialApiClient
 from yargitay_mcp_module.models import (
-    YargitayDetailedSearchRequest, YargitayDocumentMarkdown, CompactYargitaySearchResult
+    YargitayDetailedSearchRequest, YargitayDocumentMarkdown, CompactYargitaySearchResult,
+    YargitayBirimEnum
+)
+from bedesten_mcp_module.client import BedestenApiClient
+from bedesten_mcp_module.models import (
+    BedestenSearchRequest, BedestenSearchData,
+    BedestenDocumentMarkdown, DanistayBirimEnum
 )
 from danistay_mcp_module.client import DanistayApiClient
 from danistay_mcp_module.models import (
@@ -97,6 +103,7 @@ anayasa_norm_client_instance = AnayasaMahkemesiApiClient()
 anayasa_bireysel_client_instance = AnayasaBireyselBasvuruApiClient()
 kik_client_instance = KikApiClient()
 rekabet_client_instance = RekabetKurumuApiClient()
+bedesten_client_instance = BedestenApiClient()
 
 
 KARAR_TURU_ADI_TO_GUID_ENUM_MAP = {
@@ -120,9 +127,20 @@ async def search_yargitay_detailed(
     • +"phrase1" +"phrase2" = Multiple required phrases
     • +"required" -"excluded" = Include and exclude
     Examples: arsa payı | "arsa payı" | +"arsa payı" +"bozma sebebi" | bozma*"""),
-    birimYrgKurulDaire: str = Field("", description="Yargitay Board Unit (e.g., 'Hukuk Genel Kurulu')."),
-    birimYrgHukukDaire: str = Field("", description="Yargitay Civil Chamber (e.g., '1. Hukuk Dairesi')."),
-    birimYrgCezaDaire: str = Field("", description="Yargitay Criminal Chamber."),
+    birimYrgKurulDaire: YargitayBirimEnum = Field("", description="""
+        Yargıtay chamber/board selection. Available options:
+        • Empty string ('') for ALL chambers
+        • Hukuk Genel Kurulu (Civil General Assembly)
+        • 1. Hukuk Dairesi through 23. Hukuk Dairesi (Civil Chambers 1-23)
+        • Hukuk Daireleri Başkanlar Kurulu (Civil Chambers Presidents Board)
+        • Ceza Genel Kurulu (Criminal General Assembly)
+        • 1. Ceza Dairesi through 23. Ceza Dairesi (Criminal Chambers 1-23)
+        • Ceza Daireleri Başkanlar Kurulu (Criminal Chambers Presidents Board)
+        • Büyük Genel Kurulu (Grand General Assembly)
+        Total: 49 possible values
+    """),
+    birimYrgHukukDaire: str = Field("", description="Legacy field - use birimYrgKurulDaire instead"),
+    birimYrgCezaDaire: str = Field("", description="Legacy field - use birimYrgKurulDaire instead"),
     esasYil: str = Field("", description="Case year for 'Esas No'."),
     esasIlkSiraNo: str = Field("", description="Starting sequence number for 'Esas No'."),
     esasSonSiraNo: str = Field("", description="Ending sequence number for 'Esas No'."),
@@ -756,6 +774,331 @@ async def get_rekabet_kurumu_document(
         logger.exception(f"Error in tool 'get_rekabet_kurumu_document'. Karar ID: {karar_id}")
         raise 
 
+# --- MCP Tools for Bedesten (Alternative Yargitay Search) ---
+@app.tool()
+async def search_yargitay_bedesten(
+    phrase: str = Field(..., description="Aranacak kavram/kelime"),
+    pageSize: int = Field(10, ge=1, le=100, description="Sayfa başına sonuç sayısı"),
+    pageNumber: int = Field(1, ge=1, description="Sayfa numarası"),
+    birimAdi: Optional[YargitayBirimEnum] = Field(None, description="""
+        Yargıtay chamber/board filter (optional). Available options:
+        • None for ALL chambers  
+        • 'Hukuk Genel Kurulu' (Civil General Assembly)
+        • '1. Hukuk Dairesi' through '23. Hukuk Dairesi' (Civil Chambers 1-23)
+        • 'Hukuk Daireleri Başkanlar Kurulu' (Civil Chambers Presidents Board)
+        • 'Ceza Genel Kurulu' (Criminal General Assembly)
+        • '1. Ceza Dairesi' through '23. Ceza Dairesi' (Criminal Chambers 1-23)  
+        • 'Ceza Daireleri Başkanlar Kurulu' (Criminal Chambers Presidents Board)
+        • 'Büyük Genel Kurulu' (Grand General Assembly)
+        Total: 49 chamber options
+    """)
+) -> dict:
+    """
+    Searches Yargıtay decisions using Bedesten API (alternative source).
+    This complements search_yargitay_detailed for comprehensive coverage.
+    Always use BOTH Yargıtay search tools for complete results.
+    
+    Returns a simplified response with decision list and metadata.
+    """
+    search_data = BedestenSearchData(
+        pageSize=pageSize,
+        pageNumber=pageNumber,
+        itemTypeList=["YARGITAYKARARI"],  # Only Yargıtay decisions
+        phrase=phrase,
+        birimAdi=birimAdi
+    )
+    
+    search_request = BedestenSearchRequest(data=search_data)
+    
+    logger.info(f"Tool 'search_yargitay_bedesten' called: phrase='{phrase}', birimAdi='{birimAdi}', page={pageNumber}")
+    
+    try:
+        response = await bedesten_client_instance.search_documents(search_request)
+        
+        # Return simplified response format
+        return {
+            "decisions": [d.model_dump() for d in response.data.emsalKararList],
+            "total_records": response.data.total,
+            "requested_page": pageNumber,
+            "page_size": pageSize
+        }
+    except Exception as e:
+        logger.exception("Error in tool 'search_yargitay_bedesten'")
+        raise
+
+@app.tool()
+async def get_yargitay_bedesten_document_markdown(
+    documentId: str = Field(..., description="Document ID from Bedesten search results")
+) -> BedestenDocumentMarkdown:
+    """
+    Retrieves a Yargıtay decision document from Bedesten API and converts to Markdown.
+    Supports both HTML and PDF content types.
+    Use documentId from search_yargitay_bedesten results.
+    """
+    logger.info(f"Tool 'get_yargitay_bedesten_document_markdown' called for ID: {documentId}")
+    
+    if not documentId or not documentId.strip():
+        raise ValueError("Document ID must be a non-empty string.")
+    
+    try:
+        return await bedesten_client_instance.get_document_as_markdown(documentId)
+    except Exception as e:
+        logger.exception("Error in tool 'get_yargitay_bedesten_document_markdown'")
+        raise
+
+# --- MCP Tools for Bedesten (Alternative Danıştay Search) ---
+@app.tool()
+async def search_danistay_bedesten(
+    phrase: str = Field(..., description="Aranacak kavram/kelime"),
+    pageSize: int = Field(10, ge=1, le=100, description="Sayfa başına sonuç sayısı"),
+    pageNumber: int = Field(1, ge=1, description="Sayfa numarası"),
+    birimAdi: Optional[DanistayBirimEnum] = Field(None, description="""
+        Danıştay chamber/board filter (optional). Available options:
+        • None for ALL chambers
+        • Main Councils: 'Büyük Gen.Kur.', 'İdare Dava Daireleri Kurulu', 'Vergi Dava Daireleri Kurulu'
+        • Chambers: '1. Daire' through '17. Daire' (17 administrative chambers)
+        • Special Councils: 'İçtihatları Birleştirme Kurulu', 'İdari İşler Kurulu', 'Başkanlar Kurulu'
+        • Military: 'Askeri Yüksek İdare Mahkemesi' and its chambers/councils
+        Total: 27 chamber options
+    """)
+) -> dict:
+    """
+    Searches Danıştay decisions using Bedesten API (alternative source).
+    This complements existing Danıştay search tools (search_danistay_by_keyword, search_danistay_detailed) 
+    for comprehensive coverage. Always use ALL Danıştay search tools for complete results.
+    
+    Returns a simplified response with decision list and metadata.
+    """
+    search_data = BedestenSearchData(
+        pageSize=pageSize,
+        pageNumber=pageNumber,
+        itemTypeList=["DANISTAYKARAR"],  # Only Danıştay decisions
+        phrase=phrase,
+        birimAdi=birimAdi
+    )
+    
+    search_request = BedestenSearchRequest(data=search_data)
+    
+    logger.info(f"Tool 'search_danistay_bedesten' called: phrase='{phrase}', birimAdi='{birimAdi}', page={pageNumber}")
+    
+    try:
+        response = await bedesten_client_instance.search_documents(search_request)
+        
+        # Return simplified response format
+        return {
+            "decisions": [d.model_dump() for d in response.data.emsalKararList],
+            "total_records": response.data.total,
+            "requested_page": pageNumber,
+            "page_size": pageSize
+        }
+    except Exception as e:
+        logger.exception("Error in tool 'search_danistay_bedesten'")
+        raise
+
+@app.tool()
+async def get_danistay_bedesten_document_markdown(
+    documentId: str = Field(..., description="Document ID from Bedesten search results")
+) -> BedestenDocumentMarkdown:
+    """
+    Retrieves a Danıştay decision document from Bedesten API and converts to Markdown.
+    Supports both HTML and PDF content types.
+    Use documentId from search_danistay_bedesten results.
+    """
+    logger.info(f"Tool 'get_danistay_bedesten_document_markdown' called for ID: {documentId}")
+    
+    if not documentId or not documentId.strip():
+        raise ValueError("Document ID must be a non-empty string.")
+    
+    try:
+        return await bedesten_client_instance.get_document_as_markdown(documentId)
+    except Exception as e:
+        logger.exception("Error in tool 'get_danistay_bedesten_document_markdown'")
+        raise
+
+# --- MCP Tools for Bedesten (Yerel Hukuk Mahkemesi Search) ---
+@app.tool()
+async def search_yerel_hukuk_bedesten(
+    phrase: str = Field(..., description="Aranacak kavram/kelime"),
+    pageSize: int = Field(10, ge=1, le=100, description="Sayfa başına sonuç sayısı"),
+    pageNumber: int = Field(1, ge=1, description="Sayfa numarası")
+) -> dict:
+    """
+    Searches Yerel Hukuk Mahkemesi (Local Civil Court) decisions using Bedesten API.
+    This provides access to local court decisions that are not available through other APIs.
+    Currently the only available tool for searching Yerel Hukuk Mahkemesi decisions.
+    
+    Returns a simplified response with decision list and metadata.
+    """
+    search_data = BedestenSearchData(
+        pageSize=pageSize,
+        pageNumber=pageNumber,
+        itemTypeList=["YERELHUKUK"],  # Local Civil Court decisions
+        phrase=phrase
+    )
+    
+    search_request = BedestenSearchRequest(data=search_data)
+    
+    logger.info(f"Tool 'search_yerel_hukuk_bedesten' called: phrase='{phrase}', page={pageNumber}")
+    
+    try:
+        response = await bedesten_client_instance.search_documents(search_request)
+        
+        # Return simplified response format
+        return {
+            "decisions": [d.model_dump() for d in response.data.emsalKararList],
+            "total_records": response.data.total,
+            "requested_page": pageNumber,
+            "page_size": pageSize
+        }
+    except Exception as e:
+        logger.exception("Error in tool 'search_yerel_hukuk_bedesten'")
+        raise
+
+@app.tool()
+async def get_yerel_hukuk_bedesten_document_markdown(
+    documentId: str = Field(..., description="Document ID from Bedesten search results")
+) -> BedestenDocumentMarkdown:
+    """
+    Retrieves a Yerel Hukuk Mahkemesi decision document from Bedesten API and converts to Markdown.
+    Supports both HTML and PDF content types.
+    Use documentId from search_yerel_hukuk_bedesten results.
+    """
+    logger.info(f"Tool 'get_yerel_hukuk_bedesten_document_markdown' called for ID: {documentId}")
+    
+    if not documentId or not documentId.strip():
+        raise ValueError("Document ID must be a non-empty string.")
+    
+    try:
+        return await bedesten_client_instance.get_document_as_markdown(documentId)
+    except Exception as e:
+        logger.exception("Error in tool 'get_yerel_hukuk_bedesten_document_markdown'")
+        raise
+
+# --- MCP Tools for Bedesten (İstinaf Hukuk Mahkemesi Search) ---
+@app.tool()
+async def search_istinaf_hukuk_bedesten(
+    phrase: str = Field(..., description="Aranacak kavram/kelime"),
+    pageSize: int = Field(10, ge=1, le=100, description="Sayfa başına sonuç sayısı"),
+    pageNumber: int = Field(1, ge=1, description="Sayfa numarası")
+) -> dict:
+    """
+    Searches İstinaf Hukuk Mahkemesi (Civil Court of Appeals) decisions using Bedesten API.
+    This provides access to appellate court decisions that are not available through other APIs.
+    Currently the only available tool for searching İstinaf Hukuk Mahkemesi decisions.
+    
+    İstinaf courts are intermediate appellate courts in the Turkish judicial system,
+    handling appeals from local civil courts before cases reach Yargıtay.
+    
+    Returns a simplified response with decision list and metadata.
+    """
+    search_data = BedestenSearchData(
+        pageSize=pageSize,
+        pageNumber=pageNumber,
+        itemTypeList=["ISTINAFHUKUK"],  # Civil Court of Appeals decisions
+        phrase=phrase
+    )
+    
+    search_request = BedestenSearchRequest(data=search_data)
+    
+    logger.info(f"Tool 'search_istinaf_hukuk_bedesten' called: phrase='{phrase}', page={pageNumber}")
+    
+    try:
+        response = await bedesten_client_instance.search_documents(search_request)
+        
+        # Return simplified response format
+        return {
+            "decisions": [d.model_dump() for d in response.data.emsalKararList],
+            "total_records": response.data.total,
+            "requested_page": pageNumber,
+            "page_size": pageSize
+        }
+    except Exception as e:
+        logger.exception("Error in tool 'search_istinaf_hukuk_bedesten'")
+        raise
+
+@app.tool()
+async def get_istinaf_hukuk_bedesten_document_markdown(
+    documentId: str = Field(..., description="Document ID from Bedesten search results")
+) -> BedestenDocumentMarkdown:
+    """
+    Retrieves an İstinaf Hukuk Mahkemesi decision document from Bedesten API and converts to Markdown.
+    Supports both HTML and PDF content types.
+    Use documentId from search_istinaf_hukuk_bedesten results.
+    """
+    logger.info(f"Tool 'get_istinaf_hukuk_bedesten_document_markdown' called for ID: {documentId}")
+    
+    if not documentId or not documentId.strip():
+        raise ValueError("Document ID must be a non-empty string.")
+    
+    try:
+        return await bedesten_client_instance.get_document_as_markdown(documentId)
+    except Exception as e:
+        logger.exception("Error in tool 'get_istinaf_hukuk_bedesten_document_markdown'")
+        raise
+
+# --- MCP Tools for Bedesten (Kanun Yararına Bozma Search) ---
+@app.tool()
+async def search_kyb_bedesten(
+    phrase: str = Field(..., description="Aranacak kavram/kelime"),
+    pageSize: int = Field(10, ge=1, le=100, description="Sayfa başına sonuç sayısı"),
+    pageNumber: int = Field(1, ge=1, description="Sayfa numarası")
+) -> dict:
+    """
+    Searches Kanun Yararına Bozma (KYB - Extraordinary Appeal) decisions using Bedesten API.
+    This provides access to extraordinary appeal decisions that are not available through other APIs.
+    Currently the only available tool for searching KYB decisions.
+    
+    KYB decisions are extraordinary appeals in the Turkish judicial system,
+    where the Public Prosecutor's Office can request review of finalized decisions
+    in favor of the law and defendants.
+    
+    Returns a simplified response with decision list and metadata.
+    """
+    search_data = BedestenSearchData(
+        pageSize=pageSize,
+        pageNumber=pageNumber,
+        itemTypeList=["KYB"],  # Kanun Yararına Bozma decisions
+        phrase=phrase
+    )
+    
+    search_request = BedestenSearchRequest(data=search_data)
+    
+    logger.info(f"Tool 'search_kyb_bedesten' called: phrase='{phrase}', page={pageNumber}")
+    
+    try:
+        response = await bedesten_client_instance.search_documents(search_request)
+        
+        # Return simplified response format
+        return {
+            "decisions": [d.model_dump() for d in response.data.emsalKararList],
+            "total_records": response.data.total,
+            "requested_page": pageNumber,
+            "page_size": pageSize
+        }
+    except Exception as e:
+        logger.exception("Error in tool 'search_kyb_bedesten'")
+        raise
+
+@app.tool()
+async def get_kyb_bedesten_document_markdown(
+    documentId: str = Field(..., description="Document ID from Bedesten search results")
+) -> BedestenDocumentMarkdown:
+    """
+    Retrieves a Kanun Yararına Bozma (KYB) decision document from Bedesten API and converts to Markdown.
+    Supports both HTML and PDF content types.
+    Use documentId from search_kyb_bedesten results.
+    """
+    logger.info(f"Tool 'get_kyb_bedesten_document_markdown' called for ID: {documentId}")
+    
+    if not documentId or not documentId.strip():
+        raise ValueError("Document ID must be a non-empty string.")
+    
+    try:
+        return await bedesten_client_instance.get_document_as_markdown(documentId)
+    except Exception as e:
+        logger.exception("Error in tool 'get_kyb_bedesten_document_markdown'")
+        raise
+
 # --- Application Shutdown Handling ---
 def perform_cleanup():
     logger.info("MCP Server performing cleanup...")
@@ -775,7 +1118,8 @@ def perform_cleanup():
         globals().get('anayasa_norm_client_instance'),
         globals().get('anayasa_bireysel_client_instance'),
         globals().get('kik_client_instance'),
-        globals().get('rekabet_client_instance')
+        globals().get('rekabet_client_instance'),
+        globals().get('bedesten_client_instance')
     ]
     async def close_all_clients_async():
         tasks = []
