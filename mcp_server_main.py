@@ -775,7 +775,14 @@ async def get_rekabet_kurumu_document(
         raise 
 
 # --- MCP Tools for Bedesten (Alternative Yargitay Search) ---
-@app.tool()
+@app.tool(
+    description="Search Yargıtay (Court of Cassation) decisions using the Bedesten API - an alternative data source that complements the primary Yargıtay API. This tool provides access to recent decisions with advanced filtering capabilities including chamber selection, date ranges, and exact phrase matching. Use this alongside search_yargitay_detailed for comprehensive coverage.",
+    annotations={
+        "readOnlyHint": True,
+        "openWorldHint": True,
+        "idempotentHint": True
+    }
+)
 async def search_yargitay_bedesten(
     phrase: str = Field(..., description="""
         Aranacak kavram/kelime. İki farklı arama türü desteklenir:
@@ -843,7 +850,14 @@ async def search_yargitay_bedesten(
         logger.exception("Error in tool 'search_yargitay_bedesten'")
         raise
 
-@app.tool()
+@app.tool(
+    description="Retrieve a specific Yargıtay decision document from the Bedesten API and convert it to Markdown format. This tool takes a documentId obtained from search results and fetches the full decision text, supporting both HTML and PDF source documents. The content is automatically converted to readable Markdown format for easy analysis.",
+    annotations={
+        "readOnlyHint": True,
+        "openWorldHint": True,
+        "idempotentHint": True
+    }
+)
 async def get_yargitay_bedesten_document_markdown(
     documentId: str = Field(..., description="Document ID from Bedesten search results")
 ) -> BedestenDocumentMarkdown:
@@ -864,7 +878,14 @@ async def get_yargitay_bedesten_document_markdown(
         raise
 
 # --- MCP Tools for Bedesten (Alternative Danıştay Search) ---
-@app.tool()
+@app.tool(
+    description="Search Danıştay (Council of State) decisions using the Bedesten API - a powerful alternative data source. This tool provides access to administrative court decisions with comprehensive filtering options including chamber selection (27 options), date ranges, and exact phrase matching. Use this alongside search_danistay_by_keyword and search_danistay_detailed for complete coverage of administrative law decisions.",
+    annotations={
+        "readOnlyHint": True,
+        "openWorldHint": True,
+        "idempotentHint": True
+    }
+)
 async def search_danistay_bedesten(
     phrase: str = Field(..., description="""
         Aranacak kavram/kelime. İki farklı arama türü desteklenir:
@@ -929,7 +950,14 @@ async def search_danistay_bedesten(
         logger.exception("Error in tool 'search_danistay_bedesten'")
         raise
 
-@app.tool()
+@app.tool(
+    description="Retrieve a specific Danıştay decision document from the Bedesten API and convert it to Markdown format. This tool fetches the complete administrative court decision text using a documentId from search results. It handles both HTML and PDF source documents and converts them to structured Markdown for easy reading and analysis.",
+    annotations={
+        "readOnlyHint": True,
+        "openWorldHint": True,
+        "idempotentHint": True
+    }
+)
 async def get_danistay_bedesten_document_markdown(
     documentId: str = Field(..., description="Document ID from Bedesten search results")
 ) -> BedestenDocumentMarkdown:
@@ -950,7 +978,14 @@ async def get_danistay_bedesten_document_markdown(
         raise
 
 # --- MCP Tools for Bedesten (Yerel Hukuk Mahkemesi Search) ---
-@app.tool()
+@app.tool(
+    description="Search local civil court (Yerel Hukuk Mahkemesi) decisions using the Bedesten API. This is the primary and only available tool for accessing local court decisions, which represent the first instance of civil litigation in Turkey. Supports advanced search features including date filtering and exact phrase matching for precise legal research.",
+    annotations={
+        "readOnlyHint": True,
+        "openWorldHint": True,
+        "idempotentHint": True
+    }
+)
 async def search_yerel_hukuk_bedesten(
     phrase: str = Field(..., description="""
         Aranacak kavram/kelime. İki farklı arama türü desteklenir:
@@ -1005,7 +1040,14 @@ async def search_yerel_hukuk_bedesten(
         logger.exception("Error in tool 'search_yerel_hukuk_bedesten'")
         raise
 
-@app.tool()
+@app.tool(
+    description="Retrieve a specific local civil court decision document from the Bedesten API and convert it to readable Markdown format. This tool fetches complete local court decision texts using documentId from search results. Perfect for detailed analysis of first-instance civil court rulings.",
+    annotations={
+        "readOnlyHint": True,
+        "openWorldHint": True,
+        "idempotentHint": True
+    }
+)
 async def get_yerel_hukuk_bedesten_document_markdown(
     documentId: str = Field(..., description="Document ID from Bedesten search results")
 ) -> BedestenDocumentMarkdown:
@@ -1026,7 +1068,14 @@ async def get_yerel_hukuk_bedesten_document_markdown(
         raise
 
 # --- MCP Tools for Bedesten (İstinaf Hukuk Mahkemesi Search) ---
-@app.tool()
+@app.tool(
+    description="Search İstinaf Hukuk Mahkemesi (Civil Court of Appeals) decisions using Bedesten API with advanced filtering options including date range and exact phrase search capabilities",
+    annotations={
+        "readOnlyHint": True,
+        "openWorldHint": True,
+        "idempotentHint": True
+    }
+)
 async def search_istinaf_hukuk_bedesten(
     phrase: str = Field(..., description="""
         Aranacak kavram/kelime. İki farklı arama türü desteklenir:
@@ -1049,13 +1098,25 @@ async def search_istinaf_hukuk_bedesten(
 ) -> dict:
     """
     Searches İstinaf Hukuk Mahkemesi (Civil Court of Appeals) decisions using Bedesten API.
-    This provides access to appellate court decisions that are not available through other APIs.
-    Currently the only available tool for searching İstinaf Hukuk Mahkemesi decisions.
     
-    İstinaf courts are intermediate appellate courts in the Turkish judicial system,
-    handling appeals from local civil courts before cases reach Yargıtay.
+    İstinaf courts are intermediate appellate courts in the Turkish judicial system that handle
+    appeals from local civil courts before cases reach Yargıtay (Court of Cassation).
+    This is the only available tool for accessing İstinaf Hukuk Mahkemesi decisions.
     
-    Returns a simplified response with decision list and metadata.
+    Key Features:
+    • Date range filtering with ISO 8601 format (YYYY-MM-DDTHH:MM:SS.000Z)
+    • Exact phrase search using double quotes: "\"legal term\"" 
+    • Regular search for individual keywords
+    • Pagination support (1-100 results per page)
+    
+    Use cases:
+    • Research appellate court precedents
+    • Track appeals from specific lower courts
+    • Find decisions on specific legal issues at appellate level
+    • Analyze intermediate court reasoning before supreme court review
+    
+    Returns structured data with decision metadata including dates, case numbers, and summaries.
+    Use get_istinaf_hukuk_bedesten_document_markdown() to retrieve full decision texts.
     """
     search_data = BedestenSearchData(
         pageSize=pageSize,
@@ -1084,14 +1145,36 @@ async def search_istinaf_hukuk_bedesten(
         logger.exception("Error in tool 'search_istinaf_hukuk_bedesten'")
         raise
 
-@app.tool()
+@app.tool(
+    description="Retrieve full text of an İstinaf Hukuk Mahkemesi decision document from Bedesten API in Markdown format",
+    annotations={
+        "readOnlyHint": True,
+        "idempotentHint": True
+    }
+)
 async def get_istinaf_hukuk_bedesten_document_markdown(
     documentId: str = Field(..., description="Document ID from Bedesten search results")
 ) -> BedestenDocumentMarkdown:
     """
-    Retrieves an İstinaf Hukuk Mahkemesi decision document from Bedesten API and converts to Markdown.
-    Supports both HTML and PDF content types.
-    Use documentId from search_istinaf_hukuk_bedesten results.
+    Retrieves the full text of an İstinaf Hukuk Mahkemesi decision document in Markdown format.
+    
+    This tool converts the original decision document (HTML or PDF) from Bedesten API
+    into clean, readable Markdown format suitable for analysis and processing.
+    
+    Input Requirements:
+    • documentId: Use the ID from search_istinaf_hukuk_bedesten results
+    • Document ID must be non-empty string
+    
+    Output Format:
+    • Clean Markdown text with proper formatting
+    • Preserves legal structure (headers, paragraphs, citations)
+    • Removes extraneous HTML/PDF artifacts
+    
+    Use for:
+    • Reading full appellate court decision texts
+    • Legal analysis of İstinaf court reasoning
+    • Citation extraction and reference building
+    • Content analysis and summarization
     """
     logger.info(f"Tool 'get_istinaf_hukuk_bedesten_document_markdown' called for ID: {documentId}")
     
@@ -1105,7 +1188,14 @@ async def get_istinaf_hukuk_bedesten_document_markdown(
         raise
 
 # --- MCP Tools for Bedesten (Kanun Yararına Bozma Search) ---
-@app.tool()
+@app.tool(
+    description="Search Kanun Yararına Bozma (KYB - Extraordinary Appeal) decisions using Bedesten API with date filtering and exact phrase search support",
+    annotations={
+        "readOnlyHint": True,
+        "openWorldHint": True,
+        "idempotentHint": True
+    }
+)
 async def search_kyb_bedesten(
     phrase: str = Field(..., description="""
         Aranacak kavram/kelime. İki farklı arama türü desteklenir:
@@ -1128,14 +1218,32 @@ async def search_kyb_bedesten(
 ) -> dict:
     """
     Searches Kanun Yararına Bozma (KYB - Extraordinary Appeal) decisions using Bedesten API.
-    This provides access to extraordinary appeal decisions that are not available through other APIs.
-    Currently the only available tool for searching KYB decisions.
     
-    KYB decisions are extraordinary appeals in the Turkish judicial system,
-    where the Public Prosecutor's Office can request review of finalized decisions
-    in favor of the law and defendants.
+    KYB is an extraordinary legal remedy in the Turkish judicial system where the
+    Public Prosecutor's Office can request review of finalized decisions in favor of
+    the law and defendants. This is the only available tool for accessing KYB decisions.
     
-    Returns a simplified response with decision list and metadata.
+    Key Features:
+    • Date range filtering with ISO 8601 format (YYYY-MM-DDTHH:MM:SS.000Z)
+    • Exact phrase search using double quotes: "\"extraordinary appeal\""
+    • Regular search for individual keywords
+    • Pagination support (1-100 results per page)
+    
+    Legal Significance:
+    • Extraordinary remedy beyond regular appeals
+    • Initiated by Public Prosecutor's Office
+    • Reviews finalized decisions for legal errors
+    • Can benefit defendants retroactively
+    • Rare but important legal precedents
+    
+    Use cases:
+    • Research extraordinary appeal precedents
+    • Study prosecutorial challenges to final decisions
+    • Analyze legal errors in finalized cases
+    • Track KYB success rates and patterns
+    
+    Returns structured data with decision metadata. Use get_kyb_bedesten_document_markdown()
+    to retrieve full decision texts for detailed analysis.
     """
     search_data = BedestenSearchData(
         pageSize=pageSize,
@@ -1164,14 +1272,42 @@ async def search_kyb_bedesten(
         logger.exception("Error in tool 'search_kyb_bedesten'")
         raise
 
-@app.tool()
+@app.tool(
+    description="Retrieve full text of a Kanun Yararına Bozma (KYB) decision document from Bedesten API in Markdown format",
+    annotations={
+        "readOnlyHint": True,
+        "idempotentHint": True
+    }
+)
 async def get_kyb_bedesten_document_markdown(
     documentId: str = Field(..., description="Document ID from Bedesten search results")
 ) -> BedestenDocumentMarkdown:
     """
-    Retrieves a Kanun Yararına Bozma (KYB) decision document from Bedesten API and converts to Markdown.
-    Supports both HTML and PDF content types.
-    Use documentId from search_kyb_bedesten results.
+    Retrieves the full text of a Kanun Yararına Bozma (KYB) decision document in Markdown format.
+    
+    This tool converts the original extraordinary appeal decision document (HTML or PDF)
+    from Bedesten API into clean, readable Markdown format for analysis.
+    
+    Input Requirements:
+    • documentId: Use the ID from search_kyb_bedesten results
+    • Document ID must be non-empty string
+    
+    Output Format:
+    • Clean Markdown text with legal formatting preserved
+    • Structured content with headers and citations
+    • Removes technical artifacts from source documents
+    
+    Special Value for KYB Documents:
+    • Contains rare extraordinary appeal reasoning
+    • Shows prosecutorial arguments for legal review
+    • Documents correction of finalized legal errors
+    • Provides precedent for similar extraordinary circumstances
+    
+    Use for:
+    • Analyzing extraordinary appeal legal reasoning
+    • Understanding prosecutorial review criteria
+    • Research on legal error correction mechanisms
+    • Studying retroactive benefit applications
     """
     logger.info(f"Tool 'get_kyb_bedesten_document_markdown' called for ID: {documentId}")
     
