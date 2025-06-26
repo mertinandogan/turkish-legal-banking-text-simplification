@@ -59,7 +59,7 @@ class RekabetKurumuApiClient:
         
         karar_turu_id_value = ""
         if params.KararTuruID is not None: 
-            karar_turu_id_value = params.KararTuruID.value 
+            karar_turu_id_value = params.KararTuruID.value if params.KararTuruID.value != "ALL" else "" 
         query_params.append(("KararTuruID", karar_turu_id_value))
             
         query_params.append(("KararSayisi", params.KararSayisi if params.KararSayisi is not None else ""))

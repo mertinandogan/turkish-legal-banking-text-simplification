@@ -6,7 +6,7 @@ from enum import Enum
 
 # Enum for decision type GUIDs (used by the client and expected by the website)
 class RekabetKararTuruGuidEnum(str, Enum):
-    TUMU = ""  # Represents "All" or "Select Decision Type"
+    TUMU = "ALL"  # Represents "All" or "Select Decision Type"
     BIRLESME_DEVRALMA = "2fff0979-9f9d-42d7-8c2e-a30705889542"  # Merger and Acquisition
     DIGER = "dda8feaf-c919-405c-9da1-823f22b45ad9"  # Other
     MENFI_TESPIT_MUAFIYET = "95ccd210-5304-49c5-b9e0-8ee53c50d4e8"  # Negative Clearance and Exemption

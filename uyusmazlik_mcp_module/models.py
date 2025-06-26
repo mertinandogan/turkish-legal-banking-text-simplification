@@ -7,14 +7,14 @@ from enum import Enum
 # Enum definitions for user-friendly input based on the provided HTML form
 class UyusmazlikBolumEnum(str, Enum):
     """User-friendly names for 'BolumId'."""
-    TUMU = "" # Represents "...Seçiniz..." or all
+    TUMU = "ALL" # Represents "...Seçiniz..." or all
     CEZA_BOLUMU = "Ceza Bölümü"
     GENEL_KURUL_KARARLARI = "Genel Kurul Kararları"
     HUKUK_BOLUMU = "Hukuk Bölümü"
 
 class UyusmazlikTuruEnum(str, Enum):
     """User-friendly names for 'UyusmazlikId'."""
-    TUMU = "" # Represents "...Seçiniz..." or all
+    TUMU = "ALL" # Represents "...Seçiniz..." or all
     GOREV_UYUSMAZLIGI = "Görev Uyuşmazlığı"
     HUKUM_UYUSMAZLIGI = "Hüküm Uyuşmazlığı"
 

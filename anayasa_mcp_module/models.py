@@ -6,23 +6,23 @@ from enum import Enum
 
 # --- Enums (AnayasaDonemEnum, AnayasaBasvuruTuruEnum, etc. - same as before) ---
 class AnayasaDonemEnum(str, Enum):
-    TUMU = ""
+    TUMU = "ALL"
     DONEM_1961 = "1"
     DONEM_1982 = "2"
 
 class AnayasaBasvuruTuruEnum(str, Enum):
-    TUMU = ""
+    TUMU = "ALL"
     IPTAL = "1"
     ITIRAZ = "2"
     DIGER = "3"
 
 class AnayasaVarYokEnum(str, Enum):
-    TUMU = ""
+    TUMU = "ALL"
     YOK = "0"
     VAR = "1"
 
 class AnayasaNormTuruEnum(str, Enum):
-    TUMU = ""
+    TUMU = "ALL"
     ANAYASA = "1"
     ANAYASA_DEGISTIREN_KANUN = "2"
     CUMHURBASKANLIGI_KARARNAMESI = "14"
@@ -40,7 +40,7 @@ class AnayasaNormTuruEnum(str, Enum):
     YONETMELIK = "13"
 
 class AnayasaIncelemeSonucuEnum(str, Enum):
-    TUMU = ""
+    TUMU = "ALL"
     ESAS_ACILMAMIS_SAYILMA = "1"
     ESAS_IPTAL = "2"
     ESAS_KARAR_YER_OLMADIGI = "3"
@@ -52,7 +52,7 @@ class AnayasaIncelemeSonucuEnum(str, Enum):
     KANUN_6216_M43_4_IPTAL = "12"
 
 class AnayasaSonucGerekcesiEnum(str, Enum):
-    TUMU = ""
+    TUMU = "ALL"
     ANAYASAYA_AYKIRI_DEGIL = "29"
     ANAYASAYA_ESAS_YONUNDEN_AYKIRILIK = "1"
     ANAYASAYA_ESAS_YONUNDEN_UYGUNLUK = "2"
