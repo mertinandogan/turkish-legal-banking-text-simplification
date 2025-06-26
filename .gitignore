@@ -168,3 +168,15 @@ fast-mcp-docs.md
 debug_*
 test_*
 CLAUDE.md
+
+# ASGI/Deployment files
+ssl/
+*.pem
+*.key
+*.crt
+
+# Docker volumes
+redis-data/
+
+# Production logs
+logs/*.log.*

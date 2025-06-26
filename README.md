@@ -166,6 +166,32 @@ Bedesten API   Bedesten API   Dual/Triple API   Norm+Bireysel API
   - Kesin arama: `"\"mülkiyet kararı\""` (tam cümle olarak)
   - Daha kesin sonuçlar için hukuki terimler ve kavramlar
 
+---
+
+🌐 **Web Service / ASGI Deployment**
+
+Yargı MCP artık web servisi olarak da çalıştırılabilir! ASGI desteği sayesinde:
+
+- **Web API olarak erişim**: HTTP endpoint'leri üzerinden MCP araçlarına erişim
+- **Cloud deployment**: Heroku, Railway, Google Cloud Run, AWS Lambda desteği
+- **Docker desteği**: Production-ready Docker container
+- **FastAPI entegrasyonu**: REST API ve interaktif dokümantasyon
+
+**Hızlı başlangıç:**
+```bash
+# ASGI dependencies yükle
+pip install yargi-mcp[asgi]
+
+# Web servisi olarak başlat
+python run_asgi.py
+# veya
+uvicorn asgi_app:app --host 0.0.0.0 --port 8000
+```
+
+Detaylı deployment rehberi için: [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)
+
+---
+
 📜 **Lisans**
 
 Bu proje MIT Lisansı altında lisanslanmıştır. Detaylar için `LICENSE` dosyasına bakınız.
