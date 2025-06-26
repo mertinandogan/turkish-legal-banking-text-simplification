@@ -28,7 +28,7 @@ async def health_check(request: Request) -> JSONResponse:
         "status": "healthy",
         "service": "Yargı MCP Server",
         "version": "0.1.0",
-        "tools_count": len(mcp_server._tool_manager.tools)
+        "tools_count": len(mcp_server._tool_manager._tools)
     })
 
 @mcp_server.custom_route("/", methods=["GET"])
@@ -58,7 +58,7 @@ async def root(request: Request) -> JSONResponse:
 async def status(request: Request) -> JSONResponse:
     """Status endpoint with detailed information"""
     tools = []
-    for tool in mcp_server._tool_manager.tools.values():
+    for tool in mcp_server._tool_manager._tools.values():
         tools.append({
             "name": tool.name,
             "description": tool.description[:100] + "..." if len(tool.description) > 100 else tool.description

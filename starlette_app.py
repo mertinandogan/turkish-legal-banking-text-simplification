@@ -72,7 +72,7 @@ async def api_info(request: Request):
         
     return JSONResponse({
         "authenticated_as": request.user.display_name,
-        "available_tools": len(mcp_server._tool_manager.tools),
+        "available_tools": len(mcp_server._tool_manager._tools),
         "databases": [
             "Yargıtay", "Danıştay", "Emsal", "Uyuşmazlık",
             "Anayasa", "KIK", "Rekabet", "Bedesten"

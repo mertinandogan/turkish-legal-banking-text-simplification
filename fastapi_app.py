@@ -77,7 +77,7 @@ async def root():
         name="Yargı MCP Server",
         version="0.1.0",
         description="MCP server for Turkish legal databases",
-        tools_count=len(mcp_server._tool_manager.tools),
+        tools_count=len(mcp_server._tool_manager._tools),
         databases=[
             "Yargıtay (Court of Cassation)",
             "Danıştay (Council of State)",
@@ -101,7 +101,7 @@ async def health_check():
         status="healthy",
         timestamp=datetime.now(),
         uptime_seconds=uptime,
-        tools_operational=len(mcp_server._tool_manager.tools) > 0
+        tools_operational=len(mcp_server._tool_manager._tools) > 0
     )
 
 @app.get("/api/tools", response_model=List[ToolInfo])
@@ -112,7 +112,7 @@ async def list_tools(
     """List all available MCP tools"""
     tools = []
     
-    for tool in mcp_server._tool_manager.tools.values():
+    for tool in mcp_server._tool_manager._tools.values():
         # Apply filters if provided
         if search and search.lower() not in tool.name.lower() and search.lower() not in tool.description.lower():
             continue
@@ -141,7 +141,7 @@ async def list_tools(
 @app.get("/api/tools/{tool_name}", response_model=ToolInfo)
 async def get_tool(tool_name: str):
     """Get detailed information about a specific tool"""
-    tool = mcp_server._tool_manager.tools.get(tool_name)
+    tool = mcp_server._tool_manager._tools.get(tool_name)
     
     if not tool:
         raise HTTPException(status_code=404, detail=f"Tool '{tool_name}' not found")
@@ -225,7 +225,7 @@ async def get_statistics():
     
     # Count tools by database
     tool_counts = {}
-    for tool in mcp_server._tool_manager.tools.values():
+    for tool in mcp_server._tool_manager._tools.values():
         for db in ["yargitay", "danistay", "emsal", "uyusmazlik", "anayasa", "kik", "rekabet", "bedesten"]:
             if db in tool.name.lower():
                 tool_counts[db] = tool_counts.get(db, 0) + 1
@@ -238,7 +238,7 @@ async def get_statistics():
             "version": "0.1.0"
         },
         "tools": {
-            "total": len(mcp_server._tool_manager.tools),
+            "total": len(mcp_server._tool_manager._tools),
             "by_database": tool_counts
         },
         "capabilities": {
