@@ -1,4 +1,18 @@
 # mcp_server_main.py
+
+# --- MCP Spec Compliance: Reject null JSON-RPC IDs ---
+# The mcp SDK's JSONRPCNotification uses extra="allow", which causes
+# {"id": null} to be misclassified as a notification (202 Accepted).
+# Per MCP 2025-11-25, null IDs must be rejected with -32600 Invalid Request.
+# Changing to extra="forbid" makes validation fail for null IDs,
+# returning a proper JSON-RPC error response.
+from mcp.types import JSONRPCNotification as _McpJSONRPCNotification, JSONRPCMessage as _McpJSONRPCMessage
+from pydantic import ConfigDict as _ConfigDict
+_McpJSONRPCNotification.model_config = _ConfigDict(extra="forbid")
+_McpJSONRPCNotification.model_rebuild(force=True)
+_McpJSONRPCMessage.model_rebuild(force=True)
+# --- End MCP Spec Compliance ---
+
 import asyncio
 import atexit
 import logging
