@@ -1,7 +1,7 @@
 {
-  "documents_processed": 23,
-  "total_paragraphs": 70,
+  "documents_processed": 30,
+  "total_paragraphs": 114,
   "filtered_paragraphs": 0,
-  "avg_complexity": 2.29,
-  "avg_jargon_density": 0.0628
+  "avg_complexity": 2.5,
+  "avg_jargon_density": 0.0558
 }

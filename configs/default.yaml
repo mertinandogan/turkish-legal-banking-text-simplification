@@ -17,6 +17,15 @@ data_collection:
     # Output paths
     raw_output_dir: "data/raw"
     max_concurrent_requests: 3
+    # Direct regulation pages to include in dataset
+    direct_source_urls:
+      - "https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=34360&MevzuatTur=7&MevzuatTertip=5"
+      - "https://www.mevzuat.gov.tr/anasayfa/MevzuatFihristDetayIframe?MevzuatNo=7224&MevzuatTertip=5&MevzuatTur=7"
+      - "https://www.mevzuat.gov.tr/anasayfa/MevzuatFihristDetayIframe?MevzuatNo=11180&MevzuatTertip=5&MevzuatTur=7"
+      - "https://www.mevzuat.gov.tr/anasayfa/MevzuatFihristDetayIframe?MevzuatNo=6493&MevzuatTertip=5&MevzuatTur=1"
+      - "https://www.mevzuat.gov.tr/MevzuatMetin/1.5.6493.pdf"
+      - "https://www.mevzuat.gov.tr/File/GeneratePdf?mevzuatNo=38566&mevzuatTertip=5&mevzuatTur=Teblig"
+      - "https://www.mevzuat.gov.tr/File/GeneratePdf?mevzuatNo=38568&mevzuatTertip=5&mevzuatTur=KurumVeKurulusYonetmeligi"
 
   paragraph_extraction:
     min_paragraph_length: 100      # Minimum chars for a paragraph

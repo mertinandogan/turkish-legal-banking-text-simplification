@@ -7,15 +7,21 @@ Saves raw documents in Markdown format for downstream processing.
 """
 
 import asyncio
+import io
 import json
 import logging
 import os
 import sys
 import argparse
+import re
 from pathlib import Path
 from typing import Optional
+from urllib.parse import parse_qs, urlparse
 
+import httpx
 import yaml
+from bs4 import BeautifulSoup
+from pypdf import PdfReader
 
 # Add project root to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -239,6 +245,81 @@ async def search_and_scrape(
     return {"found_documents": len(all_doc_ids), "doc_ids": sorted(all_doc_ids)}
 
 
+def _extract_mevzuat_id(source_url: str) -> str:
+    """Extract a stable ID from mevzuat.gov.tr URL."""
+    parsed = urlparse(source_url)
+    qs = parse_qs(parsed.query)
+    mevzuat_no = qs.get("MevzuatNo", [""])[0].strip()
+    if mevzuat_no:
+        return mevzuat_no
+
+    # Fallback: sanitize full URL if query param is missing
+    sanitized = re.sub(r"[^a-zA-Z0-9]+", "_", source_url).strip("_")
+    return sanitized[:80] or "external_source"
+
+
+async def scrape_direct_urls(
+    source_urls: list[str],
+    output_dir: str = "data/raw",
+    request_timeout: float = 60.0,
+) -> dict:
+    """
+    Scrape direct regulation URLs and save as markdown/text for dataset inclusion.
+    """
+    os.makedirs(output_dir, exist_ok=True)
+    stats = {"total_attempted": 0, "successful": 0, "failed": 0, "failed_urls": []}
+
+    headers = {
+        "User-Agent": (
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+        ),
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        "Accept-Language": "tr-TR,tr;q=0.9,en-US;q=0.8,en;q=0.7",
+    }
+    async with httpx.AsyncClient(timeout=request_timeout, follow_redirects=True, headers=headers) as client:
+        for source_url in source_urls:
+            stats["total_attempted"] += 1
+            source_id = _extract_mevzuat_id(source_url)
+            output_file = os.path.join(output_dir, f"bddk_{source_id}.md")
+            metadata_file = os.path.join(output_dir, f"bddk_{source_id}.json")
+
+            try:
+                response = await client.get(source_url)
+                response.raise_for_status()
+                content_type = response.headers.get("content-type", "").lower()
+                if "pdf" in content_type or source_url.lower().endswith(".pdf"):
+                    pdf_reader = PdfReader(io.BytesIO(response.content))
+                    text_content = "\n".join(page.extract_text() or "" for page in pdf_reader.pages).strip()
+                else:
+                    soup = BeautifulSoup(response.text, "html.parser")
+                    text_content = soup.get_text("\n", strip=True)
+
+                if not text_content:
+                    raise ValueError("empty page content")
+
+                with open(output_file, "w", encoding="utf-8") as f:
+                    f.write(text_content)
+
+                metadata = {
+                    "document_id": source_id,
+                    "source_url": source_url,
+                    "content_length": len(text_content),
+                    "source_type": "direct_url",
+                }
+                with open(metadata_file, "w", encoding="utf-8") as f:
+                    json.dump(metadata, f, ensure_ascii=False, indent=2)
+
+                stats["successful"] += 1
+                logger.info("✅ Direct source %s saved (%d chars)", source_id, len(text_content))
+            except Exception as e:
+                stats["failed"] += 1
+                stats["failed_urls"].append(source_url)
+                logger.error("❌ Direct source failed %s: %s", source_url, str(e)[:140])
+
+    return stats
+
+
 def main():
     """CLI entry point for BDDK document scraping."""
     parser = argparse.ArgumentParser(
@@ -249,9 +330,9 @@ def main():
         help="Path to configuration file"
     )
     parser.add_argument(
-        "--mode", choices=["range", "search", "test"],
+        "--mode", choices=["range", "search", "test", "urls"],
         default="range",
-        help="Scraping mode: range (by ID range), search (by keywords), test (small test)"
+        help="Scraping mode: range, search, test, urls (direct configured URLs)"
     )
     parser.add_argument(
         "--start", type=int, default=None,
@@ -294,6 +375,16 @@ def main():
             keywords=keywords,
             output_dir=bddk_config["raw_output_dir"],
             request_delay=bddk_config["request_delay_seconds"],
+            request_timeout=bddk_config["request_timeout_seconds"],
+        ))
+    elif args.mode == "urls":
+        direct_urls = bddk_config.get("direct_source_urls", [])
+        if not direct_urls:
+            logger.warning("No direct_source_urls configured in config file.")
+            return
+        asyncio.run(scrape_direct_urls(
+            source_urls=direct_urls,
+            output_dir=bddk_config["raw_output_dir"],
             request_timeout=bddk_config["request_timeout_seconds"],
         ))
     else:
