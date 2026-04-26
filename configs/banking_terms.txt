@@ -1,0 +1,50 @@
+sermaye yeterliliği
+likidite oranı
+kredi riski
+piyasa riski
+operasyonel risk
+özkaynak
+konsolide bilanço
+teminat
+karşılık ayırma
+mevduat
+faiz oranı
+döviz kuru
+risk ağırlıklı varlıklar
+kaldıraç oranı
+takipteki alacak
+donuk alacak
+sorunlu alacak
+ipotek
+rehin
+temerrüt
+tahakkuk
+amortisman
+itfa
+provizyon
+münhasıran
+müteselsil
+müteakip
+muaccel
+munzam
+tedavül
+tasarruf
+temlik
+devir
+iktisap
+tasfiye
+konkordato
+repo
+ters repo
+swap
+opsiyon
+türev ürün
+menkul kıymet
+tahvil
+bono
+hisse senedi
+bilanço
+gelir tablosu
+nakit akışı
+sermaye tamponu
+konsolide denetim

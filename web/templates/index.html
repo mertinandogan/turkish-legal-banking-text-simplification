@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Türk Bankacılık Düzenlemelerini Yapay Zeka ile Sadeleştirme Sistemi - BDDK mevzuat metinlerini otomatik olarak sadeleştirir.">
+    <title>BankSimplify — Bankacılık Düzenlemesi Sadeleştirme Sistemi</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="bg-grid"></div>
+
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-badge">
+                <span>🏦</span> Bilgi Sistemleri Projesi
+            </div>
+            <h1>BankSimplify</h1>
+            <p>Karmaşık bankacılık düzenlemelerini yapay zeka ile sadeleştirin — hukuki anlamı koruyarak</p>
+        </header>
+
+        <!-- Tabs -->
+        <nav class="tabs" role="tablist">
+            <button class="tab-btn active" onclick="switchTab('simplify')" role="tab" id="tab-simplify">
+                ✨ Sadeleştir
+            </button>
+            <button class="tab-btn" onclick="switchTab('dashboard')" role="tab" id="tab-dashboard">
+                📊 Dashboard
+            </button>
+            <button class="tab-btn" onclick="switchTab('dataset')" role="tab" id="tab-dataset">
+                📁 Dataset
+            </button>
+        </nav>
+
+        <!-- TAB 1: Simplify -->
+        <section class="tab-panel active" id="panel-simplify" role="tabpanel">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon blue">📝</div>
+                    <div>
+                        <div class="card-title">Metin Sadeleştirme</div>
+                        <div class="card-subtitle">Karmaşık bankacılık düzenlemesi metni girin</div>
+                    </div>
+                </div>
+
+                <div class="input-area">
+                    <textarea id="input-text" placeholder="Bankacılık düzenlemesi metnini buraya yapıştırın...
+
+Örnek: 5411 sayılı Bankacılık Kanununun 43 üncü maddesi uyarınca, bankaların konsolide ve konsolide olmayan bazda hesaplayacakları sermaye yeterliliği standart oranının yüzde sekizden az olamayacağı hükmü gereğince..."
+                    oninput="updateCharCount()"></textarea>
+                    <span class="char-count" id="char-count">0 karakter</span>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn btn-primary" onclick="simplifyText()" id="btn-simplify">
+                        ✨ Sadeleştir
+                    </button>
+                    <button class="btn btn-secondary" onclick="analyzeText()">
+                        📊 Analiz Et
+                    </button>
+                    <button class="btn btn-secondary" onclick="loadSample()">
+                        📄 Örnek Metin
+                    </button>
+                </div>
+            </div>
+
+            <!-- Analysis Result -->
+            <div id="analysis-result" style="display:none;"></div>
+
+            <!-- Loading -->
+            <div class="loader" id="loader">
+                <div class="spinner"></div>
+                <div class="loader-text">Model çalışıyor, lütfen bekleyin...</div>
+            </div>
+
+            <!-- Results -->
+            <div class="results-container" id="results-container"></div>
+        </section>
+
+        <!-- TAB 2: Dashboard -->
+        <section class="tab-panel" id="panel-dashboard" role="tabpanel">
+            <div class="stats-grid" id="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="stat-docs">—</div>
+                    <div class="stat-label">BDDK Doküman</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="stat-paras">—</div>
+                    <div class="stat-label">Çıkarılan Paragraf</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="stat-train">—</div>
+                    <div class="stat-label">Eğitim Çifti</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="stat-jargon">—</div>
+                    <div class="stat-label">Ort. Jargon Yoğunluğu</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="stat-complexity">—</div>
+                    <div class="stat-label">Ort. Karmaşıklık</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="stat-test">—</div>
+                    <div class="stat-label">Test Çifti</div>
+                </div>
+            </div>
+
+            <!-- Model Comparison -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon purple">🏆</div>
+                    <div>
+                        <div class="card-title">Model Karşılaştırma</div>
+                        <div class="card-subtitle">ROUGE ve BLEU skorları</div>
+                    </div>
+                </div>
+                <div id="model-comparison">
+                    <div class="empty-state">
+                        <div class="icon">📈</div>
+                        <h3>Henüz model sonucu yok</h3>
+                        <p>Baseline veya neural modelleri eğittikten sonra sonuçlar burada görünecek</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pipeline Info -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon cyan">⚙️</div>
+                    <div>
+                        <div class="card-title">Pipeline Mimarisi</div>
+                        <div class="card-subtitle">Veri toplama → Model eğitimi → Değerlendirme</div>
+                    </div>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px;">
+                    <div class="metric-item">
+                        <div class="metric-value" style="color: var(--accent-blue);">1</div>
+                        <div class="metric-label">BDDK Veri Toplama</div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-value" style="color: var(--accent-purple);">2</div>
+                        <div class="metric-label">Paragraf Çıkarma</div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-value" style="color: var(--accent-emerald);">3</div>
+                        <div class="metric-label">LLM ile Etiketleme</div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-value" style="color: var(--accent-amber);">4</div>
+                        <div class="metric-label">Model Eğitimi</div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-value" style="color: var(--accent-rose);">5</div>
+                        <div class="metric-label">Değerlendirme</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 3: Dataset -->
+        <section class="tab-panel" id="panel-dataset" role="tabpanel">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon emerald">📁</div>
+                    <div>
+                        <div class="card-title">Çıkarılan Paragraflar</div>
+                        <div class="card-subtitle">BDDK dokümanlarından çıkarılan karmaşık paragraflar</div>
+                    </div>
+                </div>
+                <div style="overflow-x: auto;">
+                    <table class="data-table" id="paragraphs-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Kaynak</th>
+                                <th>Metin</th>
+                                <th>Jargon</th>
+                                <th>Karmaşıklık</th>
+                                <th>İşlem</th>
+                            </tr>
+                        </thead>
+                        <tbody id="paragraphs-body">
+                            <tr><td colspan="6" style="text-align:center; color: var(--text-muted); padding: 40px;">Yükleniyor...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="btn-group" style="justify-content: center; margin-top: 20px;">
+                    <button class="btn btn-secondary" onclick="loadParagraphs(Math.max(0, currentOffset - 20))">← Önceki</button>
+                    <span id="page-info" style="display:flex; align-items:center; color: var(--text-muted); font-size: 14px;"></span>
+                    <button class="btn btn-secondary" onclick="loadParagraphs(currentOffset + 20)">Sonraki →</button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
