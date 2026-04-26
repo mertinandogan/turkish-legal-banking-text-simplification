@@ -35,6 +35,7 @@ def evaluate_neural(config, model_path, test_file, output_file="results/neural_s
 
     results = {
         "model": f"neural_{config.model_name}",
+        "offline_fallback": bool(getattr(simplifier, "offline_mode", False)),
         "metrics": {**rouge, "bleu": bleu},
         "statistics": {
             "num_samples": len(data),

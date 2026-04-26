@@ -88,10 +88,12 @@ class ZeroShotSimplifier:
 
     def simplify_batch(self, texts, delay=1.0):
         results = []
+        effective_delay = 0.0 if self.offline_mode else delay
         for text in tqdm(texts, desc="Zero-shot"):
             result = self.simplify(text)
             results.append(result or "")
-            time.sleep(delay)
+            if effective_delay > 0:
+                time.sleep(effective_delay)
         return results
 
 

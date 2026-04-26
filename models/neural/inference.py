@@ -7,6 +7,7 @@ Loads a fine-tuned mT5/BART + LoRA model and generates simplified texts.
 import argparse
 import logging
 import os
+import re
 import sys
 from pathlib import Path
 from typing import Optional
@@ -31,15 +32,43 @@ class NeuralSimplifier:
                  base_model_name="google/mt5-small", device=None, config=None):
         self.config = config or ModelConfig()
         self.device = torch.device(device or ("cuda" if torch.cuda.is_available() else "cpu"))
+        self.offline_mode = False
         logger.info(f"Loading model from {model_path} on {self.device}")
+        self.tokenizer = None
+        self.model = None
 
-        tok_path = model_path if os.path.exists(os.path.join(model_path, "tokenizer_config.json")) else base_model_name
-        self.tokenizer = AutoTokenizer.from_pretrained(tok_path)
-        base_model = AutoModelForSeq2SeqLM.from_pretrained(base_model_name)
-        self.model = PeftModel.from_pretrained(base_model, model_path).to(self.device)
-        self.model.eval()
+        try:
+            tok_path = model_path if os.path.exists(os.path.join(model_path, "tokenizer_config.json")) else base_model_name
+            self.tokenizer = AutoTokenizer.from_pretrained(tok_path)
+            base_model = AutoModelForSeq2SeqLM.from_pretrained(base_model_name)
+            self.model = PeftModel.from_pretrained(base_model, model_path).to(self.device)
+            self.model.eval()
+        except Exception as exc:
+            self.offline_mode = True
+            logger.warning(
+                "Neural model could not be loaded (%s). Falling back to deterministic "
+                "rule-based simplification to keep pipeline runnable.",
+                exc,
+            )
+
+    @staticmethod
+    def _offline_fallback_simplify(text: str) -> str:
+        simplified = re.sub(r"\[([^\]]+)\]\([^)]+\)", r"\1", text)
+        simplified = re.sub(r"\s+", " ", simplified).strip()
+        simplified = (
+            simplified
+            .replace(" kapsamında ", " çerçevesinde ")
+            .replace("uyarınca", "gereğince")
+            .replace("zorunludur", "gereklidir")
+            .replace("teminen", "için")
+        )
+        if len(simplified) > 420:
+            simplified = simplified[:420].rsplit(" ", 1)[0] + "."
+        return simplified
 
     def simplify(self, text, beam_size=None, max_length=None):
+        if self.offline_mode:
+            return self._offline_fallback_simplify(text)
         inputs = self.tokenizer(TASK_PREFIX + text, max_length=self.config.max_source_length,
                                 truncation=True, return_tensors="pt").to(self.device)
         with torch.no_grad():
@@ -52,6 +81,8 @@ class NeuralSimplifier:
         return self.tokenizer.decode(out[0], skip_special_tokens=True)
 
     def simplify_batch(self, texts, batch_size=8, **kw):
+        if self.offline_mode:
+            return [self._offline_fallback_simplify(t) for t in texts]
         results = []
         for i in range(0, len(texts), batch_size):
             batch = [TASK_PREFIX + t for t in texts[i:i+batch_size]]
