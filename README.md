@@ -1,226 +1,136 @@
 # Turkish Legal Banking Text Simplification
 
-Neural and baseline-driven simplification pipeline for Turkish banking regulations (BDDK), with a reproducible data workflow, comparative evaluation, and a web API/UI for interactive testing.
+Turkish legal/banking metinlerini daha anlaşılır hale getirmek için hazırlanmış uçtan uca NLP pipeline: veri toplama, paragraf çıkarımı, baseline + neural + zero-shot karşılaştırması ve FastAPI tabanlı demo API.
 
-## What This Project Does
+## Ne Yapıyor?
 
-This repository tackles a practical NLP problem:
+- **Girdi:** Karmaşık Türkçe bankacılık/mevzuat metni
+- **Çıktı:** Hukuki anlamı mümkün olduğunca koruyan sadeleştirilmiş metin
+- **Kapsam:** BDDK + mevzuat kaynaklarından veri toplama, modelleme, değerlendirme, API sunumu
 
-- Input: complex Turkish legal banking text
-- Output: simplified text that remains faithful to legal meaning
+## Güncel Veri Özeti
 
-The project includes:
+Repository içindeki güncel artefaktlara göre:
 
-- Data collection from BDDK documents
-- Complex paragraph extraction and filtering
-- Parallel dataset creation (`complex -> simple`)
-- Baseline evaluation (TF-IDF, TextRank)
-- Neural fine-tuning (mT5 + LoRA)
-- Zero-shot LLM comparison
-- Faithfulness and hallucination-oriented analysis
-- FastAPI backend + simple web interface
+- İşlenen ham doküman: **30**
+- Çıkarılan karmaşık paragraf: **114**
+- Ortalama karmaşıklık skoru: **2.5**
+- Ortalama jargon yoğunluğu: **0.0558**
+- Pilot test set boyutu (`data/parallel/test_gold.jsonl`): **7**
 
-## Current Project Snapshot
+## Proje Akış Grafiği
 
-Based on the generated artifacts currently in this repository:
+```mermaid
+flowchart LR
+  A[BDDK & Mevzuat Kaynakları] --> B[Ham Veri Toplama]
+  B --> C[Paragraf Çıkarımı ve Filtreleme]
+  C --> D[Parallel Dataset uretimi]
+  D --> E1[TF-IDF / TextRank]
+  D --> E2[mT5 + LoRA]
+  D --> E3[Zero-shot LLM]
+  E1 --> F[ROUGE / BLEU]
+  E2 --> F
+  E3 --> F
+  F --> G[Faithfulness & Hallucination Analizi]
+  G --> H[FastAPI + Web UI]
+```
 
-- Processed raw documents: **23**
-- Extracted complex paragraphs: **70**
-- Parallel split:
-  - Train: **56**
-  - Validation: **7**
-  - Test (`test_gold`): **7**
+## Veri Kompozisyonu (Grafik)
 
-Pilot evaluation files are under `results/`.
+```mermaid
+pie showData
+  title Raw Dokuman Dagilimi
+  "Onceki BDDK Toplami" : 23
+  "Eklenen Elektronik Bankacilik Mevzuati" : 7
+```
 
-## Repository Structure
+## Model Sonuclari (Pilot)
+
+> Bu skorlar pilot olcektedir; final benchmark olarak yorumlanmamalidir.
+
+| Yontem | ROUGE-1 | ROUGE-2 | ROUGE-L | BLEU |
+|---|---:|---:|---:|---:|
+| TF-IDF | 0.7647 | 0.6212 | 0.7647 | 0.2534 |
+| TextRank | 0.7647 | 0.6212 | 0.7647 | 0.2534 |
+| mT5 + LoRA | 0.0348 | 0.0000 | 0.0348 | 0.0000 |
+| Zero-shot LLM | 0.2414 | 0.1865 | 0.2381 | 0.0350 |
+
+## Klasor Yapisi
 
 ```text
 api/                    FastAPI app (`api/main.py`)
-configs/                YAML config (`configs/default.yaml`)
+configs/                Proje konfigurasyonu (`configs/default.yaml`)
 data/
-  raw/                  Downloaded BDDK documents (.md + metadata)
-  paragraphs/           Extracted complex paragraphs
-  parallel/             Train/val/test parallel pairs
-data_collection/        Scraping + extraction + synthetic dataset tools
+  raw/                  Ham dokumanlar (.md + .json)
+  paragraphs/           Cikarilan kompleks paragraflar
+  parallel/             train/val/test verisi
+data_collection/        Scraper + extractor + synthetic tools
 models/
-  baseline/             TF-IDF / TextRank baselines
-  neural/               mT5 + LoRA training/inference/evaluation
-  zeroshot/             Prompt-based LLM simplifier
-evaluation/             Comparison + faithfulness + hallucination analysis
-results/                Generated metrics, checkpoints, reports
-web/                    Frontend assets/templates
+  baseline/             TF-IDF / TextRank
+  neural/               mT5 + LoRA
+  zeroshot/             Prompt tabanli LLM
+evaluation/             Karsilastirma ve guvenilirlik analizleri
+results/                Skorlar, raporlar, checkpointler
+web/                    Arayuz dosyalari
 ```
 
-## Tech Stack
-
-- Python 3.11+
-- FastAPI + Uvicorn
-- Hugging Face Transformers
-- PEFT / LoRA
-- PyTorch
-- scikit-learn, NetworkX
-- OpenAI-compatible client (OpenRouter/OpenAI)
-- JSONL-based data pipeline
-
-## Setup
-
-### 1) Create virtual environment
+## Hizli Baslangic
 
 ```bash
-python3.11 -m venv .venv
-.venv/bin/python -m pip install --upgrade pip
-.venv/bin/pip install -e .
+make setup
+make run
 ```
 
-### 2) Optional API keys
-
-For real LLM-based synthetic generation / zero-shot comparison:
+Alternatif:
 
 ```bash
-export OPENROUTER_API_KEY="sk-or-v1-..."
-# or
-export OPENAI_API_KEY="sk-..."
+./scripts/run_api.sh
 ```
 
-If no key is set, zero-shot module can run in an offline fallback mode (rule-based simplification), useful for pipeline checks only.
+API:
+- UI: `http://127.0.0.1:8000/`
+- Stats: `http://127.0.0.1:8000/api/stats`
 
-## End-to-End Workflow
-
-All commands assume project root.
-
-### A) Collect BDDK documents
+## Veri Toplama Komutlari
 
 ```bash
-.venv/bin/python data_collection/bddk_scraper.py --mode test
+# ID araligi ile toplama
+.venv/bin/python -m data_collection.bddk_scraper --mode range --start 1 --end 500
+
+# Config'teki dogrudan mevzuat URL'lerini toplama (elektronik bankacilik dahil)
+.venv/bin/python -m data_collection.bddk_scraper --mode urls --config configs/default.yaml
+
+# Paragraf datasetini guncelleme
+.venv/bin/python -m data_collection.paragraph_extractor --config configs/default.yaml
 ```
 
-Or range mode:
+## Deney Komutlari
 
 ```bash
-.venv/bin/python data_collection/bddk_scraper.py --mode range --start 1 --end 500
+# Baseline
+.venv/bin/python -m models.baseline.evaluate_baselines --test-file data/parallel/test_gold.jsonl --output results/baseline_scores.json
+
+# Neural evaluate
+.venv/bin/python -m models.neural.evaluate --model-path results/neural_checkpoints/best_model --test-file data/parallel/test_gold.jsonl --output results/neural_scores.json
+
+# Zero-shot
+.venv/bin/python -m models.zeroshot.llm_simplifier --test-file data/parallel/test_gold.jsonl --output results/zeroshot_scores.json
 ```
 
-### B) Extract complex paragraphs
+## API Endpointleri
 
-```bash
-.venv/bin/python data_collection/paragraph_extractor.py --config configs/default.yaml
-```
+- `GET /` -> Web arayuzu
+- `POST /api/simplify` -> Model secerek sadeleştirme
+- `POST /api/analyze` -> Jargon/karmaşıklık analizi
+- `GET /api/stats` -> Veri + model snapshot
+- `GET /api/paragraphs?limit=20&offset=0` -> Paragraf gozlemi
 
-### C) Create parallel dataset
+## Sinirlar
 
-```bash
-.venv/bin/python data_collection/synthetic_simplifier.py --config configs/default.yaml
-```
+- `test_gold` su an kucuk; kapsamli manuel gold set ile tekrar degerlendirme gerekli.
+- Hukuki metinde anlam kaymasi kritik oldugu icin niteliksel inceleme zorunlu.
+- API key yoksa zero-shot mod fallback ile calisir; bilimsel karsilastirma icin gercek LLM ciktilari tercih edilmelidir.
 
-### D) Baseline evaluation
+## Lisans
 
-```bash
-.venv/bin/python models/baseline/evaluate_baselines.py \
-  --test-file data/parallel/test_gold.jsonl \
-  --output results/baseline_scores.json
-```
-
-### E) Neural training (mT5 + LoRA)
-
-```bash
-.venv/bin/python models/neural/train.py \
-  --config configs/default.yaml \
-  --train-file data/parallel/train.jsonl \
-  --val-file data/parallel/val.jsonl
-```
-
-### F) Neural evaluation
-
-```bash
-.venv/bin/python models/neural/evaluate.py \
-  --model-path results/neural_checkpoints/best_model \
-  --test-file data/parallel/test_gold.jsonl \
-  --output results/neural_scores.json
-```
-
-### G) Zero-shot comparison
-
-```bash
-.venv/bin/python models/zeroshot/llm_simplifier.py \
-  --test-file data/parallel/test_gold.jsonl \
-  --output results/zeroshot_scores.json
-```
-
-### H) Faithfulness and hallucination analysis
-
-```bash
-.venv/bin/python evaluation/faithfulness_checker.py \
-  --input data/parallel/test_gold.jsonl \
-  --output results/faithfulness_analysis.json
-
-.venv/bin/python evaluation/hallucination_detector.py \
-  --input data/parallel/test_gold.jsonl \
-  --output results/hallucination_analysis.json
-```
-
-### I) Generate comparison report
-
-```bash
-.venv/bin/python evaluation/comparison_report.py \
-  --results-dir results \
-  --output results/comparison_report.md
-```
-
-## Run the Web App
-
-```bash
-.venv/bin/python -m uvicorn api.main:app --host 127.0.0.1 --port 8003
-```
-
-Open:
-
-- UI: `http://127.0.0.1:8003/`
-- Stats API: `http://127.0.0.1:8003/api/stats`
-
-## API Endpoints
-
-- `GET /`  
-  Serves web UI.
-
-- `POST /api/simplify`  
-  Simplifies input text with selected baseline models and returns basic reliability metrics.
-
-- `POST /api/analyze`  
-  Returns text complexity/jargon analysis.
-
-- `GET /api/stats`  
-  Returns dataset and model result snapshot from `data/` and `results/`.
-
-- `GET /api/paragraphs?limit=20&offset=0`  
-  Returns extracted paragraph records for inspection.
-
-## Current Pilot Results (from `results/`)
-
-- Baseline (TF-IDF / TextRank):
-  - ROUGE-1: `0.7647`
-  - ROUGE-2: `0.6212`
-  - ROUGE-L: `0.7647`
-  - BLEU: `0.2534`
-- Neural (mT5 + LoRA, pilot run):
-  - ROUGE-1: `0.0348`
-  - ROUGE-2: `0.0000`
-  - ROUGE-L: `0.0348`
-  - BLEU: `0.0000`
-- Zero-shot (OpenRouter run):
-  - ROUGE-1: `0.2414`
-  - ROUGE-2: `0.1865`
-  - ROUGE-L: `0.2381`
-  - BLEU: `0.0350`
-
-These are interim experiment outputs on the current small pilot split and should not be interpreted as final benchmark conclusions.
-
-## Notes and Limitations
-
-- The current `test_gold` is small; expand and manually review for stronger claims.
-- Faithfulness is critical in legal text simplification; always inspect qualitative failures.
-- API-keyless fallback in zero-shot mode is only for workflow continuity, not for scientific comparison.
-
-## License
-
-MIT (see `LICENSE`).
+MIT (`LICENSE`)
