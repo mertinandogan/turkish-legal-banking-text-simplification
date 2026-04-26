@@ -1,0 +1,133 @@
+{
+  "total_samples": 7,
+  "avg_hallucination_score": 0.0429,
+  "samples_with_number_hallucination": 0,
+  "avg_term_preservation": 1.0,
+  "avg_word_overlap": 0.4842,
+  "details": [
+    {
+      "hallucination_score": 0.0,
+      "number_check": {
+        "hallucinated_numbers": [],
+        "has_number_hallucination": false,
+        "count": 0
+      },
+      "term_preservation": {
+        "terms_in_source": [],
+        "preserved": [],
+        "missing": [],
+        "preservation_rate": 1.0
+      },
+      "word_overlap": 0.35,
+      "id": "bddk_11_p19"
+    },
+    {
+      "hallucination_score": 0.0,
+      "number_check": {
+        "hallucinated_numbers": [],
+        "has_number_hallucination": false,
+        "count": 0
+      },
+      "term_preservation": {
+        "terms_in_source": [],
+        "preserved": [],
+        "missing": [],
+        "preservation_rate": 1.0
+      },
+      "word_overlap": 0.35,
+      "id": "bddk_3_p19"
+    },
+    {
+      "hallucination_score": 0.0,
+      "number_check": {
+        "hallucinated_numbers": [],
+        "has_number_hallucination": false,
+        "count": 0
+      },
+      "term_preservation": {
+        "terms_in_source": [
+          "kanun"
+        ],
+        "preserved": [
+          "kanun"
+        ],
+        "missing": [],
+        "preservation_rate": 1.0
+      },
+      "word_overlap": 0.7222,
+      "id": "bddk_3_p15"
+    },
+    {
+      "hallucination_score": 0.0,
+      "number_check": {
+        "hallucinated_numbers": [],
+        "has_number_hallucination": false,
+        "count": 0
+      },
+      "term_preservation": {
+        "terms_in_source": [
+          "kanun"
+        ],
+        "preserved": [
+          "kanun"
+        ],
+        "missing": [],
+        "preservation_rate": 1.0
+      },
+      "word_overlap": 0.7222,
+      "id": "bddk_8_p15"
+    },
+    {
+      "hallucination_score": 0.3,
+      "number_check": {
+        "hallucinated_numbers": [],
+        "has_number_hallucination": false,
+        "count": 0
+      },
+      "term_preservation": {
+        "terms_in_source": [],
+        "preserved": [],
+        "missing": [],
+        "preservation_rate": 1.0
+      },
+      "word_overlap": 0.25,
+      "id": "bddk_11_p13"
+    },
+    {
+      "hallucination_score": 0.0,
+      "number_check": {
+        "hallucinated_numbers": [],
+        "has_number_hallucination": false,
+        "count": 0
+      },
+      "term_preservation": {
+        "terms_in_source": [
+          "kanun"
+        ],
+        "preserved": [
+          "kanun"
+        ],
+        "missing": [],
+        "preservation_rate": 1.0
+      },
+      "word_overlap": 0.6452,
+      "id": "bddk_12_p22"
+    },
+    {
+      "hallucination_score": 0.0,
+      "number_check": {
+        "hallucinated_numbers": [],
+        "has_number_hallucination": false,
+        "count": 0
+      },
+      "term_preservation": {
+        "terms_in_source": [],
+        "preserved": [],
+        "missing": [],
+        "preservation_rate": 1.0
+      },
+      "word_overlap": 0.35,
+      "id": "bddk_12_p19"
+    }
+  ]
+}

@@ -1,4 +1,4 @@
-# Neural Simplification of Banking Regulations: A Comparative Study on Legal Text Summarization and Simplification
+# Turkish Legal Banking Text Simplification: A Comparative Study on Summarization and Simplification
 
 ## Abstract
 This project studies automatic simplification of Turkish banking regulations into plain language while preserving legal meaning. We frame the task as legal-domain text generation and compare generation-aligned extractive baselines (TF-IDF, TextRank) with a Transformer-based abstractive model (mT5 + LoRA) and a zero-shot LLM approach. The current dataset pipeline has produced 23 source documents and 70 complex legal paragraphs. Final quantitative results (ROUGE, BLEU, faithfulness, hallucination) are reported as ongoing (`TBD`) because the parallel gold test split and full experiment cycle are still being completed.

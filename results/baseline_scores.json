@@ -1,0 +1,46 @@
+{
+  "textrank": {
+    "model": "TextRank",
+    "metrics": {
+      "rouge1": 0.7647,
+      "rouge2": 0.6212,
+      "rougeL": 0.7647,
+      "bleu": 0.2534
+    },
+    "statistics": {
+      "num_samples": 7,
+      "avg_prediction_length": 354.0,
+      "avg_reference_length": 216.3,
+      "length_ratio": 1.637
+    },
+    "predictions": [
+      "+ [Banka Dışı Mali Kuruluş Verileri](/Veri/Index/70) - [Faktoring](/Veri/Detay/163) - [Finansal Kiralama](/Veri/Detay/164) - [Finansman Şirketleri](/Veri/Detay/165) - [Varlık Yönetim](/Veri/Detay/166) + [Bağımsız Denetim Raporları](/Veri/Detay/75) + [VERİ YAYIMLAMA TAKVİMİ](/Veri/Detay/71) * Kuruluşlar",
+      "+ [Banka Dışı Mali Kuruluş Verileri](/Veri/Index/70) - [Faktoring](/Veri/Detay/163) - [Finansal Kiralama](/Veri/Detay/164) - [Finansman Şirketleri](/Veri/Detay/165) - [Varlık Yönetim](/Veri/Detay/166) + [Bağımsız Denetim Raporları](/Veri/Detay/75) + [VERİ YAYIMLAMA TAKVİMİ](/Veri/Detay/71) * Kuruluşlar",
+      "+ [Kanunlar](/Mevzuat/Liste/49) + [Bankacılık Kanununa İlişkin Düzenlemeler](/Mevzuat/Liste/50) + [Banka Kartları ve Kredi Kartları Kanununa İlişkin Düzenlemeler](/Mevzuat/Liste/51) + [Finansal Kiralama, Faktoring, Finansman ve Tasarruf Finansman Şirketleri Kanununa İlişkin Düzenlemeler](/Mevzuat/Liste/52) + [Bankacılık Düzenleme ve Denetleme Kurumuna İlişkin Düzenlemeler](/Mevzuat/Liste/54)",
+      "+ [Kanunlar](/Mevzuat/Liste/49) + [Bankacılık Kanununa İlişkin Düzenlemeler](/Mevzuat/Liste/50) + [Banka Kartları ve Kredi Kartları Kanununa İlişkin Düzenlemeler](/Mevzuat/Liste/51) + [Finansal Kiralama, Faktoring, Finansman ve Tasarruf Finansman Şirketleri Kanununa İlişkin Düzenlemeler](/Mevzuat/Liste/52) + [Bankacılık Düzenleme ve Denetleme Kurumuna İlişkin Düzenlemeler](/Mevzuat/Liste/54)",
+      "+ [Basın Duyuruları](/Duyuru/Liste/39) + [Mevzuat Duyuruları](/Duyuru/Liste/40) + [Kuruluş Duyuruları](/Duyuru/Liste/48) + [Veri Yayımlama Duyuruları](/Duyuru/Liste/42) + [İnsan Kaynakları Duyuruları](/Duyuru/Liste/41) + [Güncel Duyurular](/Duyuru/Liste/197) + [Duyuru Arşivi](/Duyuru/Liste/43) * Mevzuat"
+    ]
+  },
+  "tfidf": {
+    "model": "TF-IDF",
+    "metrics": {
+      "rouge1": 0.7647,
+      "rouge2": 0.6212,
+      "rougeL": 0.7647,
+      "bleu": 0.2534
+    },
+    "statistics": {
+      "num_samples": 7,
+      "avg_prediction_length": 354.0,
+      "avg_reference_length": 216.3,
+      "length_ratio": 1.637
+    },
+    "predictions": [
+      "+ [Banka Dışı Mali Kuruluş Verileri](/Veri/Index/70) - [Faktoring](/Veri/Detay/163) - [Finansal Kiralama](/Veri/Detay/164) - [Finansman Şirketleri](/Veri/Detay/165) - [Varlık Yönetim](/Veri/Detay/166) + [Bağımsız Denetim Raporları](/Veri/Detay/75) + [VERİ YAYIMLAMA TAKVİMİ](/Veri/Detay/71) * Kuruluşlar",
+      "+ [Banka Dışı Mali Kuruluş Verileri](/Veri/Index/70) - [Faktoring](/Veri/Detay/163) - [Finansal Kiralama](/Veri/Detay/164) - [Finansman Şirketleri](/Veri/Detay/165) - [Varlık Yönetim](/Veri/Detay/166) + [Bağımsız Denetim Raporları](/Veri/Detay/75) + [VERİ YAYIMLAMA TAKVİMİ](/Veri/Detay/71) * Kuruluşlar",
+      "+ [Kanunlar](/Mevzuat/Liste/49) + [Bankacılık Kanununa İlişkin Düzenlemeler](/Mevzuat/Liste/50) + [Banka Kartları ve Kredi Kartları Kanununa İlişkin Düzenlemeler](/Mevzuat/Liste/51) + [Finansal Kiralama, Faktoring, Finansman ve Tasarruf Finansman Şirketleri Kanununa İlişkin Düzenlemeler](/Mevzuat/Liste/52) + [Bankacılık Düzenleme ve Denetleme Kurumuna İlişkin Düzenlemeler](/Mevzuat/Liste/54)",
+      "+ [Kanunlar](/Mevzuat/Liste/49) + [Bankacılık Kanununa İlişkin Düzenlemeler](/Mevzuat/Liste/50) + [Banka Kartları ve Kredi Kartları Kanununa İlişkin Düzenlemeler](/Mevzuat/Liste/51) + [Finansal Kiralama, Faktoring, Finansman ve Tasarruf Finansman Şirketleri Kanununa İlişkin Düzenlemeler](/Mevzuat/Liste/52) + [Bankacılık Düzenleme ve Denetleme Kurumuna İlişkin Düzenlemeler](/Mevzuat/Liste/54)",
+      "+ [Basın Duyuruları](/Duyuru/Liste/39) + [Mevzuat Duyuruları](/Duyuru/Liste/40) + [Kuruluş Duyuruları](/Duyuru/Liste/48) + [Veri Yayımlama Duyuruları](/Duyuru/Liste/42) + [İnsan Kaynakları Duyuruları](/Duyuru/Liste/41) + [Güncel Duyurular](/Duyuru/Liste/197) + [Duyuru Arşivi](/Duyuru/Liste/43) * Mevzuat"
+    ]
+  }
+}

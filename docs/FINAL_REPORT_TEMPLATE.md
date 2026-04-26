@@ -1,7 +1,7 @@
 # Final Report Template
 
 ## Title
-Neural Simplification of Banking Regulations: A Comparative Study on Legal Text Summarization and Simplification
+Turkish Legal Banking Text Simplification: A Comparative Study on Summarization and Simplification
 
 ## Abstract
 - Problem and motivation (2-3 sentences)

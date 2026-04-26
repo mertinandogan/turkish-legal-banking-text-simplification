@@ -1,7 +1,7 @@
 # Presentation Flow (Filled Draft)
 
 ## Slide 1 - Title
-- Neural Simplification of Banking Regulations
+- Turkish Legal Banking Text Simplification
 - AYBU Software Engineering / Neural Networks
 - Team members + date
 

@@ -1,0 +1,124 @@
+# Turkish Legal Banking Text Simplification — Default Configuration
+
+project:
+  name: "turkish-legal-banking-text-simplification"
+  version: "1.0.0"
+  description: "Turkish Legal Banking Text Simplification (BDDK)"
+
+# --- Data Collection ---
+data_collection:
+  bddk:
+    # BDDK document ID range to scrape
+    doc_id_start: 1
+    doc_id_end: 500
+    # Rate limiting
+    request_delay_seconds: 1.0
+    request_timeout_seconds: 60.0
+    # Output paths
+    raw_output_dir: "data/raw"
+    max_concurrent_requests: 3
+
+  paragraph_extraction:
+    min_paragraph_length: 100      # Minimum chars for a paragraph
+    max_paragraph_length: 2000     # Maximum chars for a paragraph
+    min_jargon_density: 0.02       # Min ratio of legal/banking terms
+    output_file: "data/paragraphs/complex_paragraphs.jsonl"
+
+  synthetic_simplification:
+    # LLM API settings (uses OpenRouter by default)
+    llm_provider: "openrouter"     # "openrouter" | "openai"
+    model_name: "google/gemini-2.0-flash-001"
+    temperature: 0.3
+    max_tokens: 1024
+    # Batch settings
+    batch_size: 10
+    delay_between_batches: 2.0
+    # Output
+    train_ratio: 0.8
+    val_ratio: 0.1
+    test_ratio: 0.1
+    train_output: "data/parallel/train.jsonl"
+    val_output: "data/parallel/val.jsonl"
+    test_output: "data/parallel/test_gold.jsonl"
+
+# --- Models ---
+models:
+  baseline:
+    textrank:
+      num_sentences: 3             # Number of sentences to extract
+      language: "turkish"
+    tfidf:
+      num_sentences: 3
+      max_features: 10000
+
+  neural:
+    # Model selection
+    model_name: "google/mt5-small"   # "google/mt5-small" | "facebook/mbart-large-cc25"
+    tokenizer_name: "google/mt5-small"
+    max_source_length: 512
+    max_target_length: 256
+    
+    # LoRA configuration
+    lora:
+      r: 16
+      lora_alpha: 32
+      lora_dropout: 0.1
+      target_modules: ["q", "v"]
+      task_type: "SEQ_2_SEQ_LM"
+
+    # Training configuration
+    training:
+      epochs: 5
+      batch_size: 8
+      learning_rate: 3.0e-4
+      weight_decay: 0.01
+      warmup_steps: 100
+      eval_steps: 200
+      save_steps: 500
+      gradient_accumulation_steps: 4
+      fp16: false                   # Set true if GPU supports it
+      output_dir: "results/neural_checkpoints"
+      logging_dir: "results/logs"
+
+    # Inference
+    inference:
+      beam_size: 4
+      length_penalty: 1.0
+      no_repeat_ngram_size: 3
+      early_stopping: true
+
+  zeroshot:
+    llm_provider: "openrouter"
+    model_name: "google/gemini-2.0-flash-001"
+    temperature: 0.3
+    max_tokens: 1024
+    prompt_template: |
+      Aşağıdaki karmaşık bankacılık düzenlemesi metnini, hukuki anlamını koruyarak 
+      sade ve anlaşılır bir dile çevir. Kritik terimleri ve yasal bağlayıcılığı koru.
+      
+      Karmaşık metin:
+      {complex_text}
+      
+      Sadeleştirilmiş metin:
+
+# --- Evaluation ---
+evaluation:
+  metrics:
+    - "rouge-1"
+    - "rouge-2"
+    - "rouge-l"
+    - "bleu"
+  
+  hallucination:
+    # Key banking terms that must be preserved
+    critical_terms_file: "configs/banking_terms.txt"
+    similarity_threshold: 0.7
+  
+  faithfulness:
+    # NLI model for checking entailment
+    nli_model: "cross-encoder/mDeBERTa-v3-base-xnli-multilingual-nli-2mil7"
+    entailment_threshold: 0.5
+
+  output:
+    scores_file: "results/comparison_scores.json"
+    report_file: "results/comparison_report.md"

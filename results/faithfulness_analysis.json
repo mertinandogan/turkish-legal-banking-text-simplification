@@ -1,0 +1,57 @@
+{
+  "total_samples": 7,
+  "avg_faithfulness_score": 0.5458,
+  "avg_tfidf_similarity": 0.5231,
+  "low_faithfulness_count": 0,
+  "details": [
+    {
+      "faithfulness_score": 0.4876,
+      "tfidf_similarity": 0.4632,
+      "embedding_similarity": "N/A",
+      "length_ratio": 0.5446,
+      "id": "bddk_11_p19"
+    },
+    {
+      "faithfulness_score": 0.4876,
+      "tfidf_similarity": 0.4632,
+      "embedding_similarity": "N/A",
+      "length_ratio": 0.5446,
+      "id": "bddk_3_p19"
+    },
+    {
+      "faithfulness_score": 0.6562,
+      "tfidf_similarity": 0.6339,
+      "embedding_similarity": "N/A",
+      "length_ratio": 0.7081,
+      "id": "bddk_3_p15"
+    },
+    {
+      "faithfulness_score": 0.6562,
+      "tfidf_similarity": 0.6339,
+      "embedding_similarity": "N/A",
+      "length_ratio": 0.7081,
+      "id": "bddk_8_p15"
+    },
+    {
+      "faithfulness_score": 0.4987,
+      "tfidf_similarity": 0.5052,
+      "embedding_similarity": "N/A",
+      "length_ratio": 0.4836,
+      "id": "bddk_11_p13"
+    },
+    {
+      "faithfulness_score": 0.5467,
+      "tfidf_similarity": 0.4988,
+      "embedding_similarity": "N/A",
+      "length_ratio": 0.6583,
+      "id": "bddk_12_p22"
+    },
+    {
+      "faithfulness_score": 0.4876,
+      "tfidf_similarity": 0.4632,
+      "embedding_similarity": "N/A",
+      "length_ratio": 0.5446,
+      "id": "bddk_12_p19"
+    }
+  ]
+}

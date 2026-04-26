@@ -1,7 +1,7 @@
-# Neural Simplification of Banking Regulations
+# Turkish Legal Banking Text Simplification
 
 ## 1) Project Title
-Neural Simplification of Banking Regulations: A Comparative Study on Legal Text Summarization and Simplification
+Turkish Legal Banking Text Simplification: A Comparative Study on Summarization and Simplification
 
 ## 2) Problem Definition
 Banking regulations and legal frameworks are usually written in highly complex, jargon-heavy language. This makes them difficult to understand for standard consumers and entry-level bank employees, increasing the risk of misinterpretation.

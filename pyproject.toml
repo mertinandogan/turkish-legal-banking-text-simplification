@@ -1,60 +1,85 @@
 [project]
-name = "yargi-mcp"
-version = "0.2.0"
-description = "MCP Server For Turkish Legal Databases"
+name = "turkish-legal-banking-text-simplification"
+version = "1.0.0"
+description = "Turkish Legal Banking Text Simplification: A Comparative Study on Summarization and Simplification"
 readme = "README.md"
 requires-python = ">=3.11"
 license = {text = "MIT"}
-authors = [{name = "Said Surucu", email = "saidsrc@gmail.com"}]
-keywords = ["mcp", "turkish-law", "legal", "yargitay", "danistay", "bddk", "kvkk", "turkish", "law", "court", "decisions"]
+keywords = ["nlp", "text-simplification", "legal-text", "banking-regulation", "bddk", "turkish", "lora", "mt5", "summarization"]
 classifiers = [
-    "Development Status :: 4 - Beta",
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
     "Intended Audience :: Legal Industry",
-    "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
-    "Topic :: Software Development :: Libraries :: Python Modules",
-    "Topic :: Text Processing :: Markup :: Markdown",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Text Processing :: Linguistic",
     "Operating System :: OS Independent",
 ]
-urls = {Homepage = "https://github.com/saidsurucu/yargi-mcp", Issues = "https://github.com/saidsurucu/yargi-mcp/issues"}
 dependencies = [
-    "beautifulsoup4>=4.13.4",
+    # --- Data Collection (from existing BDDK module) ---
     "httpx>=0.28.1",
+    "beautifulsoup4>=4.13.4",
     "markitdown[pdf]>=0.1.1",
     "pydantic>=2.11.4",
     "aiohttp>=3.11.18",
-    "fastmcp>=2.10.5",
     "pypdf>=5.5.0",
-    "fastapi>=0.115.14",
-    "cryptography>=44.0.0",
     "openai>=1.0.0",
     "numpy>=1.24.0",
+    # --- NLP / ML ---
+    "transformers>=4.40.0",
+    "peft>=0.11.0",
+    "datasets>=2.19.0",
+    "torch>=2.2.0",
+    "accelerate>=0.30.0",
+    "sentencepiece>=0.2.0",
+    "protobuf>=4.25.0",
+    # --- Evaluation ---
+    "rouge-score>=0.1.2",
+    "nltk>=3.8.0",
+    "scikit-learn>=1.4.0",
+    # --- Baseline Models ---
+    "networkx>=3.2.0",
+    # --- Utilities ---
+    "pyyaml>=6.0",
+    "tqdm>=4.66.0",
+    "jsonlines>=4.0.0",
+    # --- Web API ---
+    "fastapi>=0.115.0",
+    "uvicorn>=0.32.0",
+    "jinja2>=3.1.4",
 ]
 
 [project.optional-dependencies]
-asgi = [
-    "uvicorn[standard]>=0.30.0",
-    "starlette>=0.37.0",
+gpu = [
+    "bitsandbytes>=0.43.0",
 ]
-api = [
-    "fastapi>=0.115.0",
-    "uvicorn[standard]>=0.30.0",
+tracking = [
+    "wandb>=0.16.0",
+    "tensorboard>=2.16.0",
 ]
-production = [
-    "gunicorn>=22.0.0",
-    "uvicorn[standard]>=0.30.0",
+faithfulness = [
+    "sentence-transformers>=2.7.0",
 ]
 
 [project.scripts]
-yargi-mcp = "mcp_server_main:main"
-
-[tool.setuptools]
-py-modules = ["mcp_server_main", "asgi_app"]
+collect-bddk = "data_collection.bddk_scraper:main"
+extract-paragraphs = "data_collection.paragraph_extractor:main"
+create-dataset = "data_collection.synthetic_simplifier:main"
+train-baseline = "models.baseline.evaluate_baselines:main"
+train-neural = "models.neural.train:main"
+evaluate = "evaluation.comparison_report:main"
 
 [tool.setuptools.packages.find]
-include = ["*_mcp_module", "semantic_search"]
+include = [
+    "data_collection",
+    "models",
+    "models.*",
+    "evaluation",
+    "bddk_mcp_module",
+    "semantic_search",
+]
 
 [build-system]
 requires = ["setuptools>=65.0", "wheel"]

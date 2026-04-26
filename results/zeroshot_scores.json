@@ -1,0 +1,35 @@
+{
+  "model": "zeroshot_google/gemini-2.0-flash-001",
+  "metrics": {
+    "rouge1": 0.2414,
+    "rouge2": 0.1865,
+    "rougeL": 0.2381,
+    "bleu": 0.035
+  },
+  "statistics": {
+    "num_samples": 7,
+    "avg_pred_len": 1363.6
+  },
+  "predictions": [
+    {
+      "complex": "+ [Banka Dışı Mali Kuruluş Verileri](/Veri/Index/70) - [Faktoring](/Veri/Detay/163) - [Finansal Kiralama](/Veri/Detay/164) - [Finansman Şirketleri](/Veri/Detay/165) - [Varlık Yönetim](/Veri/Detay/166)",
+      "prediction": "**Banka Dışı Finans Kuruluşları Verileri:**\n\n*   **Faktoring:** Faktoring şirketlerine ait veriler.\n*   **Finansal Kiralama (Leasing):** Finansal kiralama şirketlerine ait veriler.\n*   **Finansman Şir"
+    },
+    {
+      "complex": "+ [Banka Dışı Mali Kuruluş Verileri](/Veri/Index/70) - [Faktoring](/Veri/Detay/163) - [Finansal Kiralama](/Veri/Detay/164) - [Finansman Şirketleri](/Veri/Detay/165) - [Varlık Yönetim](/Veri/Detay/166)",
+      "prediction": "**Banka Dışı Finans Kuruluşları Verileri:**\n\n*   Bu bölümde, banka olmayan finans kuruluşlarına ait verilere ulaşabilirsiniz. Bu kuruluşlar şunlardır:\n    *   **Faktoring Şirketleri:** Faktoring şirke"
+    },
+    {
+      "complex": "+ [Kanunlar](/Mevzuat/Liste/49) + [Bankacılık Kanununa İlişkin Düzenlemeler](/Mevzuat/Liste/50) + [Banka Kartları ve Kredi Kartları Kanununa İlişkin Düzenlemeler](/Mevzuat/Liste/51) + [Finansal Kirala",
+      "prediction": "Aşağıda, bankacılık sektörünü düzenleyen temel kanunlar ve ilgili düzenlemeler listelenmiştir:\n\n*   **Genel Bankacılık Kanunu ve Düzenlemeleri:** Bankaların faaliyetlerini ve işleyişini düzenleyen tem"
+    },
+    {
+      "complex": "+ [Kanunlar](/Mevzuat/Liste/49) + [Bankacılık Kanununa İlişkin Düzenlemeler](/Mevzuat/Liste/50) + [Banka Kartları ve Kredi Kartları Kanununa İlişkin Düzenlemeler](/Mevzuat/Liste/51) + [Finansal Kirala",
+      "prediction": "**Sadeleştirilmiş Metin:**\n\nAşağıdaki kanunlar ve bu kanunlara bağlı düzenlemeler bu metnin kapsamındadır:\n\n*   [Kanunlar](/Mevzuat/Liste/49)\n*   [Bankacılık Kanunu ile ilgili düzenlemeler](/Mevzuat/L"
+    },
+    {
+      "complex": "+ [Basın Duyuruları](/Duyuru/Liste/39) + [Mevzuat Duyuruları](/Duyuru/Liste/40) + [Kuruluş Duyuruları](/Duyuru/Liste/48) + [Veri Yayımlama Duyuruları](/Duyuru/Liste/42) + [İnsan Kaynakları Duyuruları]",
+      "prediction": "**Bankacılık Düzenlemeleri Hakkında Bilgilendirme:**\n\nAşağıdaki duyuru kategorilerinden güncel bilgilere ulaşabilirsiniz:\n\n*   **Basın Duyuruları:** Bankacılık sektörüyle ilgili basın açıklamaları.\n* "
+    }
+  ]
+}
