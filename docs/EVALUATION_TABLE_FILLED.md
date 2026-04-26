@@ -23,6 +23,7 @@
 - These values are valid for pipeline verification and interim reporting.
 - Final report should rerun the same evaluation on manually reviewed gold-standard pairs.
 - E4 zero-shot result was produced with real OpenRouter API calls on the same pilot set.
+- Gold expansion plan (short): grow `test_gold` from 7 to at least 100 manually reviewed pairs, stratify by decision topic/length, then re-run E1-E4 with the same metrics.
 
 ## How to Fill This Table Quickly
 1. [x] Create/finalize `data/parallel/test_gold.jsonl`.

@@ -50,9 +50,11 @@
 - Baseline pilot metrics (current `test_gold`, n=7):
   - TextRank: R-1 0.7647, R-2 0.6212, R-L 0.7647, BLEU 0.2534
   - TF-IDF: R-1 0.7647, R-2 0.6212, R-L 0.7647, BLEU 0.2534
+  - mT5-small (LoRA, pilot): R-1 0.0348, R-2 0.0000, R-L 0.0348, BLEU 0.0000
+  - Zero-shot LLM (OpenRouter, pilot): R-1 0.2414, R-2 0.1865, R-L 0.2381, BLEU 0.0350
   - Faithfulness (avg): 0.5458
   - Hallucination score (avg): 0.0429
-- Neural + zero-shot metrics: `TBD` (next experiment stage)
+- Note: all scores are pilot-scale and will be re-validated on expanded gold data.
 - Show one sample input-output from demo API
 
 ## Slide 10 - Error Analysis (Template)
