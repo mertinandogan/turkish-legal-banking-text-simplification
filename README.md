@@ -12,10 +12,10 @@ Turkish legal/banking metinlerini daha anlaşılır hale getirmek için hazırla
 
 Repository içindeki güncel artefaktlara göre:
 
-- İşlenen ham doküman: **30**
-- Çıkarılan karmaşık paragraf: **114**
-- Ortalama karmaşıklık skoru: **2.5**
-- Ortalama jargon yoğunluğu: **0.0558**
+- İşlenen ham doküman: **813**
+- Çıkarılan karmaşık paragraf: **794**
+- Ortalama karmaşıklık skoru: **1.61**
+- Ortalama jargon yoğunluğu: **0.0608**
 - Pilot test set boyutu (`data/parallel/test_gold.jsonl`): **7**
 
 ## Proje Akış Grafiği
@@ -40,8 +40,8 @@ flowchart LR
 ```mermaid
 pie showData
   title Raw Dokuman Dagilimi
-  "Onceki BDDK Toplami" : 23
-  "Eklenen Elektronik Bankacilik Mevzuati" : 7
+  "Onceki Seed Korpus" : 30
+  "Genisletilmis BDDK Toplami" : 783
 ```
 
 ## Model Sonuclari (Pilot)
@@ -94,8 +94,8 @@ API:
 ## Veri Toplama Komutlari
 
 ```bash
-# ID araligi ile toplama
-.venv/bin/python -m data_collection.bddk_scraper --mode range --start 1 --end 500
+# ID araligi ile toplama (genis corpus icin)
+.venv/bin/python -m data_collection.bddk_scraper --mode range --start 1 --end 2500
 
 # Config'teki dogrudan mevzuat URL'lerini toplama (elektronik bankacilik dahil)
 .venv/bin/python -m data_collection.bddk_scraper --mode urls --config configs/default.yaml
