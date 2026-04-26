@@ -1,0 +1,23 @@
+Bankacılık Düzenleme ve Denetleme Kurumundan:
+
+Bankacılık Düzenleme ve Denetleme Kurulu Kararı
+
+Karar Sayısı: 7925
+
+         Karar Tarihi: 09/08/2018
+
+(14.08.2018 tarih ve 30509 sayılı Resmi Gazete’de yayımlanmıştır.)
+
+Kurul  Başkanlığının  08.08.2018  tarihli  gündem  yazısı  ekinde  gönderilen  08.08.2018
+
+tarih ve 32521522-101.01.05[24]-E.14758 sayılı yazı ve eklerinin incelenmesi sonucunda;
+
+5411 sayılı Bankacılık Kanununun 4 üncü maddesinin birinci fıkrasının (v) bendi ile
+Geçici  3  üncü  maddesi  çerçevesinde,  Alternatifbank  A.Ş.’ye,  yurtiçi  ve  yurtdışında  kurulu
+banka  ve  diğer  kuruluşların,  yurtiçinde  ve/veya  yurtdışında  yerleşik  gerçek  ve  tüzel  kişilere
+kullandıracakları kredilere yönelik olarak dokümantasyon hazırlama ve bilgilendirme, teminat
+alma, izleme, teminatları nakde çevirme ile bunların raporlanmasına yönelik kredi operasyon
+işlemlerinin  sunulması  konularında  destek/danışmanlık  hizmeti  vermesi  hususunda  izin
+verilmesine
+
+karar verilmiştir.

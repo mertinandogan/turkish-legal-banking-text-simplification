@@ -1,0 +1,26 @@
+Bankacılık Düzenleme ve Denetleme Kurumundan:
+
+Bankacılık Düzenleme ve Denetleme Kurulu Kararı
+
+Karar Sayısı: 7964
+
+Karar Tarihi: 13/09/2018
+
+(19.09.2018 tarih ve 30540 sayılı Resmi Gazete’de yayımlanmıştır.)
+
+Kurul  Başkanlığının  12.09.2018  tarihli  gündem  yazısı  ekinde  gönderilen  12.09.2018
+
+tarih ve 12509071-113-E.16584 sayılı yazı ve eklerinin incelenmesi sonucunda;
+
+-  Vezne24  Tahsilat  Sistemleri  ve  Ödeme  Hizmetleri  A.Ş.’ye  6493  sayılı  Ödeme  ve
+Menkul  Kıymet  Mutabakat  Sistemleri,  Ödeme  Hizmetleri  ve  Elektronik  Para  Kuruluşları
+Hakkında Kanunun (Kanun) 12 nci maddesinin (1) numaralı fıkrasının (ç) ve (e) bentlerinde
+belirtilen ödeme hizmetlerini sunmak üzere, Kanunun 14 üncü maddesinin birinci fıkrası ile
+15  inci  maddesinin  birinci  fıkrası  uyarınca  ödeme  kuruluşu  olarak  faaliyette  bulunma  izni
+verilmesine,
+
+-  Kanunun  15  inci  maddesinin  birinci  fıkrası  çerçevesinde  işbu  kararın  Resmi
+
+Gazete’de yayımlanmasına
+
+karar verilmiştir.

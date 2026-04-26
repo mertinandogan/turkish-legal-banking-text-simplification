@@ -1,0 +1,26 @@
+Bankacılık Düzenleme ve Denetleme Kurumundan:
+
+Bankacılık Düzenleme ve Denetleme Kurulu Kararı
+
+Karar Sayısı: 8027
+
+Karar Tarihi: 04/10/2018
+
+(09.10.2018 tarih ve 30560 sayılı Resmi Gazete’de yayımlanmıştır.)
+
+Kurul  Başkanlığının  03.10.2018  tarihli  gündem  yazısı  ekinde  gönderilen  03.10.2018
+
+tarih ve 12509071-114-E.17970 sayılı yazı ve eklerinin incelenmesi sonucunda;
+
+- Aköde Elektronik Para ve Ödeme Hizmetleri A.Ş.’ye 6493 sayılı Ödeme ve Menkul
+Kıymet  Mutabakat  Sistemleri,  Ödeme  Hizmetleri  ve  Elektronik  Para  Kuruluşları  Hakkında
+Kanunun (Kanun) 12 nci maddesinin birinci fıkrasının (a), (b), (c) ve (ç) bentlerinde belirtilen
+ödeme  hizmetlerini  sunmak  ve  Kanunun  15  inci  maddesinin  birinci  fıkrası,  18  inci
+maddesinin  ikinci  fıkrası  ve  19  uncu  maddesi  uyarınca  elektronik  para  ihraç  etmek  üzere
+elektronik para kuruluşu olarak faaliyette bulunma izni verilmesine,
+
+-  Kanunun  15  inci  maddesinin  birinci  fıkrası  çerçevesinde  işbu  kararın  Resmi
+
+Gazete’de yayımlanmasına
+
+karar verilmiştir.

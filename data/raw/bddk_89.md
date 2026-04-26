@@ -1,0 +1,20 @@
+Bankacılık Düzenleme ve Denetleme Kurumundan:
+
+Bankacılık Düzenleme ve Denetleme Kurulu Kararı
+
+Karar Sayısı: 1764
+
+Karar Tarihi: 28/12/2005
+
+(29.12.2005 tarih ve 26038 sayılı Resmi Gazete’de yayımlanmıştır.)
+
+Kurul  Başkanlığının  27.12.2005
+
+tarihli  yazısı  ekinde  gönderilen  Bankacılık
+Düzenleme  ve  Denetleme  Kurumunun  27.12.2005  tarih  ve  BDDK.KR2.94.1-11133  sayılı
+yazı ve eklerinin incelenmesi sonucunda;
+
+Anadolu  Finans  Kurumu  A.Ş.  ve  Family  Finans  Kurumu  A.Ş.’nin  23.12.2005
+tarihinde yapılan olağanüstü genel kurullarının devre dair kararlarının tescil edilmesine onay
+verilmesi,  5411  sayılı  Bankacılık  Kanununun  19  uncu  ve  Geçici  1  inci  maddeleri  uyarınca
+uygun görülmüştür.

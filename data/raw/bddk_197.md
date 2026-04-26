@@ -1,0 +1,22 @@
+Bankacılık Düzenleme ve Denetleme Kurumundan:
+
+Bankacılık Düzenleme ve Denetleme Kurulu Kararı
+
+Karar Sayısı: 4714
+
+                        Karar Tarihi: 19/04/2012
+
+(21.04.2012 tarih ve 28271 sayılı Resmi Gazete’de yayımlanmıştır.)
+
+Kurul  Başkanlığının  18.04.2012  tarihli  yazısı  ekinde  gönderilen  13.04.2012  tarih  ve
+
+B.02.1.BDK.0.11.00.00.55.1-7812 sayılı yazı ve eklerinin incelenmesi sonucunda;
+
+Fibabanka  A.Ş.’nin  (Banka)  5411  sayılı  Bankacılık  Kanunundan  (Kanun)  ve  ilgili
+diğer  mevzuattan  kaynaklanan  yükümlülüklerinden  doğan  sorumlulukları  saklı  kalmak
+kaydıyla; Kanunun 4 üncü maddesinin birinci fıkrasının (v) bendi ve  geçici 3 üncü maddesi
+uyarınca,  Bankaya,  dahil  olduğu  risk  grubunda  yer  alan  ortaklıklara  bakım,  yazılım  ve
+operasyonel  alanları  içerecek  şekilde  bilgi  sistemleri  destek  ve  danışmanlık  hizmeti
+sunulabilmesi hususunda izin verilmesine
+
+karar verilmiştir.

@@ -1,0 +1,19 @@
+Bankacılık Düzenleme ve Denetleme Kurumundan:
+
+Bankacılık Düzenleme ve Denetleme Kurulu Kararı
+
+Karar Sayısı: 7180
+
+Karar Tarihi: 05/01/2017
+
+(12.01.2017 tarih ve 29946 sayılı Resmi Gazete’de yayımlanmıştır.)
+
+Kurul  Başkanlığının  04.01.2017  tarihli  gündem  yazısı  ekinde  gönderilen  04.01.2017
+
+tarih ve 20008792-101.01.05[47]-E.263 sayılı yazı ve eklerinin incelenmesi sonucunda;
+
+Turkland Bank A.Ş.’ye; 5411 sayılı Bankacılık Kanununun 4 üncü maddesinin birinci
+fıkrasının  (r)  bendi  ile  Geçici  3  üncü  maddesi  uyarınca  faktöring  faaliyetinde  bulunulması
+hususunda izin verilmesine
+
+karar verilmiştir.

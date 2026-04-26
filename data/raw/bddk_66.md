@@ -1,0 +1,24 @@
+Bankacılık Düzenleme ve Denetleme Kurumundan:
+
+Bankacılık Düzenleme ve Denetleme Kurulu Kararı
+
+Karar Sayısı: 554
+
+Karar Tarihi: 13/12/2001
+
+(14.12.2001 tarih ve 24613 sayılı Resmi Gazete’de yayımlanmıştır.)
+
+Kurul  Başkanlığının  13.12.2001  tarihli  yazıları  ekinde  gönderilen  Tasarruf  Mevduatı
+Sigorta  Fonunun  13.12.2001  tarih  ve  BDDK.2.TMSF.01.VAR-555  sayılı  yazısının,  4389
+sayılı  Bankalar  Kanununun  14,  18  ve  3/11  inci  maddeleri  de  gözönünde  bulundurularak
+değerlendirilmesi  sonucunda;  mali  sistemde  güven  ve  istikrarın  sürdürülmesinin  temini
+amacıyla,  Etibank  A.Ş.’nin  bankacılık  işlemleri  yapma  ve  mevduat  kabul  etme  izninin,
+hisselerinin  satışa  sunulmasına  rağmen  yeterli  teklif  verilmemesi  ve  Bankanın  30.11.2001
+tarihi  itibariyle  birikmiş  zarar  tutarının  4.465.045  milyar  TL  olması  nedeniyle  28.12.2001
+tarihi  mesai  bitimi  itibariyle  kaldırılmasına,  adı  geçen  Bankanın  tasfiyesinin,  Türk  Ticaret
+Kanununun  infisah  ve  tasfiyeye  ilişkin  hükümleri  ile  4389  sayılı  Bankalar  Kanunu’nun  18
+inci maddesi kapsamında ve Banka Anasözleşme hükümlerine göre gerçekleştirilmesine, söz
+konusu hususların bu çerçevede  yürütülmesi konusunda Tasarruf Mevduatı Sigorta Fonunun
+yetkili kılınmasına,
+
+karar verilmiştir.

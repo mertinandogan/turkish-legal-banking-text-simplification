@@ -1,0 +1,22 @@
+Bankacılık Düzenleme ve Denetleme Kurumundan:
+
+Bankacılık Düzenleme ve Denetleme Kurulu Kararı
+
+Karar Sayısı:6528
+
+Karar Tarihi: 18/11/2015
+
+(25.11.2015 tarih ve 29543 sayılı Resmi Gazete’de yayımlanmıştır.)
+
+Kurul  Başkanlığının  17.11.2015  tarihli  gündem  yazısı  ekinde  gönderilen  17.11.2015
+
+tarih ve 20008792-101.01.05[44]-E.26962 sayılı yazı ve eklerinin incelenmesi sonucunda;
+
+T.İş  Bankası  A.Ş.'ye,  5411  sayılı  Bankacılık  Kanununun  4  üncü  maddesinin  birinci
+fıkrasının (v) bendi ve geçici 3 üncü maddesi hükümleri çerçevesinde, yurt içi ve yurt dışında
+kurulu  banka  ve  diğer  finansal  kuruluşlara,  Türkiye’de  yerleşik  firmalara  kullandırılacak
+kredilere yönelik olarak, dokümantasyon hazırlama ve bilgilendirme, teminat alma ve izleme,
+teminatları  nakde  çevirme  ile  bunların  raporlanmasına  yönelik  kredi  operasyon  işlemlerine
+ilişkin destek/danışmanlık hizmeti vermesi konusunda izin verilmesine
+
+karar verilmiştir.

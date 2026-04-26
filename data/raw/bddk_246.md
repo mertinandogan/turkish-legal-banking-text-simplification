@@ -1,0 +1,31 @@
+Bankacılık Düzenleme ve Denetleme Kurumundan:
+
+Bankacılık Düzenleme ve Denetleme Kurulu Kararı
+
+Karar Sayısı: 6015
+
+         Karar Tarihi: 18/09/2014
+
+(20.09.2014 tarih ve 29125 sayılı Resmi Gazete’de yayımlanmıştır.)
+
+Kurul  Başkanlığının  10.09.2014  tarihli  gündem  yazısı  ekinde  gönderilen  08.09.2014
+
+tarih ve 20008792-101.01.05[71]-25774 sayılı yazı ve eklerinin incelenmesi sonucunda;
+
+Denizbank A.Ş.’ye (Banka);
+
+ -  Türkiye’de  ve  yurtdışında  yerleşik  firma  ve  şahıslara  kullandırılacak  kredilere
+yönelik  teminatların  borçludan  teslim  alınması,  kontrolü,  sistemsel  giriş  ve  çıkışlarının
+yapılması,  raporlanması  ve  kredi  operasyonel  işlemleri  ile  ödemelerinde  gecikme  bulunan
+müşterilerin  aranması  faaliyeti  kapsamında  Bankanın  mali  ortaklıklarına  çağrı  merkezi
+hizmeti hususlarında destek/danışmanlık hizmeti sağlaması,
+
+ - Denizbank AG’ye 5411 sayılı Bankacılık Kanununun (Kanun) 73 üncü maddesinin
+son  fıkrası  uyarınca  yapacağı  sözleşmeler  çerçevesinde,  kredi  riskinin  analizi,  izlenmesi,
+değerlendirmesi, kontrolü ve istihbarat faaliyetleri dolayısıyla bilgi ve belge alışverişinde ve
+hizmet  temininde  bulunabilmesi  ve  kredilerin  geri  ödemelerinin  takibi  ve  tahsili  hizmeti
+sunabilmesi
+
+hususlarında Kanunun 4 üncü maddesinin birinci fıkrasının (v) bendi ile geçici 3 üncü
+
+maddesi uyarınca faaliyet genişlemesi izni verilmesine karar verilmiştir.

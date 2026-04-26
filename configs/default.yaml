@@ -12,11 +12,11 @@ data_collection:
     doc_id_start: 1
     doc_id_end: 500
     # Rate limiting
-    request_delay_seconds: 1.0
+    request_delay_seconds: 0.1
     request_timeout_seconds: 60.0
     # Output paths
     raw_output_dir: "data/raw"
-    max_concurrent_requests: 3
+    max_concurrent_requests: 10
     # Direct regulation pages to include in dataset
     direct_source_urls:
       - "https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=34360&MevzuatTur=7&MevzuatTertip=5"

@@ -1,0 +1,20 @@
+Bankacılık Düzenleme ve Denetleme Kurumundan:
+
+Bankacılık Düzenleme ve Denetleme Kurulu Kararı
+
+Karar Sayısı: 929
+
+Karar Tarihi: 19/12/2002
+
+(21.12.2002 tarih ve 24970 sayılı Resmi Gazete’de yayımlanmıştır.)
+
+Kurul  Başkanlığının  18.12.2002
+
+tarihli  yazısı  ekinde  gönderilen  Bankacılık
+Düzenleme  ve  Denetleme  Kurumunun  17.12.2002  tarih  ve  BDDK.KYĐ/71-1/14063  sayılı
+yazısı ve eklerinin incelenmesi sonucunda;
+
+Milli  Aydın  Bankası  T.A.Ş.  ve  Denizbank  A.Ş.  Genel  Kurullarının  devre  dair
+kararlarının  tescil  edilmesine  onay  verilmesi,  4389  sayılı  Bankalar  Kanununun  18  inci
+maddesinin  (1)  numaralı  fıkrası  ve  bu  fıkra  hükmüne  dayanılarak  çıkarılan  Bankaların
+Birleşme ve Devirleri Hakkında Yönetmelik uyarınca uygun görülmüştür.

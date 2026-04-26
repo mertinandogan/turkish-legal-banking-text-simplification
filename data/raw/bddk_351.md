@@ -1,0 +1,21 @@
+Bankacılık Düzenleme ve Denetleme Kurumundan:
+
+Bankacılık Düzenleme ve Denetleme Kurulu Kararı
+
+Karar Sayısı: 7367
+
+Karar Tarihi: 08/06/2017
+
+(14.06.2017 tarih ve 30096 sayılı Resmi Gazete’de yayımlanmıştır.)
+
+Kurul  Başkanlığının  07.06.2017  tarihli  gündem  yazısı  ekinde  gönderilen  07.06.2017
+
+tarih ve 20008792-101.01.05[42]-E.11690 sayılı yazı ve eklerinin incelenmesi sonucunda;
+
+5411 sayılı Bankacılık  Kanununun 4 üncü maddesinin birinci fıkrasının (v) bendi ile
+geçici  3  üncü  maddesi  çerçevesinde,  T.  Garanti  Bankası  A.Ş.’ye,  yurt  içi  ve  yurt  dışı
+iştirakleri  ile  bağlı  ortaklıkları,  ana  ortağı  ve  üçüncü  kişiler  tarafından  kurulan/kurulacak
+yatırım  fonlarına  operasyonel  ve  idari  fon  hizmetleri  alanında  destek/danışmanlık  faaliyeti
+sunması konusunda izin verilmesine
+
+karar verilmiştir.

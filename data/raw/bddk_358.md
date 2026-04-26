@@ -1,0 +1,25 @@
+Bankacılık Düzenleme ve Denetleme Kurumundan:
+
+Bankacılık Düzenleme ve Denetleme Kurulu Kararı
+
+Karar Sayısı: 7433
+
+Karar Tarihi: 20/07/2017
+
+(22.07.2017 tarih ve 30131 sayılı Resmi Gazete’de yayımlanmıştır.)
+
+Kurul  Başkanlığının  19.07.2017  tarihli  gündem  yazısı  ekinde  gönderilen  19.07.2017
+
+tarih ve 12509071-114-E.14324 sayılı yazı ve eklerinin incelenmesi sonucunda;
+
+-  Turkcell  Ödeme  ve  Elektronik  Para  Hizmetleri  ve  A.Ş.’ye  6493  sayılı  Ödeme  ve
+Menkul  Kıymet  Mutabakat  Sistemleri,  Ödeme  Hizmetleri  ve  Elektronik  Para  Kuruluşları
+Hakkında Kanunun 15 inci maddesinin birinci fıkrası, 18 inci maddesinin ikinci fıkrası ve 19
+uncu maddesi çerçevesinde elektronik para ihraç etmek üzere elektronik para kuruluşu olarak
+faaliyette bulunma izni verilmesine,
+
+-  Anılan  Kanunun  15  inci  maddesinin  birinci  fıkrası  uyarınca  işbu  kararın  Resmi
+
+Gazete’de yayımlanmasına
+
+karar verilmiştir.

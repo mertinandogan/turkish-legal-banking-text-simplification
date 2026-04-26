@@ -1,0 +1,24 @@
+Bankacılık Düzenleme ve Denetleme Kurumundan:
+
+Bankacılık Düzenleme ve Denetleme Kurulu Kararı
+
+Karar Sayısı: 7394
+
+Karar Tarihi: 21/06/2017
+
+(29.06.2017 tarih ve 30109 sayılı Resmi Gazete’de yayımlanmıştır.)
+
+Kurul  Başkanlığının  20.06.2017  tarihli  gündem  yazısı  ekinde  gönderilen  20.06.2017
+
+tarih ve 12509071-110.01.01-E.12673 sayılı yazı ve eklerinin incelenmesi sonucunda;
+
+-  Kurulun  23.12.2016  tarih  ve  7154  sayılı  Kararı  ile  kuruluşuna  izin  verilen  Çözen
+Varlık  Yönetim  A.Ş.’ye  5411  sayılı  Bankacılık  Kanununun  143  üncü  maddesi  ve  Varlık
+Yönetim Şirketlerinin Kuruluş ve Faaliyet Esasları Hakkında Yönetmeliğin 6 ncı maddesinin
+(4) ve (6) numaralı fıkraları çerçevesinde faaliyet izni verilmesine,
+
+-  Anılan  Yönetmeliğin  6  ncı  maddesinin  (6)  numaralı  fıkrası  uyarınca  işbu  Kararın
+
+Resmi Gazete’de yayımlanmasına
+
+karar verilmiştir.

@@ -1,0 +1,52 @@
+Bankacılık Düzenleme ve Denetleme Kurumundan:
+
+Bankacılık Düzenleme ve Denetleme Kurulu Kararı
+
+Karar Sayısı: 5807
+
+         Karar Tarihi: 10/04/2014
+
+(16.04.2014 tarih ve 28974 sayılı Resmi Gazete’de yayımlanmıştır.)
+
+Kurul  Başkanlığının  09.04.2014  tarihli  gündem  yazısı  ekinde  gönderilen  02.04.2014
+
+tarih ve 20008792-101.01.05[38]-8666 sayılı yazı ve eklerinin incelenmesi sonucunda;
+
+Şekerbank T.A.Ş.’ye;
+
+-  Mali  ortaklıklarına,  kredili  müşterilerinin  bilgi  ve  belgelerinin  alınması,  teminat
+teminatların  nakde  dönüştürülmesi  gibi  kredi  operasyonel
+
+kontrolünün  sağlanması,
+işlemlerine ilişkin destek / danışmanlık hizmeti verebilmesi,
+
+- 5411 sayılı Bankacılık Kanununun (Kanun) 73  üncü maddesinin son  fıkrası uyarınca
+mali ortaklıkları ile yapacağı sözleşmeler çerçevesinde, Kurumun Türkiye Bankalar Birliğini
+muhatap  07.08.2012  tarih  ve  16266  sayılı  yazısı  çerçevesinde  Kredi  Kayıt  Bürosu  A.Ş.  ve
+diğer  kanallardan  temin  edilen  bilgilerin  paylaşılması  hariç,  söz  konusu  ortaklıklarının
+izlenmesi,  değerlendirilmesi,  kontrolü  ve  müşteri
+müşterilerinin
+hizmetlerinin  yerine  getirilmesi  nedeniyle  bilgi  ve  belge  alışverişinde  ve  hizmet  temininde
+bulunabilmesi,
+
+risk  durumlarının
+
+-  Teknik  ve  mesleki  konularda  görüş  vermek  amacıyla  destek  /  danışmanlık  hizmeti
+
+verebilmesi,
+
+-  Hukuk  müşavirliği,  vergi  müşavirliği  konularında  ise  hizmet  verilecek  şirketin
+işlemlerinin yürütülmemesi ve destek/danışmanlık alınan hizmeti yürütecek birimlerin  ya da
+söz  konusu  faaliyetlerin  yürütülmesinden  sorumlu  personelin  şirketlerin  bünyesinde
+bulunması kaydıyla, Kanunun 73 üncü maddesinin son fıkrası hükümleri saklı kalmak üzere,
+sadece görüş vermek, tek tip sözleşme hazırlanmasına yardımcı olmak ve sair amaçla destek /
+danışmanlık hizmeti sunulması,
+
+- Bankacılık ürün ve hizmetlerinin kullanımını özendirmek amacı ile reklam ve tanıtım
+programlarının  yapılması, müşterilerden  gelen  şikayet  ve  önerilerin  değerlendirilerek çözüm
+önerileri geliştirilmesine ilişkin müşteri ilişkileri ve iletişim alanlarında destek / danışmanlık
+hizmeti verebilmesi
+
+hususlarında  faaliyet  genişlemesi  izni  verilmesine  Kanunun  4  üncü  maddesinin  birinci
+
+fıkrasının (v) bendi ile geçici 3 üncü maddesi uyarınca karar verilmiştir.

@@ -1,0 +1,22 @@
+Bankacılık Düzenleme ve Denetleme Kurumundan:
+
+Bankacılık Düzenleme ve Denetleme Kurulu Kararı
+
+Karar Sayısı:6319
+
+Karar Tarihi: 04/06/2015
+
+(09.06.2015 tarih ve 29381 sayılı Resmi Gazete’de yayımlanmıştır.)
+
+Kurul  Başkanlığının  03.06.2015  tarihli  gündem  yazısı  ekinde  gönderilen  03.06.2015
+
+tarih ve 20008792-101.01.05[522]-E.14066 sayılı yazı ve eklerinin incelenmesi sonucunda;
+
+Akbank  T.A.Ş.’ye,  5411  sayılı  Bankacılık  Kanununun  4  üncü  maddesinin  birinci
+fıkrasının (v) bendi ile geçici 3 üncü maddesi hükümleri çerçevesinde, yurt içi ve yurt dışında
+kurulu  banka  ve  diğer  finansal  kuruluşlara,  Türkiye’de  yerleşik  firmalara  kullandırılacak
+kredilere  yönelik  olarak,  dokümantasyon  hazırlama  ve  bilgilendirme,  teminat  alma,  izleme,
+teminatları  nakde  çevirme  ile  bunların  raporlanmasına  yönelik  kredi  operasyon  işlemlerine
+ilişkin destek/danışmanlık hizmeti vermesi konusunda izin verilmesine
+
+karar verilmiştir.

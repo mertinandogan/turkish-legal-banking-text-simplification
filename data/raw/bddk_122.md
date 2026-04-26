@@ -1,0 +1,34 @@
+Bankacılık Düzenleme ve Denetleme Kurumundan:
+
+Bankacılık Düzenleme ve Denetleme Kurulu Kararı
+
+Karar Sayısı: 2814
+
+         Karar Tarihi: 18/09/2008
+
+(23.09.2008 tarih ve 27006 sayılı Resmi Gazete’de yayımlanmıştır.)
+
+Kurul  Başkanlığının  17.09.2008  tarihli  yazısı  ekinde  gönderilen  10.09.2008  tarih  ve
+
+BDDK.UY1.23.1-12396 sayılı yazı ve eklerinin incelenmesi sonucunda;
+
+5411  sayılı  Bankacılık  Kanununun  (Kanun)  4  üncü  maddesinin  birinci  fıkrasının  (v)
+
+bendi ve geçici 3 üncü maddesi çerçevesinde, Akbank T.A.Ş.’nin (Banka);
+
+- Sektördeki diğer bankalara,
+
+-  Banka  tarafından  ana  faaliyet  konularının  hiçbir  şekilde  yapılmaması  ve  bu
+faaliyetlerin icra edilmesinin planlanmaması şartıyla kendi risk grubunda yer alan kuruluşlara
+
+destek/danışmanlık  hizmeti  kapsamında  çağrı  merkezi
+
+ticaret
+operasyonel  destek  hizmetleri,  bireysel  kredi  başvurusu  işlemleri,  basım  hizmetleri,  kredi
+kartı  ve  pos  operasyonel  işlemleri,  ATM  bakım  ve  kredi  operasyonu  hizmetleri  verme
+konularında  faaliyette  bulunmasına,  Kanun  ve  ilgili  mevzuat  hükümleri  saklı  kalmak
+kaydıyla, izin verilmesine
+
+işlemleri,  dış
+
+karar verilmiştir.
